@@ -1,1523 +1,234 @@
 
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bittensor Daily Report — 2026-05-08</title>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bittensor — 2026-05-08</title>
 <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        background: #0a0a0f;
-        color: #e0e0e6;
-        line-height: 1.6;
-    }
-    .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
-    header {
-        text-align: center;
-        padding: 40px 0;
-        border-bottom: 2px solid #1a1a2e;
-        margin-bottom: 30px;
-    }
-    h1 { font-size: 2.2em; color: #ff6b35; margin-bottom: 10px; }
-    .meta { color: #888; font-size: 0.9em; }
-    .stats-bar {
-        display: flex;
-        justify-content: center;
-        gap: 40px;
-        padding: 25px;
-        background: #151520;
-        border-radius: 12px;
-        margin-bottom: 35px;
-    }
-    .stat { text-align: center; }
-    .stat-value { font-size: 2.2em; font-weight: bold; color: #ff6b35; }
-    .stat-label { font-size: 0.8em; color: #888; text-transform: uppercase; margin-top: 5px; }
-    .section {
-        margin-bottom: 30px;
-        background: #12121e;
-        border-radius: 12px;
-        padding: 25px;
-        border: 1px solid #1e1e30;
-    }
-    h2 {
-        color: #ff6b35;
-        font-size: 1.4em;
-        margin-bottom: 15px;
-        padding-bottom: 12px;
-        border-bottom: 1px solid #1e1e30;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-    .subnet {
-        margin-bottom: 18px;
-        padding: 18px;
-        background: #0d0d15;
-        border-radius: 10px;
-        border-left: 3px solid #333;
-    }
-    .subnet.major { border-left-color: #ff4444; }
-    .subnet.minor { border-left-color: #ffaa00; }
-    .subnet.signal { border-left-color: #00cc66; }
-    .subnet.quiet { border-left-color: #444; opacity: 0.6; }
-    .subnet-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: baseline;
-        margin-bottom: 10px;
-        flex-wrap: wrap;
-        gap: 8px;
-    }
-    .subnet-name { font-weight: 600; font-size: 1.15em; }
-    .subnet-owner { color: #888; font-size: 0.85em; }
-    .subnet-verdict {
-        display: inline-block;
-        padding: 4px 12px;
-        border-radius: 15px;
-        font-size: 0.75em;
-        font-weight: bold;
-        text-transform: uppercase;
-    }
-    .verdict-major { background: #ff444433; color: #ff4444; }
-    .verdict-minor { background: #ffaa0033; color: #ffaa00; }
-    .verdict-signal { background: #3388ff33; color: #66aaff; }
-    .verdict-quiet { background: #222; color: #555; }
-    .message-preview {
-        color: #b0b0c0;
-        font-size: 0.92em;
-        padding: 10px 0;
-        border-top: 1px solid #1a1a2e;
-        margin-top: 8px;
-    }
-    .sender { color: #ff6b35; font-weight: 600; }
-    .quiet-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-        gap: 10px;
-        margin-top: 15px;
-    }
-    .quiet-item {
-        background: #0a0a10;
-        padding: 10px;
-        border-radius: 6px;
-        font-size: 0.82em;
-        color: #555;
-        text-align: center;
-    }
-    .quiet-label { display: block; color: #333; font-size: 0.75em; margin-top: 3px; }
-    .highlight-box {
-        background: #1a1510;
-        border-left: 3px solid #ff6b35;
-        padding: 18px;
-        margin: 15px 0;
-        border-radius: 0 10px 10px 0;
-    }
-    .consttt-box {
-        background: #1a1010;
-        border: 1px solid #2a1a1a;
-        border-left: 3px solid #ff6b35;
-    }
-    footer {
-        text-align: center;
-        padding: 30px;
-        color: #444;
-        font-size: 0.8em;
-        border-top: 1px solid #1a1a2e;
-        margin-top: 30px;
-    }
-    .nav {
-        position: sticky;
-        top: 0;
-        background: #12121e;
-        padding: 12px 20px;
-        border-bottom: 1px solid #1e1e30;
-        z-index: 100;
-        display: flex;
-        gap: 20px;
-        justify-content: center;
-    }
-    .nav a {
-        color: #888;
-        text-decoration: none;
-        font-size: 0.85em;
-        text-transform: uppercase;
-    }
-    .nav a:hover { color: #ff6b35; }
-</style>
-</head>
-<body>
-    <div class="nav">
-        <a href="#overview">Overview</a>
-        <a href="#high-signal">High Signal</a>
-        <a href="#subnets">All Subnets</a>
-        <a href="#quiet">Quiet</a>
-    </div>
-    
-    <div class="container">
-        <header id="overview">
-            <h1>🧠 Bittensor Daily Report</h1>
-            <div class="meta">2026-05-08 | 501 unique messages | 91 active subnets | 37 quiet</div>
-        </header>
-        
-        <div class="stats-bar">
-            <div class="stat">
-                <div class="stat-value">91</div>
-                <div class="stat-label">Active Subnets</div>
-            </div>
-            <div class="stat">
-                <div class="stat-value">37</div>
-                <div class="stat-label">Quiet</div>
-            </div>
-            <div class="stat">
-                <div class="stat-value">29</div>
-                <div class="stat-label">High Signal</div>
-            </div>
-            <div class="stat">
-                <div class="stat-value">1</div>
-                <div class="stat-label">Consttt Posts</div>
-            </div>
-        </div>
-
-        <div class="section" id="high-signal">
-            <h2>🔴 High Signal</h2>
-
-            <div class="subnet major">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN2 · β・dsperse・2</span>
-                    <span class="subnet-owner">Owner: gagichce · 10 messages</span>
-                    <span class="subnet-verdict verdict-major">MAJOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@wencoffee</span>: **🥩 &lt;@&1220505352953528380&gt;  Miners and Validators 🥩**  Version `14.8.1` is  deploying now. This is a **validator and miner** patch release.  **Changes** - Implement robust DDoS pr...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@wencoffee</span>: DDoS is / has been a somewhat common issue in some subnets over time and it's always been the recommendation that miners monitor and keep tight networking setups. Since it's come u...
-                </div>
-            </div>
-
-            <div class="subnet major">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN7 · η・allways・7</span>
-                    <span class="subnet-owner">Owner: e35mango · 4 messages</span>
-                    <span class="subnet-verdict verdict-major">MAJOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@e35strap</span>: ## Allways Update — v1.0.0 &lt;@&1437497690077397065&gt;   We are live at https://all-ways.io Enabling trustless BTC ↔ TAO swaps, end-to-end, today.  - **Agents transact in one click.** ...
-                </div>
-            </div>
-
-            <div class="subnet major">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN8 · θ・vanta・8</span>
-                    <span class="subnet-owner">Owner: tl_arrash · 4 messages</span>
-                    <span class="subnet-verdict verdict-major">MAJOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@ward_taoshiio</span>: &lt;@&1179152515758030858&gt; Validators and Miners, please consider pulling the latest commit on main - we've migrated to the latest bittensor sdk v10. If there are issues with package ...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@tl_arrash</span>: Vanta is for larger markets (crypto, equities, fx, commodities) not for trading alpha tokens...
-                </div>
-            </div>
-
-            <div class="subnet major">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN11 · λ・trajectory-rl・11</span>
-                    <span class="subnet-owner">Owner: crabby [Kat msg (2026-01-30)] · 9 messages</span>
-                    <span class="subnet-verdict verdict-major">MAJOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@crabby_tt</span>: we’re rolling out features related, will make official announcement after all of them shipped. Hope can be done in 2 epochs...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@crabby_tt</span>: they're not evaluated because they're not top 3  when validators start to eval, so they don't need to be re-evaluated and the score of epoch 1128 is re-used....
-                </div>
-            </div>
-
-            <div class="subnet major">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN15 · ο・oro・15</span>
-                    <span class="subnet-owner">Owner: shardi-b [Kat msg (2026-02-03)] · 10 messages</span>
-                    <span class="subnet-verdict verdict-major">MAJOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@Forge</span>: Hey John — for the current race (#25), there are **375 qualified agents** so far. Qualifying is still open (closes at 12:00 PM PT today), so that number may change before the race ...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@Forge</span>: Hey grotri — the "invalid management key" (401) usually means the CLI's authentication with the ORO backend isn't matching your registered hotkey. A couple things to check:  1. Mak...
-                </div>
-            </div>
-
-            <div class="subnet major">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN16 · π・biτads・16</span>
-                    <span class="subnet-owner">Owner: eseck · 1 messages</span>
-                    <span class="subnet-verdict verdict-major">MAJOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@eseck</span>: &lt;@1385637302071726083&gt;  Wanted to give a quick plan of work till next Monday, it is not a full update on the work, just to align on what we are doing.  This week is dedicated to AP...
-                </div>
-            </div>
-
-            <div class="subnet major">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN19 · τ・blockmachine・19</span>
-                    <span class="subnet-owner">Owner: mogmachine · 10 messages</span>
-                    <span class="subnet-verdict verdict-major">MAJOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@flowsniper.ai</span>: &lt;@700779471287877764&gt; I was thinking about the old SubVortex subnet with a load-balanced public endpoint, a free alternative to finney, and my need is a perfect use case for someth...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@poggle0455</span>: There's a probe on node add and hourly that enforces a minimum version... any incompatible nodes are removed automatically. In practice most updates are runtime-only and the subten...
-                </div>
-            </div>
-
-            <div class="subnet major">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN21 · φ・adτao・21</span>
-                    <span class="subnet-owner">Owner: robwarner · 5 messages</span>
-                    <span class="subnet-verdict verdict-major">MAJOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@robwarner</span>: At last!!!  🚨 SN21 IS LIVE ON TESTNET 🚨  **Subnet 21 AdTAO  is now open for testnet miners and validators.**  Here's what we're building:  Google Ads is a $300B market running on v...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@robwarner</span>: The plan is in the next 7 days, but that is of course unless something catastrophic turns up from our testnet feedback.  You can do all the planning in the world, benchmarks, testi...
-                </div>
-            </div>
-        </div>
-
-        <div class="section" id="subnets">
-            <h2>📋 SN1 – SN128 Full Breakdown</h2>
-
-            <div class="subnet minor">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN1 · 𝛼・apex・1</span>
-                    <span class="subnet-owner">Owner: @subnet-claiminfo @Compelle [CDP] · 9 messages</span>
-                    <span class="subnet-verdict verdict-minor">MINOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@_wctsq</span>: &lt;@1499157189401509908&gt; I don't make emission decisions based on miner requests - we will continue to review it based on competition performance and the dynamics in the system....
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@_wctsq</span>: Reg spamming from miner groups forced the implementation of the reg fee... so blame your peers....
-                </div>
-            </div>
-
-            <div class="subnet major">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN2 · β・dsperse・2</span>
-                    <span class="subnet-owner">Owner: gagichce · 10 messages</span>
-                    <span class="subnet-verdict verdict-major">MAJOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@wencoffee</span>: **🥩 &lt;@&1220505352953528380&gt;  Miners and Validators 🥩**  Version `14.8.1` is  deploying now. This is a **validator and miner** patch release.  **Changes** - Implement robust DDoS pr...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@wencoffee</span>: DDoS is / has been a somewhat common issue in some subnets over time and it's always been the recommendation that miners monitor and keep tight networking setups. Since it's come u...
-                </div>
-            </div>
-
-            <div class="subnet minor">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN3 · γ・τeuτonic・3</span>
-                    <span class="subnet-owner">Owner: unknown · 7 messages</span>
-                    <span class="subnet-verdict verdict-minor">MINOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@techforgeworks</span>: you can find your hotkey on dashboard list...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@techforgeworks</span>: no, you need to create new one. so you should strictly check on your local side. and then push...
-                </div>
-            </div>
-
-            <div class="subnet minor">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN4 · ∆・τargon・4</span>
-                    <span class="subnet-owner">Owner: unknown · 9 messages</span>
-                    <span class="subnet-verdict verdict-minor">MINOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@p383_54249</span>: If you turn up incentive won’t miners bring more GPUs?...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@0xcarro</span>: I could make incentive 6 dollars I don't think I would get that many more...
-                </div>
-            </div>
-
-            <div class="subnet signal">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN6 · ζ・numinous・6</span>
-                    <span class="subnet-owner">Owner: unknown · 5 messages</span>
-                    <span class="subnet-verdict verdict-signal">SIGNAL</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@joey_00655</span>: Hi &lt;@1210731177837727866&gt; and team, looking at the analytics, seems that Gemini brier has significantly improved in the past 2 weeks and surpassed sn miners. Would you mind help us...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@opopeee</span>: Hi &lt;@1210731177837727866&gt; "numi services link" returns 503 "Failed to store API key" since ~08:30 UTC. Any idea what the problem might be ? My hotkey is registered and the API key ...
-                </div>
-            </div>
-
-            <div class="subnet major">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN7 · η・allways・7</span>
-                    <span class="subnet-owner">Owner: e35mango · 4 messages</span>
-                    <span class="subnet-verdict verdict-major">MAJOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@e35strap</span>: ## Allways Update — v1.0.0 &lt;@&1437497690077397065&gt;   We are live at https://all-ways.io Enabling trustless BTC ↔ TAO swaps, end-to-end, today.  - **Agents transact in one click.** ...
-                </div>
-            </div>
-
-            <div class="subnet major">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN8 · θ・vanta・8</span>
-                    <span class="subnet-owner">Owner: tl_arrash · 4 messages</span>
-                    <span class="subnet-verdict verdict-major">MAJOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@ward_taoshiio</span>: &lt;@&1179152515758030858&gt; Validators and Miners, please consider pulling the latest commit on main - we've migrated to the latest bittensor sdk v10. If there are issues with package ...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@tl_arrash</span>: Vanta is for larger markets (crypto, equities, fx, commodities) not for trading alpha tokens...
-                </div>
-            </div>
-
-            <div class="subnet signal">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN9 · ι・ioτa・9</span>
-                    <span class="subnet-owner">Owner: Macrocosmos · 10 messages</span>
-                    <span class="subnet-verdict verdict-signal">SIGNAL</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@skippyroo72</span>: Train at home.ai reckons 64 miners only running. You must be having troubles, right? This has been going on for weeks and weeks. Bought new equipment for this, why? China and Europ...
-                </div>
-            </div>
-
-            <div class="subnet minor">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN10 · κ・unclaimed・10</span>
-                    <span class="subnet-owner">Owner: NEEDS_FILL · 2 messages</span>
-                    <span class="subnet-verdict verdict-minor">MINOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@kat_frenone</span>: It means that no one has come forward to claim the subnet (meaning: to claim the ability to operate in this channel, in this server, because they own the subnet).  Please read the ...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@aussiedave.</span>: What does unclaimed mean? Does it mean nobody owns it or someone owns it but is just sitting on it? If is the latter is there a time limit that they can do nothing with it?...
-                </div>
-            </div>
-
-            <div class="subnet major">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN11 · λ・trajectory-rl・11</span>
-                    <span class="subnet-owner">Owner: crabby [Kat msg (2026-01-30)] · 9 messages</span>
-                    <span class="subnet-verdict verdict-major">MAJOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@crabby_tt</span>: we’re rolling out features related, will make official announcement after all of them shipped. Hope can be done in 2 epochs...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@crabby_tt</span>: they're not evaluated because they're not top 3  when validators start to eval, so they don't need to be re-evaluated and the score of epoch 1128 is re-used....
-                </div>
-            </div>
-
-            <div class="subnet signal">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN12 · µ・horde・12</span>
-                    <span class="subnet-owner">Owner: unknown · 3 messages</span>
-                    <span class="subnet-verdict verdict-signal">SIGNAL</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@rhef</span>: In Chi mode agent spinned up three async loops and some threads and it broke down during testing, meanwhile nexus handles it gracefully. We had something like that in Horde after 6...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@rhef</span>: It's being edited for publication but the results are better than I expected...
-                </div>
-            </div>
-
-            <div class="subnet signal">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN14 · テ・τaohash・14</span>
-                    <span class="subnet-owner">Owner: vune · 1 messages</span>
-                    <span class="subnet-verdict verdict-signal">SIGNAL</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@aussiedave.</span>: Is this subnet still active?...
-                </div>
-            </div>
-
-            <div class="subnet major">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN15 · ο・oro・15</span>
-                    <span class="subnet-owner">Owner: shardi-b [Kat msg (2026-02-03)] · 10 messages</span>
-                    <span class="subnet-verdict verdict-major">MAJOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@Forge</span>: Hey John — for the current race (#25), there are **375 qualified agents** so far. Qualifying is still open (closes at 12:00 PM PT today), so that number may change before the race ...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@Forge</span>: Hey grotri — the "invalid management key" (401) usually means the CLI's authentication with the ORO backend isn't matching your registered hotkey. A couple things to check:  1. Mak...
-                </div>
-            </div>
-
-            <div class="subnet major">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN16 · π・biτads・16</span>
-                    <span class="subnet-owner">Owner: eseck · 1 messages</span>
-                    <span class="subnet-verdict verdict-major">MAJOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@eseck</span>: &lt;@1385637302071726083&gt;  Wanted to give a quick plan of work till next Monday, it is not a full update on the work, just to align on what we are doing.  This week is dedicated to AP...
-                </div>
-            </div>
-
-            <div class="subnet minor">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN17 · ρ・404—gen・17</span>
-                    <span class="subnet-owner">Owner: unknown · 10 messages</span>
-                    <span class="subnet-verdict verdict-minor">MINOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@canigonow</span>: To clarify - this update doesn't change outcome of Round 2 - the winner is the same regardless. We are currently in the collection phase for Round 3. We are keeping a close eye on ...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@manojbh</span>: Well that’s not fair isn’t it? The current round is round 3 so miners can prepare accordingly...
-                </div>
-            </div>
-
-            <div class="subnet signal">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN18 · σ・zeus・18</span>
-                    <span class="subnet-owner">Owner: orpheusai · 5 messages</span>
-                    <span class="subnet-verdict verdict-signal">SIGNAL</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@_vstone0359_</span>: https://x.com/zeussubnet/status/2052405073079152748 😂  what does this subnet do with this?...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@_vstone0359_</span>: this team kept saying big news soon but no news at all and self-miners are selling massive...
-                </div>
-            </div>
-
-            <div class="subnet major">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN19 · τ・blockmachine・19</span>
-                    <span class="subnet-owner">Owner: mogmachine · 10 messages</span>
-                    <span class="subnet-verdict verdict-major">MAJOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@flowsniper.ai</span>: &lt;@700779471287877764&gt; I was thinking about the old SubVortex subnet with a load-balanced public endpoint, a free alternative to finney, and my need is a perfect use case for someth...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@poggle0455</span>: There's a probe on node add and hourly that enforces a minimum version... any incompatible nodes are removed automatically. In practice most updates are runtime-only and the subten...
-                </div>
-            </div>
-
-            <div class="subnet major">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN21 · φ・adτao・21</span>
-                    <span class="subnet-owner">Owner: robwarner · 5 messages</span>
-                    <span class="subnet-verdict verdict-major">MAJOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@robwarner</span>: At last!!!  🚨 SN21 IS LIVE ON TESTNET 🚨  **Subnet 21 AdTAO  is now open for testnet miners and validators.**  Here's what we're building:  Google Ads is a $300B market running on v...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@robwarner</span>: The plan is in the next 7 days, but that is of course unless something catastrophic turns up from our testnet feedback.  You can do all the planning in the world, benchmarks, testi...
-                </div>
-            </div>
-
-            <div class="subnet minor">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN22 · χ・desearch・22</span>
-                    <span class="subnet-owner">Owner: cosmicquantum. · 2 messages</span>
-                    <span class="subnet-verdict verdict-minor">MINOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@lordnadejde.eth</span>: &lt;@563965484060377109&gt; one more thing can you check please why performance reward is 0 coming from 58 validator on some ai queries. For example this one:  ``` {   "penalties": {    ...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@lordnadejde.eth</span>: &lt;@563965484060377109&gt; I think I found a bug for twitter + only_links specific combo on ai search:  ``` Then the ONLY_LINKS check (summary_relevance.py:339-353):    if response.resu...
-                </div>
-            </div>
-
-            <div class="subnet minor">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN23 · ψ・trishool・23</span>
-                    <span class="subnet-owner">Owner: Nav | SN23 [Kat msg (2025-12-02) [role]] · 10 messages</span>
-                    <span class="subnet-verdict verdict-minor">MINOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@kardashev_i</span>: Just to confirm, validators will retry in the case of API limit error...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@fantasyfist</span>: Hi, &lt;@397803575289446400&gt; In the leaderboard, will validators wait for API rate limit error?...
-                </div>
-            </div>
-
-            <div class="subnet major">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN24 · ω・quasar・24</span>
-                    <span class="subnet-owner">Owner: Honey Badger [Kat msg (2026-01-08)] · 5 messages</span>
-                    <span class="subnet-verdict verdict-major">MAJOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@basil_99471</span>: by checking from the github commits, probably there still some issues with the validator codes, just in case you wondering. Github commits has been actively pushing some updates....
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@thesocialabg</span>: It’s hurts ngl 🤕 waiting to see the emissions get back on track!...
-                </div>
-            </div>
-
-            <div class="subnet minor">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN26 · ב・perτurb・26</span>
-                    <span class="subnet-owner">Owner: NEEDS_FILL · 7 messages</span>
-                    <span class="subnet-verdict verdict-minor">MINOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@heliosprime_3194</span>: how long until validator queries? ```  bittensor:miner.py:286 | Miner started. Waiting for validator queries. ```...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@alswan_22309</span>: Hello, I'd like to know, doesn't the new subnet have a 21-day lock-up period? Why can owners transfer alpha tokens?...
-                </div>
-            </div>
-
-            <div class="subnet minor">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN29 · ה・booτsτrap・29</span>
-                    <span class="subnet-owner">Owner: unknown · 1 messages</span>
-                    <span class="subnet-verdict verdict-minor">MINOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@obscuredmoonlit</span>: willing to help w promotion of  and especially onboarding (miners) to subsubnets with apple silicon support (for free, forever.) . building a platform exclusively for mac users abo...
-                </div>
-            </div>
-
-            <div class="subnet signal">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN32 · ח・iτsai・32</span>
-                    <span class="subnet-owner">Owner: unknown · 4 messages</span>
-                    <span class="subnet-verdict verdict-signal">SIGNAL</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@d4rku</span>: alright you guys got lucky today i accidently firewalled all my miners all day...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@jonluis_</span>: Hi, i'm new here, what is the actual task once i run miner?...
-                </div>
-            </div>
-
-            <div class="subnet minor">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN33 · ט・ready・33</span>
-                    <span class="subnet-owner">Owner: unknown · 7 messages</span>
-                    <span class="subnet-verdict verdict-minor">MINOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@rajeshkoothrapali.</span>: How is this helpful to someone who might be running a miner or validator neuron?...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@rajeshkoothrapali.</span>: How is trying to help a subnet understand where they’re lacking seen as harassing them?...
-                </div>
-            </div>
-
-            <div class="subnet minor">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN34 · י・mind・34</span>
-                    <span class="subnet-owner">Owner: unknown · 10 messages</span>
-                    <span class="subnet-verdict verdict-minor">MINOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@assasin030511</span>: I'm new miner in this subnet...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@assasin030511</span>: there are 2 miners: discriminative miner and generative miner  so i have to be both miners?...
-                </div>
-            </div>
-
-            <div class="subnet minor">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN35 · ך・oxmarkets・35</span>
-                    <span class="subnet-owner">Owner: mikecontango · 2 messages</span>
-                    <span class="subnet-verdict verdict-minor">MINOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@negulyayev036</span>: hi, &lt;@797206988978651156&gt;   How can I be miner here? I checked the github and website but  not clear how to join and mining....
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@jr_zeus0707_22986</span>: Hello guys, I am curious who is the owner of this subnet? And I'd like to know if I can get funded account as my bot trades subnet alpha tokens. I saw that this subnet allows trade...
-                </div>
-            </div>
-
-            <div class="subnet major">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN37 · ל・aurelius・37</span>
-                    <span class="subnet-owner">Owner: Ausτin · 10 messages</span>
-                    <span class="subnet-verdict verdict-major">MAJOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@techforgeworks</span>: &lt;@333803678408376320&gt; can we have more reduced burn rate? because currently one miner is getting few amount of incentive....
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@sy_phen_</span>: &lt;@333803678408376320&gt; is this subnet dead? Why no owner no bot reply to any miner queries...
-                </div>
-            </div>
-
-            <div class="subnet major">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN39 · מ・cathedral・39</span>
-                    <span class="subnet-owner">Owner: unknown · 9 messages</span>
-                    <span class="subnet-verdict verdict-major">MAJOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@wallscalr</span>: **Agreed.** Validators need to support  or this does not matter.  The direction is not “reward random workflows.” Polaris runs real agent jobs. Cathedral rewards miners who create ...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@obscuredmoonlit</span>: maybe on demand gpu/cpu inference but for apple silicon? I am launching a website called earnyourmac (live on bitstarter idea forum too) that aggregates subnets that has full minin...
-                </div>
-            </div>
-
-            <div class="subnet signal">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN44 · ף・score・44</span>
-                    <span class="subnet-owner">Owner: unknown · 9 messages</span>
-                    <span class="subnet-verdict verdict-signal">SIGNAL</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@miner1007</span>: how can I get the other miners responses? Now I can only get the present top miner's response. how to get the previous response.....
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@mikhaelskm</span>: In others miners responses...
-                </div>
-            </div>
-
-            <div class="subnet minor">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN45 · פ・τalisman・45</span>
-                    <span class="subnet-owner">Owner: unknown · 4 messages</span>
-                    <span class="subnet-verdict verdict-minor">MINOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@canti_dev</span>: we pushed an update to validators today to alleviate timeouts, if you continue to see them please DM me and I can help you troubleshoot...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@happyandygod</span>: if all timeout is it means respond cannot send back to validator...
-                </div>
-            </div>
-
-            <div class="subnet signal">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN46 · ץ・resi・46</span>
-                    <span class="subnet-owner">Owner: unknown · 8 messages</span>
-                    <span class="subnet-verdict verdict-signal">SIGNAL</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@sebyverse</span>: Neither. The borrowers pay unless the lender loads an account for kyc / credit /income / title checks etc  Our flow is:  1. Borrower logs in with gmail 2. Borrower fills 3-5 questi...
-                </div>
-            </div>
-
-            <div class="subnet major">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN47 · צ・evolai・47</span>
-                    <span class="subnet-owner">Owner: openevolai · 9 messages</span>
-                    <span class="subnet-verdict verdict-major">MAJOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@openevolai</span>: Different behaviors affect different components:  * Sharp gains followed by regression → degrade capability and improvement signals * High variance → reduces the stability (flow) t...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@openevolai</span>: Thanks for the careful follow-up. Below is a more concrete pass on each question. We are still being selective about implementation detail, but we can give a clearer view of the de...
-                </div>
-            </div>
-
-            <div class="subnet minor">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN50 · ש・synth・50</span>
-                    <span class="subnet-owner">Owner: unknown · 5 messages</span>
-                    <span class="subnet-verdict verdict-minor">MINOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@bytecrafter15_02112</span>: I have been mining on this subnet for about half a year, and this is the first time I have seen it take this long to resolve a minor dashboard issue....
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@bytecrafter15_02112</span>: Hi SYNTH team. When can I expect the updated dashboard?...
-                </div>
-            </div>
-
-            <div class="subnet signal">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN51 · ⱄ・lium-io・51</span>
-                    <span class="subnet-owner">Owner: unknown · 8 messages</span>
-                    <span class="subnet-verdict verdict-signal">SIGNAL</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@pigeonsyndrome</span>: oh ok. looks like `  -H 'Authorization: Bearer sk_{...}'` needs to be updated...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@pigeonsyndrome</span>: ``` curl -X 'GET' \   'https://lium.io/api/users/me' \   -H 'accept: application/json' \   -H 'Authorization: Bearer sk_{...}' ``` i am getting a 401 from the lium swagger page...
-                </div>
-            </div>
-
-            <div class="subnet minor">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN52 · ا・dojo・52</span>
-                    <span class="subnet-owner">Owner: unknown · 1 messages</span>
-                    <span class="subnet-verdict verdict-minor">MINOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@jr_zeus0707_22986</span>: Hello &lt;@1137088934799740999&gt;  Are you still the owner of this subnet or handed over to someone else? If you are the owner of this subent, I have a few questions. As far as I know, ...
-                </div>
-            </div>
-
-            <div class="subnet major">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN54 · ت・miid・54</span>
-                    <span class="subnet-owner">Owner: unknown · 9 messages</span>
-                    <span class="subnet-verdict verdict-major">MAJOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@abaza9651</span>: Use the method in the https://github.com/yanez-compliance/MIID-subnet/blob/main/LDS/miner_call_LDS.py the `sign_message`.  the `message_text` is the one you get from the dashboard ...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@gwhitet</span>: &lt;@354083175804436481&gt; Please clarify the update time window, is the dashboard not real-time? I noticed that at 7:00 UTC, other miners on the leaderboard were still updating their i...
-                </div>
-            </div>
-
-            <div class="subnet signal">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN56 · ج・gradients・56</span>
-                    <span class="subnet-owner">Owner: unknown · 2 messages</span>
-                    <span class="subnet-verdict verdict-signal">SIGNAL</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@oper0447</span>: Hi, &lt;@1007031799236534424&gt; &lt;@1497252016961884300&gt; &lt;@464034973041688595&gt; &lt;@216043018686431233&gt;  All competitors are still using lr finder table (lrs dir) in their Auto ML projects. ...
-                </div>
-            </div>
-
-            <div class="subnet signal">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN60 · ذ・bitsec・60</span>
-                    <span class="subnet-owner">Owner: unknown · 4 messages</span>
-                    <span class="subnet-verdict verdict-signal">SIGNAL</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@yubo</span>: it includes openrouter api so we are not tied to just chutes...
-                </div>
-            </div>
-
-            <div class="subnet major">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN62 · ل・ridges・62</span>
-                    <span class="subnet-owner">Owner: mancerayder · 6 messages</span>
-                    <span class="subnet-verdict verdict-major">MAJOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@kooltek68</span>: Hey Ridges team 👋 : some platform feedback from our research that we think would help everyone build better miners:  &gt; 1. Multi-run scoring averaging &gt; Binary 1/0 scoring evaluated...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@pharaohgrade</span>: It’s just that what will end up happening is that rich miners will have edge by virtue of them having capital and hence more shots on target. It’s similar idea to BYOK.  If you che...
-                </div>
-            </div>
-
-            <div class="subnet signal">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN63 · س・enigma・63</span>
-                    <span class="subnet-owner">Owner: unknown · 2 messages</span>
-                    <span class="subnet-verdict verdict-signal">SIGNAL</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@sir_entangled</span>: We've been deep in the development cycle for the past few months as we remodel the subnet. We've just launched vali code to test some new features and will be launching fully soon!...
-                </div>
-            </div>
-
-            <div class="subnet signal">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN64 · ش・chutes・64</span>
-                    <span class="subnet-owner">Owner: unknown · 10 messages</span>
-                    <span class="subnet-verdict verdict-signal">SIGNAL</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@_cxmplex</span>: back when you could acquire gpus easier, miners would race themselves to the bottom in terms of gpu payout, that can't happen if theres a chokehold on the supply of gpus...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@_cxmplex</span>: from tracking, if anything they're overpaid on average that period, so incentive mechanism is paying that's not the problem, bt works....
-                </div>
-            </div>
-
-            <div class="subnet major">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN65 · ص・τpn・65</span>
-                    <span class="subnet-owner">Owner: unknown · 3 messages</span>
-                    <span class="subnet-verdict verdict-major">MAJOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@dutchmikel</span>: Tnx for checking in 🙂  Tech-wise I'll share last wk sprint: TPN Subnet — Development Branch Weekly Summary (Mon Apr 20 – Mon May 4, 2026)  ───  🔀 Merged PRs  PR #181 — Remove Weigh...
-                </div>
-            </div>
-
-            <div class="subnet major">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN66 · ض・ninja・66</span>
-                    <span class="subnet-owner">Owner: unknown · 10 messages</span>
-                    <span class="subnet-verdict verdict-major">MAJOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@kooltek68</span>: The sn66 pace is too fast n furious, I guess miners should submit one or two versions to compete at a time and to see if there is new King, new update needed to apply before submit...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@grotri</span>: yeah i noticed it too, with mining 2 agent subnets from time to time things go crazy rn both oro and ninja got updates, both require attention and work, but ninja need to settle wi...
-                </div>
-            </div>
-
-            <div class="subnet major">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN69 · ع・unclaimed・69</span>
-                    <span class="subnet-owner">Owner: unclaimed · 3 messages</span>
-                    <span class="subnet-verdict verdict-major">MAJOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@kat_frenone</span>: Gentle reminder: if you make a declarative announcement of someone owning a subnet, including reposting/quoting a claim made elsewhere, in an "unclaimed" channel here, your post wi...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@mamslbb</span>: The owner (everybody knows who it is) had more than a year to find a project/team to work here, they put team in more than half a dozen subnets and never touched this one, and stil...
-                </div>
-            </div>
-
-            <div class="subnet signal">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN71 · ف・leadpoeτ・71</span>
-                    <span class="subnet-owner">Owner: pepelepluτus · 5 messages</span>
-                    <span class="subnet-verdict verdict-signal">SIGNAL</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@jackson10011986</span>: &lt;@1391466278161748101&gt; I'm asking for your help. Just asking... I didn't change miner.py excluding getting leads....
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@guptaant9999</span>: strange miner. it is just your work not owner team....
-                </div>
-            </div>
-
-            <div class="subnet major">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN72 · ق・sτreeτvision・72</span>
-                    <span class="subnet-owner">Owner: unknown · 10 messages</span>
-                    <span class="subnet-verdict verdict-major">MAJOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@albeszhebo</span>: This is only temporary for now, until the subnet relaunches with the updated roadmap...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@hnnam.</span>: In this case i can understand the situation of &lt;@806874851088138240&gt;. He is the top miner,  the owner should notice for him in advance. Anyway, it is decided, welcome the new updat...
-                </div>
-            </div>
-
-            <div class="subnet signal">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN74 · ل・giττensor・74</span>
-                    <span class="subnet-owner">Owner: kimbologic · 6 messages</span>
-                    <span class="subnet-verdict verdict-signal">SIGNAL</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@tet9.0</span>: Why's it that whenever my PR gets merged, the score becomes 0, although it charges a collateral of a greater score than that before getting merged 🤔...
-                </div>
-            </div>
-
-            <div class="subnet minor">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN75 · م・hippius・75</span>
-                    <span class="subnet-owner">Owner: unknown · 7 messages</span>
-                    <span class="subnet-verdict verdict-minor">MINOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@anglov0518</span>: what is the public endpoint of S3 bucket in huppius?...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@vancliff</span>: Can SN75's alpha be used ? 🤔 If yes, does it grant more credit than using FIAT & is the alpha used burned ?...
-                </div>
-            </div>
-
-            <div class="subnet minor">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN77 · ه・liquidity・77</span>
-                    <span class="subnet-owner">Owner: unknown · 1 messages</span>
-                    <span class="subnet-verdict verdict-minor">MINOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@jr_zeus0707_22986</span>: Hello guys, I am curious who is the owner of this subnet? And as far as I know, this SN supply liquidity on any projects so I wonder if I can get a chance to be funded for my tradi...
-                </div>
-            </div>
-
-            <div class="subnet major">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN78 · و・vocence・78</span>
-                    <span class="subnet-owner">Owner: Space · 7 messages</span>
-                    <span class="subnet-verdict verdict-major">MAJOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@Logos</span>: hey op, good questions 👀  **Vocence (Subnet 78)** is a voice intelligence subnet on Bittensor. right now (Q1) it's focused on **PromptTTS** — text-to-speech where miners deploy mod...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@Logos</span>: hey op, I just covered what the subnet does above — but to zero in on the **top miner** part 👀  being a miner is one thing, being the *best* one is another. here's what separates t...
-                </div>
-            </div>
-
-            <div class="subnet minor">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN81 · ᚠ・reliquary・81</span>
-                    <span class="subnet-owner">Owner: unknown · 5 messages</span>
-                    <span class="subnet-verdict verdict-minor">MINOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@sebc0844_46056</span>: Chill gars, Conviction upgrade Novelty search tonight where it will be discussed. Also going live may 13th...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@bytecrafter15_02112</span>: Who is the owner of this subnet?...
-                </div>
-            </div>
-
-            <div class="subnet minor">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN83 · ᚦ・cliqueai・83</span>
-                    <span class="subnet-owner">Owner: Thurisaz · 1 messages</span>
-                    <span class="subnet-verdict verdict-minor">MINOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@danyloooah525</span>: &lt;@1243050243944222770&gt;  When are you going to release new version?...
-                </div>
-            </div>
-
-            <div class="subnet major">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN84 · ᚨ・unclaimed・84</span>
-                    <span class="subnet-owner">Owner: unclaimed · 2 messages</span>
-                    <span class="subnet-verdict verdict-major">MAJOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@techforgeworks</span>: How can top miner get emission?...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@xiny9999</span>: self alpha collecting there is only one validator...
-                </div>
-            </div>
-
-            <div class="subnet signal">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN88 · ᛇ・invesτing・88</span>
-                    <span class="subnet-owner">Owner: unknown · 10 messages</span>
-                    <span class="subnet-verdict verdict-signal">SIGNAL</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@elan0902</span>: I was wondering if u guide me how to check api response... Not sure what u mean. Thanx!...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@elan0902</span>: Can I submit via miner code? Or only available to use KYM app?...
-                </div>
-            </div>
-
-            <div class="subnet major">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN94 · ᚄ・biτsoτa・94</span>
-                    <span class="subnet-owner">Owner: mekaneeky · 5 messages</span>
-                    <span class="subnet-verdict verdict-major">MAJOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@mekaneeky</span>: All rewards now are held on a merkle tree contract. Miners no longer need to register hotkeys on chain but need to claim rewards off the contract. Either directly through your ai c...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@mekaneeky</span>: This will allow you to set weights. However, access to the validator backend requires whitelisting...
-                </div>
-            </div>
-
-            <div class="subnet minor">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN95 · ᚅ・actual・95</span>
-                    <span class="subnet-owner">Owner: T0m · 3 messages</span>
-                    <span class="subnet-verdict verdict-minor">MINOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@kooltek68</span>: when competition? Is there any issue for the owner to code the subnet competition? If he needs helps, he shall update his progress here....
-                </div>
-            </div>
-
-            <div class="subnet major">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN96 · ᚛・veraτhos・96</span>
-                    <span class="subnet-owner">Owner: Kepler · 10 messages</span>
-                    <span class="subnet-verdict verdict-major">MAJOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@kepler_1803</span>: Yes, one model endpoint per vLLM instance per GPU. If you have a multi GPU setup, follow the CLI instructions or point your agent to it. It will automatically start one vLLM proces...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@xp0nential</span>: Hi,  That situation is not necessarily abnormal.  `Incentive` and `staked alpha` are different things.  `Incentive` means validators assigned weight/score to that UID, so the UID c...
-                </div>
-            </div>
-
-            <div class="subnet minor">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN97 · ა・distil・97</span>
-                    <span class="subnet-owner">Owner: consτ · 10 messages</span>
-                    <span class="subnet-verdict verdict-minor">MINOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@Arbos</span>: 📈 [Live Dashboard](&lt;https://distil.arbos.life&gt;)...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@Arbos</span>: &lt;@&1482026585358991571&gt; ## 🏆 New King of Distil SN97!  **UID 180** has dethroned **UID 182**  📊 **Composite final: 0.465** (ranking key) — previous king: 0.393 📐 worst-3 mean: 0.36...
-                </div>
-            </div>
-
-            <div class="subnet major">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN99 · გ・leoma・99</span>
-                    <span class="subnet-owner">Owner: Kakashi · 10 messages</span>
-                    <span class="subnet-verdict verdict-major">MAJOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@Rendix</span>: Hey Nikola 🤙  **Yes — your chute needs to be public (or at minimum, callable by anyone with a Chutes API key).**  **Why:**  **1. Validators call your chute with their own API key**...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@Rendix</span>: Hey Xem 🤙  **The full Leoma (SN99) loop in three parts:**  ## 1. What miners do - **Build/fine-tune a TI2V model** (text + image → video) — your model takes a starting image + text...
-                </div>
-            </div>
-
-            <div class="subnet minor">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN102 · ვ・connito-ai・102</span>
-                    <span class="subnet-owner">Owner: isabella · 3 messages</span>
-                    <span class="subnet-verdict verdict-minor">MINOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@a.choji</span>: https://dashboard-api.connito.ai/api/v1/leaderboard...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@lovelyvan0682_86525</span>: hello &lt;@865127800121327618&gt;, where is the github repo of this sn?...
-                </div>
-            </div>
-
-            <div class="subnet major">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN103 · ա・djinn・103</span>
-                    <span class="subnet-owner">Owner: Jack · 6 messages</span>
-                    <span class="subnet-verdict verdict-major">MAJOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@hnnam.</span>: It seems all validators are updated to new versions and gain back the ok status for miners. Thank you....
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@hnnam.</span>: Hi &lt;@551064429664403467&gt; , just update.   After i register a new miner and run the latest code, this time all validators show offline status for my miner but it can still receive r...
-                </div>
-            </div>
-
-            <div class="subnet major">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN104 · բ・sovereign・104</span>
-                    <span class="subnet-owner">Owner: xytaol · 3 messages</span>
-                    <span class="subnet-verdict verdict-major">MAJOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@xytaol</span>: or you can stop speculative buying on subnets with no product &lt;:awesome:997302345224421386&gt;...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@antimarking</span>: &lt;@389189199514959893&gt;  Please put a stop to owner's outrageous behavior. Fake buy transaction and selling alpha token...
-                </div>
-            </div>
-
-            <div class="subnet signal">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN105 · գ・beam・105</span>
-                    <span class="subnet-owner">Owner: Lindsay · 9 messages</span>
-                    <span class="subnet-verdict verdict-signal">SIGNAL</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@sy_phen_</span>: Why this subnet always burning i see this pattern 1-2 day mining work then again burn...
-                </div>
-            </div>
-
-            <div class="subnet major">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN107 · ミ・minos・107</span>
-                    <span class="subnet-owner">Owner: Centrum · 9 messages</span>
-                    <span class="subnet-verdict verdict-major">MAJOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@centrum_blue</span>: Hey everyone, the dashboard has been updated. We removed a few entries that may have been confusing, so it should be easier to follow now.  The on-chain version bump is also going ...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@centrum_blue</span>: Hey everyone - please have a look at this guide if you have questions about how to improve your configs. FreeBayes is deliberately excluded because we will stop supporting it this ...
-                </div>
-            </div>
-
-            <div class="subnet signal">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN110 · ѐ・greencompute・110</span>
-                    <span class="subnet-owner">Owner: Jack · 2 messages</span>
-                    <span class="subnet-verdict verdict-signal">SIGNAL</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@guptaant9999</span>: &lt;@219272131421274113&gt;  Scam Subnet?...
-                </div>
-            </div>
-
-            <div class="subnet minor">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN111 · ё・oneoneone・111</span>
-                    <span class="subnet-owner">Owner: unknown · 6 messages</span>
-                    <span class="subnet-verdict verdict-minor">MINOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@sy_phen_</span>: I have started miner when i will receive first incentive?...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@perseus0665</span>: &lt;@1376882643773292614&gt; , &lt;@1376644937952530526&gt;   is there any dashboard or wandb to check validator log?...
-                </div>
-            </div>
-
-            <div class="subnet major">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN112 · ђ・minoτaur・112</span>
-                    <span class="subnet-owner">Owner: τ-slice · 2 messages</span>
-                    <span class="subnet-verdict verdict-major">MAJOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@t.slice</span>: All links to our open source release in minotaurs latest tweet - next set: taking code live. https://x.com/minotaursubnet/status/2052503289523290496...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@stalkervmr</span>: Hey, we just went open source! So this is the right time to poke holes and engage. The project is ambitious and security is paramount so dig in, enjoy, criticize, and help us build...
-                </div>
-            </div>
-
-            <div class="subnet major">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN113 · ѓ・tensorusd・113</span>
-                    <span class="subnet-owner">Owner: Khem · 1 messages</span>
-                    <span class="subnet-verdict verdict-major">MAJOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@khem8947</span>: &lt;#1450910875790872700&gt;  PR #2550 has been merged! https://x.com/TensorUSD/status/2052406853342994670?s=20...
-                </div>
-            </div>
-
-            <div class="subnet signal">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN114 · є・soma・114</span>
-                    <span class="subnet-owner">Owner: oli · 8 messages</span>
-                    <span class="subnet-verdict verdict-signal">SIGNAL</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@huawk77</span>: also give miners the direction for the next competition...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@oli37.</span>: hey, yep, we will do it today...
-                </div>
-            </div>
-
-            <div class="subnet signal">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN118 · ⲁ・ditto・118</span>
-                    <span class="subnet-owner">Owner: unknown · 8 messages</span>
-                    <span class="subnet-verdict verdict-signal">SIGNAL</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@futuretrees</span>: **New Ditto features shipped today:** - openclaw integration https://clawhub.ai/ditto/ditto https://app.heyditto.ai/connect/openclaw `openclaw skills install ditto`  - ditto CLI ht...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@futuretrees</span>: We added summaries for Ditto live mode. Have a call with ditto and it gets remembered...
-                </div>
-            </div>
-
-            <div class="subnet signal">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN119 · ⲃ・saτori・119</span>
-                    <span class="subnet-owner">Owner: Kun · 2 messages</span>
-                    <span class="subnet-verdict verdict-signal">SIGNAL</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@miketheimmortalbard</span>: github not found= gone. no mas. finito...
-                </div>
-            </div>
-
-            <div class="subnet minor">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN120 · ⴷ・ⴷffine・120</span>
-                    <span class="subnet-owner">Owner: unknown · 6 messages</span>
-                    <span class="subnet-verdict verdict-minor">MINOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@allan_ww</span>: I have deployed this model locally and test it. For 8253, it takes around 10 times at my side for first one pass. For 8296, it pass at first time. Then I use the rollout on affine....
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@allan_ww</span>: let me deploy it locally and try. but as swe is sampled on local machine, I do not think there is way to exploit like someone did on chutes....
-                </div>
-            </div>
-
-            <div class="subnet minor">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN122 · ⲅ・bitrecs・122</span>
-                    <span class="subnet-owner">Owner: unknown · 9 messages</span>
-                    <span class="subnet-verdict verdict-minor">MINOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@dimi2844</span>: there is a testnet, url is in the code cli at the top. You can submit to it but there is no dashboard so you cannot see your results. We'll look at getting a testnet dashboard up....
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@eliteboy1016_55856</span>: it isn't existed at testnet list at discord. where can I get test tao?...
-                </div>
-            </div>
-
-            <div class="subnet minor">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN123 · 𑀀・mantis・123</span>
-                    <span class="subnet-owner">Owner: Barbarian-backup-acc · 3 messages</span>
-                    <span class="subnet-verdict verdict-minor">MINOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@barbarian_alt_account</span>: Hi Flynn  At each grid point the validator snapshots whichever position you happen to be submitting at that minute, treats it as a fresh trade, holds it for horizon_bars = 60 (1 ho...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@flynn07148</span>: Hi, &lt;@1212550374595108894&gt;  I’m a bit confused about how rebalancing works. Is rebalancing triggered automatically on the validator side, or do I need to submit rebalanced signals ...
-                </div>
-            </div>
-
-            <div class="subnet minor">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN124 · 𑀁・swarm・124</span>
-                    <span class="subnet-owner">Owner: miguelik · 1 messages</span>
-                    <span class="subnet-verdict verdict-minor">MINOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@shishir01428_53373</span>: &lt;@836164044531695676&gt; &lt;@649548815682109440&gt; It’s really hard to survive in this SN. With only 5% emissions allocated to miners, it’s difficult even to cover GPU and VPS costs....
-                </div>
-            </div>
-
-            <div class="subnet major">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN126 · 𑀃・poker44・126</span>
-                    <span class="subnet-owner">Owner: sachp · 9 messages</span>
-                    <span class="subnet-verdict verdict-major">MAJOR</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@sachhp</span>: the policies we apply carry different weights depending on the severity of the issue. The manifest goes through this policy system, and weights accumulate up to a maximum threshold...
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@sachhp</span>: Yes, we were discussing that yesterday. Let’s see how things progress today before temporarily moving to proportional emissions...
-                </div>
-            </div>
-
-            <div class="subnet signal">
-                <div class="subnet-header">
-                    <span class="subnet-name">SN127 · 𑀅・asτrid・127</span>
-                    <span class="subnet-owner">Owner: Léo Mercier · 1 messages</span>
-                    <span class="subnet-verdict verdict-signal">SIGNAL</span>
-                </div>
-
-                <div class="message-preview">
-                    <span class="sender">@alanw6200</span>: Maybe:  1. Astrid need to explain their plans for Taofi. Explain why buying subnet tokens via Base is no longer a good idea? If that is the case?? 2. Provide some technical support...
-                </div>
-            </div>
-        </div>
-
-        <div class="section" id="quiet">
-            <h2>🌑 Quiet Subnets (No Activity)</h2>
-            <div class="quiet-grid">
-                <div class="quiet-item">SN20<span class="quiet-label">υ・groundlayer・20</span></div>
-                <div class="quiet-item">SN25<span class="quiet-label">א・mainframe・25</span></div>
-                <div class="quiet-item">SN27<span class="quiet-label">ג・unclaimed・27</span></div>
-                <div class="quiet-item">SN30<span class="quiet-label">ו・wahooτ・30</span></div>
-                <div class="quiet-item">SN31<span class="quiet-label">ז・unclaimed・31</span></div>
-                <div class="quiet-item">SN36<span class="quiet-label">כ・eirel・36</span></div>
-                <div class="quiet-item">SN38<span class="quiet-label">ם・unclaimed・38</span></div>
-                <div class="quiet-item">SN40<span class="quiet-label">ן・unclaimed・40</span></div>
-                <div class="quiet-item">SN41<span class="quiet-label">נ・almanac・41</span></div>
-                <div class="quiet-item">SN42<span class="quiet-label">ס・unclaimed・42</span></div>
-                <div class="quiet-item">SN43<span class="quiet-label">ע・graphiτe・43</span></div>
-                <div class="quiet-item">SN48<span class="quiet-label">ק・quantum-c・48</span></div>
-                <div class="quiet-item">SN57<span class="quiet-label">ح・unclaimed・57</span></div>
-                <div class="quiet-item">SN58<span class="quiet-label">خ・handshake・58</span></div>
-                <div class="quiet-item">SN67<span class="quiet-label">ط・harnyx・67</span></div>
-                <div class="quiet-item">SN70<span class="quiet-label">غ・nexisgen・70</span></div>
-                <div class="quiet-item">SN73<span class="quiet-label">ك・parked・73</span></div>
-                <div class="quiet-item">SN76<span class="quiet-label">ن・unclaimed・76</span></div>
-                <div class="quiet-item">SN80<span class="quiet-label">՞・dogelayer・80</span></div>
-                <div class="quiet-item">SN82<span class="quiet-label">ᚢ・compelle・82</span></div>
-                <div class="quiet-item">SN85<span class="quiet-label">ᚱ・vidaio・85</span></div>
-                <div class="quiet-item">SN86<span class="quiet-label">ᚳ・unclaimed・86</span></div>
-                <div class="quiet-item">SN87<span class="quiet-label">ы・luminar・87</span></div>
-                <div class="quiet-item">SN89<span class="quiet-label">ᛒ・infiniτehash・89</span></div>
-                <div class="quiet-item">SN90<span class="quiet-label">_・unclaimed・90</span></div>
-                <div class="quiet-item">SN92<span class="quiet-label">ᚂ・sτoryneτ・92</span></div>
-                <div class="quiet-item">SN93<span class="quiet-label">ᚃ・biτcasτ・93</span></div>
-                <div class="quiet-item">SN98<span class="quiet-label">ბ・forevermoney・98</span></div>
-                <div class="quiet-item">SN101<span class="quiet-label">ე・unclaimed・101</span></div>
-                <div class="quiet-item">SN106<span class="quiet-label">դ・voidai・106</span></div>
-                <div class="quiet-item">SN108<span class="quiet-label">զ・talkhead・108</span></div>
-                <div class="quiet-item">SN115<span class="quiet-label">ѕ・soulx・115</span></div>
-                <div class="quiet-item">SN116<span class="quiet-label">ъ・τaolend・116</span></div>
-                <div class="quiet-item">SN117<span class="quiet-label">ⲁ・unclaimed・117</span></div>
-                <div class="quiet-item">SN121<span class="quiet-label">ⲅ・sundae-bar・121</span></div>
-                <div class="quiet-item">SN125<span class="quiet-label">𑀂・flyspeck・125</span></div>
-                <div class="quiet-item">SN128<span class="quiet-label">න・byteleap・128</span></div>
-            </div>
-        </div>
-
-        <footer>
-            Generated by Thane · Bittensor Monitor v2.0 · <a href="https://github.com/thaneclaw/bittensor-monitor" style="color:#555">GitHub</a>
-        </footer>
-    </div>
-</body>
-</html>
+:root{--bg:#0c0c14;--card:#14141e;--text:#c8c8d4;--dim:#555;--orange:#ff6b35;--red:#ff4444;--green:#00c060;--blue:#5599ff}
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+body{background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:900px;margin:0 auto;padding:16px}
+header{text-align:center;padding:30px 0 20px;border-bottom:1px solid #222;margin-bottom:20px}
+h1{color:var(--orange);font-size:1.8em} .meta{color:var(--dim);font-size:.85em;margin-top:4px}
+.stats{display:flex;justify-content:center;gap:24px;padding:16px;background:var(--card);border-radius:10px;margin-bottom:20px}
+.stat{text-align:center} .v{color:var(--orange);font-size:1.8em;font-weight:bold} .l{font-size:.7em;color:var(--dim)}
+.section{background:var(--card);border-radius:10px;padding:18px;margin-bottom:16px;border:1px solid #1e1e30}
+h2{color:var(--orange);font-size:1.1em;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #222}
+.sn{color:var(--dim);font-size:.72em;text-transform:uppercase;letter-spacing:.5px}
+.crit{border-left:3px solid var(--red)} .high{border-left:3px solid var(--orange)} .med{border-left:3px solid var(--blue)} .low{border-left:3px solid #444}
+.tldr{margin:6px 0 4px;font-size:.95em;line-height:1.5}
+.toggle{background:#222;border:1px solid #333;color:var(--orange);padding:5px 14px;border-radius:5px;cursor:pointer;font-size:.78em;margin-top:6px}
+.toggle:hover{background:#2a2a3a}
+.details{display:none;padding:10px 0 0;margin-top:8px;border-top:1px solid #222}
+.msg{color:#999;font-size:.82em;padding:6px 0;border-bottom:1px solid #1a1a20}
+.msg:last-child{border-bottom:none}
+.sender{color:var(--orange);font-weight:600}
+.ref{color:#777;font-size:.7em;margin-top:4px;display:block}
+.quiet-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:6px;margin-top:10px}
+.qi{background:#0a0a12;padding:8px;border-radius:4px;text-align:center;font-size:.78em;color:#555}
+</style></head>
+<body><div class="container">
+<header><h1>Bittensor Daily Report</h1><div class="meta">2026-05-08 · 602 messages · 32 subnets with signal · 59 talking · 37 quiet</div></header>
+<div class="stats">
+<div class="stat"><div class="v">32</div><div class="l">SIGNAL</div></div>
+<div class="stat"><div class="v">59</div><div class="l">TALKING</div></div>
+<div class="stat"><div class="v">37</div><div class="l">QUIET</div></div>
+</div>
+<div class="section" id="high"><h2>🔴 Signal Subnets</h2>
+<div class="section high" style="margin-bottom:12px;padding:14px">
+<div style="display:flex;justify-content:space-between;align-items:baseline"><div><div class="sn">SN2 · β・dsperse・2</div><div class="tldr"><span class="sender">@wencoffee</span>: DDoS is / has been a somewhat common issue in some subnets over time and it's always been the recommendation that miners</div></div><span style="font-size:.7em;color:var(--dim)">FIX · Owner: gagichce</span></div>
+<button class="toggle" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display=='block'?'none':'block'">Expand (10 messages)</button>
+<div class="details">
+<div class="msg"><span class="sender">@wencoffee (signal message)</span>: DDoS is / has been a somewhat common issue in some subnets over time and it's always been the recommendation that miners monitor and keep tight networking setups. Since it's come up again we've issued the above release and documentation to provide better support both at the application level in an a</div><div class="msg"><span class="sender">@dangdohoanghai3828265</span>: And then 84.32.220.217:8136  There are 11 same ip and ports. 5FvR1j32xkt2K4ZR7TxEbvEPpv9RbSpVUnXDYSwNaKmeJmGv is not my coldkey....</div><div class="msg"><span class="sender">@dangdohoanghai3828265</span>: 5HBUPzCAA4QutqgGFYg1odoVswkv73PvX94m3syqbtGauLJe this coldkey gets rewards with my ip and port and degrade my vps performance....</div><div class="msg"><span class="sender">@dangdohoanghai3828265</span>: 84.32.220.217 This is my ip, but 5HBUPzCAA4QutqgGFYg1odoVswkv73PvX94m3syqbtGauLJe is not my coldkey....</div></div></div>
+<div class="section med" style="margin-bottom:12px;padding:14px">
+<div style="display:flex;justify-content:space-between;align-items:baseline"><div><div class="sn">SN3 · γ・τeuτonic・3</div><div class="tldr"><span class="sender">@roykollensvendsen</span>: <@889638608288514098>, it looks like MINING.md needs to be updated after the arch change</div></div><span style="font-size:.7em;color:var(--dim)">UPDATE · Owner: unknown</span></div>
+<button class="toggle" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display=='block'?'none':'block'">Expand (15 messages)</button>
+<div class="details">
+<div class="msg"><span class="sender">@roykollensvendsen (signal message)</span>: <@889638608288514098>, it looks like MINING.md needs to be updated after the arch change</div><div class="msg"><span class="sender">@kyle890015</span>: So encounter OOM then down...</div><div class="msg"><span class="sender">@kyle890015</span>: <@389189199514959893> eval process is down now: "eval server error: {'error': 'could not load model with any attention implementation'}"...</div><div class="msg"><span class="sender">@kyle890015</span>: we encountered OOM, so there might be memory leak somewhere...</div></div></div>
+<div class="section crit" style="margin-bottom:12px;padding:14px">
+<div style="display:flex;justify-content:space-between;align-items:baseline"><div><div class="sn">SN7 · η・allways・7</div><div class="tldr"><span class="sender">@e35strap</span>: ## Allways Update — v1.0.0 <@&1437497690077397065>   We are live at https://all-ways.io Enabling trustless BTC ↔ TAO swa</div></div><span style="font-size:.7em;color:var(--dim)">LAUNCH · Owner: e35mango</span></div>
+<button class="toggle" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display=='block'?'none':'block'">Expand (4 messages)</button>
+<div class="details">
+<div class="msg"><span class="sender">@e35strap (signal message)</span>: ## Allways Update — v1.0.0 <@&1437497690077397065>   We are live at https://all-ways.io Enabling trustless BTC ↔ TAO swaps, end-to-end, today.  - **Agents transact in one click.** Drop the [Allways agent instructions](https://all-ways.io/agents) into any agent runtime and it can exchange natively. -</div><div class="msg"><span class="sender">@5gurl</span>: What's the ETA on that?...</div><div class="msg"><span class="sender">@5gurl</span>: Great work! I'll try it out when the in-browser swap drops!...</div></div></div>
+<div class="section med" style="margin-bottom:12px;padding:14px">
+<div style="display:flex;justify-content:space-between;align-items:baseline"><div><div class="sn">SN8 · θ・vanta・8</div><div class="tldr"><span class="sender">@ward_taoshiio</span>: <@&1179152515758030858> Validators and Miners, please consider pulling the latest commit on main - we've migrated to the</div></div><span style="font-size:.7em;color:var(--dim)">UPDATE · Owner: tl_arrash</span></div>
+<button class="toggle" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display=='block'?'none':'block'">Expand (4 messages)</button>
+<div class="details">
+<div class="msg"><span class="sender">@ward_taoshiio (signal message)</span>: <@&1179152515758030858> Validators and Miners, please consider pulling the latest commit on main - we've migrated to the latest bittensor sdk v10. If there are issues with package incompatibilities, please view the async-substrate-interface update announcement https://discord.com/channels/7996720112</div><div class="msg"><span class="sender">@jr_zeus0707_22986</span>: Thanks for clarification. Can I DM you? <@1070067978474901655>...</div><div class="msg"><span class="sender">@tl_arrash</span>: Vanta is for larger markets (crypto, equities, fx, commodities) not for trading alpha tokens...</div></div></div>
+<div class="section crit" style="margin-bottom:12px;padding:14px">
+<div style="display:flex;justify-content:space-between;align-items:baseline"><div><div class="sn">SN11 · λ・trajectory-rl・11</div><div class="tldr"><span class="sender">@crabby_tt</span>: The 12-hour rate limit submission will be launched this epoch.</div></div><span style="font-size:.7em;color:var(--dim)">LAUNCH · Owner: crabby [Kat msg (2026-01-30)]</span></div>
+<button class="toggle" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display=='block'?'none':'block'">Expand (8 messages)</button>
+<div class="details">
+<div class="msg"><span class="sender">@crabby_tt (signal message)</span>: The 12-hour rate limit submission will be launched this epoch.</div><div class="msg"><span class="sender">@hunny_88408</span>: when announcement, <@956468453848522782> ?...</div></div></div>
+<div class="section med" style="margin-bottom:12px;padding:14px">
+<div style="display:flex;justify-content:space-between;align-items:baseline"><div><div class="sn">SN15 · ο・oro・15</div><div class="tldr"><span class="sender">@Forge</span>: WangWang, multiple workers refers to how many problems are evaluated in parallel during a test or evaluation run.  In lo</div></div><span style="font-size:.7em;color:var(--dim)">UPDATE · Owner: shardi-b [Kat msg (2026-02-03)]</span></div>
+<button class="toggle" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display=='block'?'none':'block'">Expand (19 messages)</button>
+<div class="details">
+<div class="msg"><span class="sender">@Forge (signal message)</span>: WangWang, multiple workers refers to how many problems are evaluated in parallel during a test or evaluation run.  In local testing, you control this with the `--max-workers` flag (default is 3): ``` docker compose run test --agent-file agent.py --max-workers 3 ```  This means 3 problems from the su</div><div class="msg"><span class="sender">@cherokee_24</span>: Hi, <@550899962657898526>  I recommend you to save chatbot token. 😂...</div><div class="msg"><span class="sender">@zwangwang0125_88885</span>: What does multiple-workers means?...</div></div></div>
+<div class="section med" style="margin-bottom:12px;padding:14px">
+<div style="display:flex;justify-content:space-between;align-items:baseline"><div><div class="sn">SN16 · π・biτads・16</div><div class="tldr"><span class="sender">@eseck</span>: <@1385637302071726083>  Wanted to give a quick plan of work till next Monday, it is not a full update on the work, just </div></div><span style="font-size:.7em;color:var(--dim)">UPDATE · Owner: eseck</span></div>
+<button class="toggle" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display=='block'?'none':'block'">Expand (1 messages)</button>
+<div class="details">
+<div class="msg"><span class="sender">@eseck (signal message)</span>: <@1385637302071726083>  Wanted to give a quick plan of work till next Monday, it is not a full update on the work, just to align on what we are doing.  This week is dedicated to APIs for the campaign moderation and editing, operations with wallet and markup of the pages we have.  Once the APIs are r</div></div></div>
+<div class="section med" style="margin-bottom:12px;padding:14px">
+<div style="display:flex;justify-content:space-between;align-items:baseline"><div><div class="sn">SN17 · ρ・404—gen・17</div><div class="tldr"><span class="sender">@canigonow</span>: To clarify - this update doesn't change outcome of Round 2 - the winner is the same regardless. We are currently in the </div></div><span style="font-size:.7em;color:var(--dim)">UPDATE · Owner: unknown</span></div>
+<button class="toggle" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display=='block'?'none':'block'">Expand (10 messages)</button>
+<div class="details">
+<div class="msg"><span class="sender">@canigonow (signal message)</span>: To clarify - this update doesn't change outcome of Round 2 - the winner is the same regardless. We are currently in the collection phase for Round 3. We are keeping a close eye on the data and value miners' feedback.  If adjustments are necessary - we will of course update miners.</div><div class="msg"><span class="sender">@manojbh</span>: The variance is still too high the previous judge results are good.  Now this looks more like a lucky draw than any directional competition...</div><div class="msg"><span class="sender">@manojbh</span>: Will check the 7% margin on round 2...</div></div></div>
+<div class="section med" style="margin-bottom:12px;padding:14px">
+<div style="display:flex;justify-content:space-between;align-items:baseline"><div><div class="sn">SN19 · τ・blockmachine・19</div><div class="tldr"><span class="sender">@poggle0455</span>: There's a probe on node add and hourly that enforces a minimum version... any incompatible nodes are removed automatical</div></div><span style="font-size:.7em;color:var(--dim)">UPDATE · Owner: mogmachine</span></div>
+<button class="toggle" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display=='block'?'none':'block'">Expand (10 messages)</button>
+<div class="details">
+<div class="msg"><span class="sender">@poggle0455 (signal message)</span>: There's a probe on node add and hourly that enforces a minimum version... any incompatible nodes are removed automatically. In practice most updates are runtime-only and the subtensor version stays compatible for a while, so you don't need to chase every release. We'll flag it when a hard upgrade is</div><div class="msg"><span class="sender">@flowsniper.ai</span>: <@700779471287877764> I was thinking about the old SubVortex subnet with a load-balanced public endpoint, a free alternative to finney, and my need is a perfect use case for something like that. Would...</div><div class="msg"><span class="sender">@flowsniper.ai</span>: Don't want to shill it here, lol. But it's a dTAO bot that combines 4 different modes. Sniper - automated momentum trading (scalping), Designate - automated portfolio building, think funds with auto r...</div></div></div>
+<div class="section crit" style="margin-bottom:12px;padding:14px">
+<div style="display:flex;justify-content:space-between;align-items:baseline"><div><div class="sn">SN21 · φ・adτao・21</div><div class="tldr"><span class="sender">@robwarner</span>: At last!!!  🚨 SN21 IS LIVE ON TESTNET 🚨  **Subnet 21 AdTAO  is now open for testnet miners and validators.**  Here's wha</div></div><span style="font-size:.7em;color:var(--dim)">LAUNCH · Owner: robwarner</span></div>
+<button class="toggle" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display=='block'?'none':'block'">Expand (5 messages)</button>
+<div class="details">
+<div class="msg"><span class="sender">@robwarner (signal message)</span>: At last!!!  🚨 SN21 IS LIVE ON TESTNET 🚨  **Subnet 21 AdTAO  is now open for testnet miners and validators.**  Here's what we're building:  Google Ads is a $300B market running on vibes. Advertisers get black-box recommendations from a platform with every incentive to make them spend more, not perfor</div><div class="msg"><span class="sender">@jamesanderson0101</span>: Hi <@919697308369694790>  When do you announces the real URL?...</div><div class="msg"><span class="sender">@davidwilliamn</span>: Hey <@919697308369694790>  i sent a dm, please check it out. Thank you...</div></div></div>
+<div class="section med" style="margin-bottom:12px;padding:14px">
+<div style="display:flex;justify-content:space-between;align-items:baseline"><div><div class="sn">SN24 · ω・quasar・24</div><div class="tldr"><span class="sender">@ahmdt</span>: Nope, there’s no problem with the Vali code. The update was in the environment variable example not the code.</div></div><span style="font-size:.7em;color:var(--dim)">UPDATE · Owner: Honey Badger [Kat msg (2026-01-08)]</span></div>
+<button class="toggle" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display=='block'?'none':'block'">Expand (6 messages)</button>
+<div class="details">
+<div class="msg"><span class="sender">@ahmdt (signal message)</span>: Nope, there’s no problem with the Vali code. The update was in the environment variable example not the code.</div><div class="msg"><span class="sender">@thesocialabg</span>: It’s hurts ngl 🤕 waiting to see the emissions get back on track!...</div><div class="msg"><span class="sender">@basil_99471</span>: by checking from the github commits, probably there still some issues with the validator codes, just in case you wondering. Github commits has been actively pushing some updates....</div></div></div>
+<div class="section med" style="margin-bottom:12px;padding:14px">
+<div style="display:flex;justify-content:space-between;align-items:baseline"><div><div class="sn">SN39 · מ・cathedral・39</div><div class="tldr"><span class="sender">@wallscalr</span>: Distilled models are probably the first useful miner asset here, but not the whole game.  The broader unit is a deployab</div></div><span style="font-size:.7em;color:var(--dim)">UPDATE · Owner: unknown</span></div>
+<button class="toggle" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display=='block'?'none':'block'">Expand (8 messages)</button>
+<div class="details">
+<div class="msg"><span class="sender">@wallscalr (signal message)</span>: Distilled models are probably the first useful miner asset here, but not the whole game.  The broader unit is a deployable improvement to a real Polaris job: distillation, routers, judges, eval harnesses, workflow optimizers, or failure fixes.  That is why I think this has a clean flywheel:  * Miner</div><div class="msg"><span class="sender">@mcdee1311</span>: This is a nice outlook for growth in the space and understanding that the main concept is decentralization...</div></div></div>
+<div class="section med" style="margin-bottom:12px;padding:14px">
+<div style="display:flex;justify-content:space-between;align-items:baseline"><div><div class="sn">SN45 · פ・τalisman・45</div><div class="tldr"><span class="sender">@canti_dev</span>: we pushed an update to validators today to alleviate timeouts, if you continue to see them please DM me and I can help y</div></div><span style="font-size:.7em;color:var(--dim)">UPDATE · Owner: unknown</span></div>
+<button class="toggle" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display=='block'?'none':'block'">Expand (3 messages)</button>
+<div class="details">
+<div class="msg"><span class="sender">@canti_dev (signal message)</span>: we pushed an update to validators today to alleviate timeouts, if you continue to see them please DM me and I can help you troubleshoot</div><div class="msg"><span class="sender">@happyandygod</span>: if all timeout is it means respond cannot send back to validator...</div><div class="msg"><span class="sender">@happyandygod</span>: still tons of timeouts...</div></div></div>
+<div class="section crit" style="margin-bottom:12px;padding:14px">
+<div style="display:flex;justify-content:space-between;align-items:baseline"><div><div class="sn">SN47 · צ・evolai・47</div><div class="tldr"><span class="sender">@rocp34</span>: Hope you’ll enjoy the article. It’s now live! https://x.com/TensiaFDN/status/2052415777572110776?s=20</div></div><span style="font-size:.7em;color:var(--dim)">LAUNCH · Owner: openevolai</span></div>
+<button class="toggle" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display=='block'?'none':'block'">Expand (9 messages)</button>
+<div class="details">
+<div class="msg"><span class="sender">@rocp34 (signal message)</span>: Hope you’ll enjoy the article. It’s now live! https://x.com/TensiaFDN/status/2052415777572110776?s=20</div><div class="msg"><span class="sender">@openevolai</span>: we are connecting with them, you can skip their challenge now since they don't do evaluation...</div><div class="msg"><span class="sender">@hnnam.</span>: <@1464164360531218541> <@1450512218390134816> I check wandb logs, it seems validator 5E9fVY (uid 6) has the substrate RPC error and cannot get the metadata, validator 5Fuzgv (uid 4) doesn't show the e...</div></div></div>
+<div class="section med" style="margin-bottom:12px;padding:14px">
+<div style="display:flex;justify-content:space-between;align-items:baseline"><div><div class="sn">SN50 · ש・synth・50</div><div class="tldr"><span class="sender">@bytecrafter15_02112</span>: Hi SYNTH team. When can I expect the updated dashboard?</div></div><span style="font-size:.7em;color:var(--dim)">UPDATE · Owner: unknown</span></div>
+<button class="toggle" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display=='block'?'none':'block'">Expand (4 messages)</button>
+<div class="details">
+<div class="msg"><span class="sender">@bytecrafter15_02112 (signal message)</span>: Hi SYNTH team. When can I expect the updated dashboard?</div><div class="msg"><span class="sender">@prongs_24</span>: has anyone evaluated the accuracy or is that captured anywhere on the website?...</div><div class="msg"><span class="sender">@jamesrosst</span>: Synth LLM now available   https://x.com/SynthdataCo/status/2052418427894014399?s=20...</div></div></div>
+<div class="section med" style="margin-bottom:12px;padding:14px">
+<div style="display:flex;justify-content:space-between;align-items:baseline"><div><div class="sn">SN51 · ⱄ・lium-io・51</div><div class="tldr"><span class="sender">@pigeonsyndrome</span>: oh ok. looks like `  -H 'Authorization: Bearer sk_{...}'` needs to be updated</div></div><span style="font-size:.7em;color:var(--dim)">UPDATE · Owner: unknown</span></div>
+<button class="toggle" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display=='block'?'none':'block'">Expand (9 messages)</button>
+<div class="details">
+<div class="msg"><span class="sender">@pigeonsyndrome (signal message)</span>: oh ok. looks like `  -H 'Authorization: Bearer sk_{...}'` needs to be updated</div><div class="msg"><span class="sender">@einsum69</span>: how can i calculate expected value of daily incentive given compute specs?...</div><div class="msg"><span class="sender">@sgwo</span>: We are on it. Sorry for inconvenience....</div><div class="msg"><span class="sender">@david056225</span>: <@1197181539851714662> <@1200159085094523031>  I can't see any pods....</div></div></div>
+<div class="section med" style="margin-bottom:12px;padding:14px">
+<div style="display:flex;justify-content:space-between;align-items:baseline"><div><div class="sn">SN54 · ت・miid・54</div><div class="tldr"><span class="sender">@abaza9651</span>: It turns out is was mostly a UI problem. What was showing was the amount of challages that you sent not the amount of im</div></div><span style="font-size:.7em;color:var(--dim)">UPDATE · Owner: unknown</span></div>
+<button class="toggle" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display=='block'?'none':'block'">Expand (9 messages)</button>
+<div class="details">
+<div class="msg"><span class="sender">@abaza9651 (signal message)</span>: It turns out is was mostly a UI problem. What was showing was the amount of challages that you sent not the amount of images you sent. We updated the UI so that it also has the total amount of images sent. There is a list a few missing where we will have to check and cross reference the logs with th</div><div class="msg"><span class="sender">@dangdohoanghai3828265</span>: Incentive burn 96.69%. Is it right?...</div><div class="msg"><span class="sender">@devpuffer0807</span>: <@354083175804436481> , Could you please check my DM?...</div></div></div>
+<div class="section crit" style="margin-bottom:12px;padding:14px">
+<div style="display:flex;justify-content:space-between;align-items:baseline"><div><div class="sn">SN63 · س・enigma・63</div><div class="tldr"><span class="sender">@sir_entangled</span>: We've been deep in the development cycle for the past few months as we remodel the subnet. We've just launched vali code</div></div><span style="font-size:.7em;color:var(--dim)">LAUNCH · Owner: unknown</span></div>
+<button class="toggle" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display=='block'?'none':'block'">Expand (2 messages)</button>
+<div class="details">
+<div class="msg"><span class="sender">@sir_entangled (signal message)</span>: We've been deep in the development cycle for the past few months as we remodel the subnet. We've just launched vali code to test some new features and will be launching fully soon!</div><div class="msg"><span class="sender">@buyhighsellcry_55805</span>: <@1385305714552995992> Can I dm you?...</div></div></div>
+<div class="section med" style="margin-bottom:12px;padding:14px">
+<div style="display:flex;justify-content:space-between;align-items:baseline"><div><div class="sn">SN65 · ص・τpn・65</div><div class="tldr"><span class="sender">@dutchmikel</span>: Tnx for checking in 🙂  Tech-wise I'll share last wk sprint: TPN Subnet — Development Branch Weekly Summary (Mon Apr 20 –</div></div><span style="font-size:.7em;color:var(--dim)">UPDATE · Owner: unknown</span></div>
+<button class="toggle" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display=='block'?'none':'block'">Expand (3 messages)</button>
+<div class="details">
+<div class="msg"><span class="sender">@dutchmikel (signal message)</span>: Tnx for checking in 🙂  Tech-wise I'll share last wk sprint: TPN Subnet — Development Branch Weekly Summary (Mon Apr 20 – Mon May 4, 2026)  ───  🔀 Merged PRs  PR #181 — Remove Weights & Biases (wandb) Integration Merged: Apr 28 | Author: Sir Claudius (actuallymentor)  The validator had code to initia</div></div></div>
+<div class="section med" style="margin-bottom:12px;padding:14px">
+<div style="display:flex;justify-content:space-between;align-items:baseline"><div><div class="sn">SN66 · ض・ninja・66</div><div class="tldr"><span class="sender">@grotri</span>: yeah i noticed it too, with mining 2 agent subnets from time to time things go crazy rn both oro and ninja got updates, </div></div><span style="font-size:.7em;color:var(--dim)">UPDATE · Owner: unknown</span></div>
+<button class="toggle" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display=='block'?'none':'block'">Expand (17 messages)</button>
+<div class="details">
+<div class="msg"><span class="sender">@grotri (signal message)</span>: yeah i noticed it too, with mining 2 agent subnets from time to time things go crazy rn both oro and ninja got updates, both require attention and work, but ninja need to settle with it's system so no rush is needed</div><div class="msg"><span class="sender">@cherokee_24</span>: that's becuase of subnet is still in development...</div><div class="msg"><span class="sender">@cherokee_24</span>: sorry for your accident, sir <@1485714343893925981>...</div><div class="msg"><span class="sender">@cherokee_24</span>: reg with new hotkey and recommit...</div></div></div>
+<div class="section crit" style="margin-bottom:12px;padding:14px">
+<div style="display:flex;justify-content:space-between;align-items:baseline"><div><div class="sn">SN72 · ق・sτreeτvision・72</div><div class="tldr"><span class="sender">@albeszhebo</span>: This is only temporary for now, until the subnet relaunches with the updated roadmap</div></div><span style="font-size:.7em;color:var(--dim)">LAUNCH · Owner: unknown</span></div>
+<button class="toggle" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display=='block'?'none':'block'">Expand (9 messages)</button>
+<div class="details">
+<div class="msg"><span class="sender">@albeszhebo (signal message)</span>: This is only temporary for now, until the subnet relaunches with the updated roadmap</div><div class="msg"><span class="sender">@nvagon_</span>: No owner here? I want to give an advice before you dereg....</div><div class="msg"><span class="sender">@corocoiler</span>: Or just burn the owner emissions 😂...</div><div class="msg"><span class="sender">@corocoiler</span>: Lets meet in the middle and cut 1% <:aaa:997302332092063774>...</div></div></div>
+<div class="section med" style="margin-bottom:12px;padding:14px">
+<div style="display:flex;justify-content:space-between;align-items:baseline"><div><div class="sn">SN78 · و・vocence・78</div><div class="tldr"><span class="sender">@Logos</span>: hey op, good questions 👀  **Vocence (Subnet 78)** is a voice intelligence subnet on Bittensor. right now (Q1) it's focus</div></div><span style="font-size:.7em;color:var(--dim)">UPDATE · Owner: Space</span></div>
+<button class="toggle" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display=='block'?'none':'block'">Expand (8 messages)</button>
+<div class="details">
+<div class="msg"><span class="sender">@Logos (signal message)</span>: hey op, good questions 👀  **Vocence (Subnet 78)** is a voice intelligence subnet on Bittensor. right now (Q1) it's focused on **PromptTTS** — text-to-speech where miners deploy models that take text + natural-language voice instructions (like "a calm male voice, warm tone, speaking slowly") and gene</div><div class="msg"><span class="sender">@jrkbrzz0990</span>: Does the model support all common formats — safetensors, PTH, ONNX, GGUF, etc.?...</div></div></div>
+<div class="section crit" style="margin-bottom:12px;padding:14px">
+<div style="display:flex;justify-content:space-between;align-items:baseline"><div><div class="sn">SN81 · ᚠ・reliquary・81</div><div class="tldr"><span class="sender">@sebc0844_46056</span>: Chill gars, Conviction upgrade Novelty search tonight where it will be discussed. Also going live may 13th</div></div><span style="font-size:.7em;color:var(--dim)">LAUNCH · Owner: unknown</span></div>
+<button class="toggle" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display=='block'?'none':'block'">Expand (5 messages)</button>
+<div class="details">
+<div class="msg"><span class="sender">@sebc0844_46056 (signal message)</span>: Chill gars, Conviction upgrade Novelty search tonight where it will be discussed. Also going live may 13th</div><div class="msg"><span class="sender">@canislupus99</span>: https://giphy.com/gifs/spongebob-season-3-spongebob-squarepants-3ofSB3K9KXedXm4nmM...</div><div class="msg"><span class="sender">@redvoid8344</span>: So we're working to make sam rich again?...</div></div></div>
+<div class="section med" style="margin-bottom:12px;padding:14px">
+<div style="display:flex;justify-content:space-between;align-items:baseline"><div><div class="sn">SN83 · ᚦ・cliqueai・83</div><div class="tldr"><span class="sender">@danyloooah525</span>: <@1243050243944222770>  When are you going to release new version?</div></div><span style="font-size:.7em;color:var(--dim)">UPDATE · Owner: Thurisaz</span></div>
+<button class="toggle" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display=='block'?'none':'block'">Expand (1 messages)</button>
+<div class="details">
+<div class="msg"><span class="sender">@danyloooah525 (signal message)</span>: <@1243050243944222770>  When are you going to release new version?</div></div></div>
+<div class="section med" style="margin-bottom:12px;padding:14px">
+<div style="display:flex;justify-content:space-between;align-items:baseline"><div><div class="sn">SN88 · ᛇ・invesτing・88</div><div class="tldr"><span class="sender">@elan0902</span>: Thanks. But where can I check rule? I think ur team must update readme or sth special relating to exact rule. very confu</div></div><span style="font-size:.7em;color:var(--dim)">UPDATE · Owner: unknown</span></div>
+<button class="toggle" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display=='block'?'none':'block'">Expand (16 messages)</button>
+<div class="details">
+<div class="msg"><span class="sender">@elan0902 (signal message)</span>: Thanks. But where can I check rule? I think ur team must update readme or sth special relating to exact rule. very confused.</div><div class="msg"><span class="sender">@johm67.</span>: Well there are a lot of subnets with different pay grade...</div><div class="msg"><span class="sender">@simioape</span>: you can lead the change by being in a better position, getting traction into your product, get the revenue and then that'll you set 100% emissions if you want to...</div><div class="msg"><span class="sender">@simioape</span>: again, looking at the whole ecosystem...</div></div></div>
+<div class="section med" style="margin-bottom:12px;padding:14px">
+<div style="display:flex;justify-content:space-between;align-items:baseline"><div><div class="sn">SN95 · ᚅ・actual・95</div><div class="tldr"><span class="sender">@kooltek68</span>: when competition? Is there any issue for the owner to code the subnet competition? If he needs helps, he shall update hi</div></div><span style="font-size:.7em;color:var(--dim)">UPDATE · Owner: T0m</span></div>
+<button class="toggle" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display=='block'?'none':'block'">Expand (3 messages)</button>
+<div class="details">
+<div class="msg"><span class="sender">@kooltek68 (signal message)</span>: when competition? Is there any issue for the owner to code the subnet competition? If he needs helps, he shall update his progress here.</div><div class="msg"><span class="sender">@obscuredmoonlit</span>: track id: holograffiti by blank banshee...</div><div class="msg"><span class="sender">@obscuredmoonlit</span>: (fan made) (im the fan)...</div></div></div>
+<div class="section med" style="margin-bottom:12px;padding:14px">
+<div style="display:flex;justify-content:space-between;align-items:baseline"><div><div class="sn">SN99 · გ・leoma・99</div><div class="tldr"><span class="sender">@Rendix</span>: Hey Xem 🤙  **The full Leoma (SN99) loop in three parts:**  ## 1. What miners do - **Build/fine-tune a TI2V model** (text</div></div><span style="font-size:.7em;color:var(--dim)">UPDATE · Owner: Kakashi</span></div>
+<button class="toggle" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display=='block'?'none':'block'">Expand (10 messages)</button>
+<div class="details">
+<div class="msg"><span class="sender">@Rendix (signal message)</span>: Hey Xem 🤙  **The full Leoma (SN99) loop in three parts:**  ## 1. What miners do - **Build/fine-tune a TI2V model** (text + image → video) — your model takes a starting image + text prompt and generates a short video clip - Push it to HuggingFace at `<your_user>/leoma-<hotkey>` - Deploy it on **Chute</div><div class="msg"><span class="sender">@cats_cr</span>: My guess, he wasn't convinced enough 😏...</div><div class="msg"><span class="sender">@cats_cr</span>: What happened to <@836362081422540864>? He hasn't posted anything in a month lol...</div><div class="msg"><span class="sender">@manta.llm</span>: Hi <@1400649080987717654> can I send you a DM too?...</div></div></div>
+<div class="section med" style="margin-bottom:12px;padding:14px">
+<div style="display:flex;justify-content:space-between;align-items:baseline"><div><div class="sn">SN103 · ա・djinn・103</div><div class="tldr"><span class="sender">@hnnam.</span>: It seems all validators are updated to new versions and gain back the ok status for miners. Thank you.</div></div><span style="font-size:.7em;color:var(--dim)">UPDATE · Owner: Jack</span></div>
+<button class="toggle" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display=='block'?'none':'block'">Expand (6 messages)</button>
+<div class="details">
+<div class="msg"><span class="sender">@hnnam. (signal message)</span>: It seems all validators are updated to new versions and gain back the ok status for miners. Thank you.</div><div class="msg"><span class="sender">@fork_gondor</span>: So this is the same validator which "helps" the 103sn team from the day 1.  Come on, why are you so naive? https://discord.com/channels/799672011265015819/1465362098971345010/1465455428908482742...</div><div class="msg"><span class="sender">@pmaymin</span>: Great. Thanks for your help in raising the issue....</div></div></div>
+<div class="section med" style="margin-bottom:12px;padding:14px">
+<div style="display:flex;justify-content:space-between;align-items:baseline"><div><div class="sn">SN107 · ミ・minos・107</div><div class="tldr"><span class="sender">@centrum_blue</span>: Hey everyone - please have a look at this guide if you have questions about how to improve your configs. FreeBayes is de</div></div><span style="font-size:.7em;color:var(--dim)">UPDATE · Owner: Centrum</span></div>
+<button class="toggle" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display=='block'?'none':'block'">Expand (10 messages)</button>
+<div class="details">
+<div class="msg"><span class="sender">@centrum_blue (signal message)</span>: Hey everyone - please have a look at this guide if you have questions about how to improve your configs. FreeBayes is deliberately excluded because we will stop supporting it this weekend.</div><div class="msg"><span class="sender">@dronfron</span>: When will the incentive burn percent decrease?...</div><div class="msg"><span class="sender">@jezus.albeat</span>: Is it ok for me to consider high scores as outliers?...</div></div></div>
+<div class="section med" style="margin-bottom:12px;padding:14px">
+<div style="display:flex;justify-content:space-between;align-items:baseline"><div><div class="sn">SN108 · զ・talkhead・108</div><div class="tldr"><span class="sender">@kiroain108</span>: Increasing burn release has clearly improved miner submissions and overall performance.  To further accelerate competiti</div></div><span style="font-size:.7em;color:var(--dim)">UPDATE · Owner: kiro</span></div>
+<button class="toggle" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display=='block'?'none':'block'">Expand (1 messages)</button>
+<div class="details">
+<div class="msg"><span class="sender">@kiroain108 (signal message)</span>: Increasing burn release has clearly improved miner submissions and overall performance.  To further accelerate competition, we’re now fully releasing the burn: 🔥 Burn ratio updated: 0.5 → 0.0 (100% released)  We’ll continue monitoring the subnet and update hyperparameters as needed to ensure fair an</div></div></div>
+<div class="section crit" style="margin-bottom:12px;padding:14px">
+<div style="display:flex;justify-content:space-between;align-items:baseline"><div><div class="sn">SN120 · ⴷ・ⴷffine・120</div><div class="tldr"><span class="sender">@allan_ww</span>: I have deployed this model locally and test it. For 8253, it takes around 10 times at my side for first one pass. For 82</div></div><span style="font-size:.7em;color:var(--dim)">LAUNCH · Owner: unknown</span></div>
+<button class="toggle" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display=='block'?'none':'block'">Expand (14 messages)</button>
+<div class="details">
+<div class="msg"><span class="sender">@allan_ww (signal message)</span>: I have deployed this model locally and test it. For 8253, it takes around 10 times at my side for first one pass. For 8296, it pass at first time. Then I use the rollout on affine.io to do forward to verify that this model could produce that trace.  The variance issue happens from this subnet launch</div><div class="msg"><span class="sender">@tonyrussel_0716</span>: <@1483036161722286131> pls tell me current anticopy detection system. Can model work with invalid reason?...</div><div class="msg"><span class="sender">@tinydeep226</span>: you should know about the how the system works...</div><div class="msg"><span class="sender">@hebert5968</span>: <@1091660419023773828>  Have you already determined UID 213 as the next champion before sampling even finished?...</div></div></div>
+<div class="section med" style="margin-bottom:12px;padding:14px">
+<div style="display:flex;justify-content:space-between;align-items:baseline"><div><div class="sn">SN126 · 𑀃・poker44・126</div><div class="tldr"><span class="sender">@sachhp</span>: the policies we apply carry different weights depending on the severity of the issue. The manifest goes through this pol</div></div><span style="font-size:.7em;color:var(--dim)">UPDATE · Owner: sachp</span></div>
+<button class="toggle" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display=='block'?'none':'block'">Expand (11 messages)</button>
+<div class="details">
+<div class="msg"><span class="sender">@sachhp (signal message)</span>: the policies we apply carry different weights depending on the severity of the issue. The manifest goes through this policy system, and weights accumulate up to a maximum threshold. Right now, we want to see how it behaves in practice and keep detecting edge cases. We will make it public together wi</div><div class="msg"><span class="sender">@kabar4573</span>: <@1435366962153656420>  unless there are any concerns regarding publishing this, it would be very convenient if there was an information on properly identified samples, aside of total samples  in the ...</div></div></div>
+</div>
+<div class="section" id="active"><h2>🟢 Active Subnets (Community / Support)</h2>
+<ul style="list-style:none;padding:0">
+<li style="padding:4px 0;font-size:.85em;color:var(--dim)">SN1 · 𝛼・apex・1 · Owner: @subnet-claiminfo @Compelle [CDP]</li>
+<li style="padding:4px 0;font-size:.85em;color:var(--dim)">SN4 · ∆・τargon・4 · Owner: unknown</li>
+<li style="padding:4px 0;font-size:.85em;color:var(--dim)">SN5 · ε・hone・5 · Owner: NEEDS_FILL</li>
+<li style="padding:4px 0;font-size:.85em;color:var(--dim)">SN6 · ζ・numinous・6 · Owner: unknown</li>
+<li style="padding:4px 0;font-size:.85em;color:var(--dim)">SN9 · ι・ioτa・9 · Owner: Macrocosmos</li>
+<li style="padding:4px 0;font-size:.85em;color:var(--dim)">SN10 · κ・unclaimed・10 · Owner: NEEDS_FILL</li>
+<li style="padding:4px 0;font-size:.85em;color:var(--dim)">SN12 · µ・horde・12 · Owner: unknown</li>
+<li style="padding:4px 0;font-size:.85em;color:var(--dim)">SN13 · ν・daτaverse・13 · Owner: arrmlet</li>
+<li style="padding:4px 0;font-size:.85em;color:var(--dim)">SN14 · テ・τaohash・14 · Owner: vune</li>
+<li style="padding:4px 0;font-size:.85em;color:var(--dim)">SN18 · σ・zeus・18 · Owner: orpheusai</li>
+<li style="padding:4px 0;font-size:.85em;color:var(--dim)">SN22 · χ・desearch・22 · Owner: cosmicquantum.</li>
+<li style="padding:4px 0;font-size:.85em;color:var(--dim)">SN23 · ψ・trishool・23 · Owner: Nav | SN23 [Kat msg (2025-12-02) [role]]</li>
+<li style="padding:4px 0;font-size:.85em;color:var(--dim)">SN26 · ב・perτurb・26 · Owner: NEEDS_FILL</li>
+<li style="padding:4px 0;font-size:.85em;color:var(--dim)">SN28 · ד・fish・28 · Owner: unknown</li>
+<li style="padding:4px 0;font-size:.85em;color:var(--dim)">SN29 · ה・booτsτrap・29 · Owner: unknown</li>
+<li style="padding:4px 0;font-size:.85em;color:var(--dim)">SN32 · ח・iτsai・32 · Owner: unknown</li>
+<li style="padding:4px 0;font-size:.85em;color:var(--dim)">SN33 · ט・ready・33 · Owner: unknown</li>
+<li style="padding:4px 0;font-size:.85em;color:var(--dim)">SN34 · י・mind・34 · Owner: unknown</li>
+<li style="padding:4px 0;font-size:.85em;color:var(--dim)">SN35 · ך・oxmarkets・35 · Owner: mikecontango</li>
+<li style="padding:4px 0;font-size:.85em;color:var(--dim)">SN37 · ל・aurelius・37 · Owner: Ausτin</li>
+<li style="padding:4px 0;font-size:.85em;color:var(--dim)">SN44 · ף・score・44 · Owner: unknown</li>
+<li style="padding:4px 0;font-size:.85em;color:var(--dim)">SN46 · ץ・resi・46 · Owner: unknown</li>
+<li style="padding:4px 0;font-size:.85em;color:var(--dim)">SN49 · ר・nepher・49 · Owner: nτerprime</li>
+<li style="padding:4px 0;font-size:.85em;color:var(--dim)">SN52 · ا・dojo・52 · Owner: unknown</li>
+<li style="padding:4px 0;font-size:.85em;color:var(--dim)">SN53 · ب・unclaimed・53 · Owner: unclaimed</li>
+<li style="padding:4px 0;font-size:.85em;color:var(--dim)">SN55 · ث・niome・55 · Owner: unclaimed</li>
+<li style="padding:4px 0;font-size:.85em;color:var(--dim)">SN56 · ج・gradients・56 · Owner: unknown</li>
+<li style="padding:4px 0;font-size:.85em;color:var(--dim)">SN59 · د・babelbiτ・59 · Owner: Lindsay</li>
+<li style="padding:4px 0;font-size:.85em;color:var(--dim)">SN60 · ذ・bitsec・60 · Owner: unknown</li>
+<li style="padding:4px 0;font-size:.85em;color:var(--dim)">SN61 · ر・red-team・61 · Owner: unknown</li>
+<li style="padding:4px 0;color:var(--dim);font-size:.8em">... and 29 more</li>
+</ul></div>
+<div class="section" id="quiet"><h2>🌑 Quiet Subnets (No Activity)</h2><div class="quiet-grid">
+<div class="qi">SN20<div style="font-size:.65em;margin-top:2px">υ・groundlayer・20</div></div><div class="qi">SN25<div style="font-size:.65em;margin-top:2px">א・mainframe・25</div></div><div class="qi">SN27<div style="font-size:.65em;margin-top:2px">ג・unclaimed・27</div></div><div class="qi">SN30<div style="font-size:.65em;margin-top:2px">ו・wahooτ・30</div></div><div class="qi">SN31<div style="font-size:.65em;margin-top:2px">ז・unclaimed・31</div></div><div class="qi">SN36<div style="font-size:.65em;margin-top:2px">כ・eirel・36</div></div><div class="qi">SN38<div style="font-size:.65em;margin-top:2px">ם・unclaimed・38</div></div><div class="qi">SN40<div style="font-size:.65em;margin-top:2px">ן・unclaimed・40</div></div><div class="qi">SN41<div style="font-size:.65em;margin-top:2px">נ・almanac・41</div></div><div class="qi">SN42<div style="font-size:.65em;margin-top:2px">ס・unclaimed・42</div></div><div class="qi">SN43<div style="font-size:.65em;margin-top:2px">ע・graphiτe・43</div></div><div class="qi">SN48<div style="font-size:.65em;margin-top:2px">ק・quantum-c・48</div></div><div class="qi">SN57<div style="font-size:.65em;margin-top:2px">ح・unclaimed・57</div></div><div class="qi">SN58<div style="font-size:.65em;margin-top:2px">خ・handshake・58</div></div><div class="qi">SN67<div style="font-size:.65em;margin-top:2px">ط・harnyx・67</div></div><div class="qi">SN70<div style="font-size:.65em;margin-top:2px">غ・nexisgen・70</div></div><div class="qi">SN73<div style="font-size:.65em;margin-top:2px">ك・parked・73</div></div><div class="qi">SN76<div style="font-size:.65em;margin-top:2px">ن・unclaimed・76</div></div><div class="qi">SN80<div style="font-size:.65em;margin-top:2px">՞・dogelayer・80</div></div><div class="qi">SN82<div style="font-size:.65em;margin-top:2px">ᚢ・compelle・82</div></div><div class="qi">SN85<div style="font-size:.65em;margin-top:2px">ᚱ・vidaio・85</div></div><div class="qi">SN86<div style="font-size:.65em;margin-top:2px">ᚳ・unclaimed・86</div></div><div class="qi">SN87<div style="font-size:.65em;margin-top:2px">ы・luminar・87</div></div><div class="qi">SN89<div style="font-size:.65em;margin-top:2px">ᛒ・infiniτehash・89</div></div><div class="qi">SN90<div style="font-size:.65em;margin-top:2px">_・unclaimed・90</div></div><div class="qi">SN91<div style="font-size:.65em;margin-top:2px">ᚁ・biτsτarτer-1・91</div></div><div class="qi">SN92<div style="font-size:.65em;margin-top:2px">ᚂ・sτoryneτ・92</div></div><div class="qi">SN93<div style="font-size:.65em;margin-top:2px">ᚃ・biτcasτ・93</div></div><div class="qi">SN98<div style="font-size:.65em;margin-top:2px">ბ・forevermoney・98</div></div><div class="qi">SN101<div style="font-size:.65em;margin-top:2px">ე・unclaimed・101</div></div><div class="qi">SN106<div style="font-size:.65em;margin-top:2px">դ・voidai・106</div></div><div class="qi">SN115<div style="font-size:.65em;margin-top:2px">ѕ・soulx・115</div></div><div class="qi">SN116<div style="font-size:.65em;margin-top:2px">ъ・τaolend・116</div></div><div class="qi">SN117<div style="font-size:.65em;margin-top:2px">ⲁ・unclaimed・117</div></div><div class="qi">SN121<div style="font-size:.65em;margin-top:2px">ⲅ・sundae-bar・121</div></div><div class="qi">SN125<div style="font-size:.65em;margin-top:2px">𑀂・flyspeck・125</div></div><div class="qi">SN128<div style="font-size:.65em;margin-top:2px">න・byteleap・128</div></div></div></div>
+<footer style="text-align:center;padding:20px;color:#444;font-size:.75em">Generated by Thane · Bittensor Monitor</footer></div></body></html>
