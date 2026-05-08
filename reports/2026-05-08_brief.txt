@@ -1,0 +1,39 @@
+📊 Bittensor Daily Brief — 2026-05-08
+📬 714 unique messages across 106 channels
+
+🔇 Founder (consttt):
+  • מ・cathedral・39: chat with the validators...
+
+🔴 HIGH SIGNAL:
+  SN21 · φ・adτao・21
+    @robwarner: At last!!!
+
+🚨 SN21 IS LIVE ON TESTNET 🚨
+
+**Subnet 21 AdTAO  is now open for testnet miners...
+  SN107 · ミ・minos・107
+    @centrum_blue: Hey everyone, the dashboard has been updated. We removed a few entries that may have been ...
+  SN03 · γ・τeuτonic・3
+    @sam0x17 [ τ, τ ]: sam0x17 [ τ, τ ]rao — 4/24/26, 3:31 AMFriday, April 24, 2026 at 3:31 AMHey @everyone!
+
+The...
+  SN03 · γ・τeuτonic・3
+    @sam0x17 [ τ, τ ]: sam0x17 [ τ, τ ]rao — 6:32 PMWednesday, May 6, 2026 at 6:32 PMHey @everyone!
+
+Just now tes...
+  SN07 · η・allways・7
+    @e35strap: ## Allways Update — v1.0.0
+<@&1437497690077397065> 
+
+We are live at https://all-ways.io
+En...
+
+🟡 Team Updates:
+  SN01 · 𝛼・apex・1: @_wctsq
+  SN02 · β・dsperse・2: @wencoffee
+  SN02 · β・dsperse・2: @wencoffee
+  SN04 · ∆・τargon・4: @p383_54249
+  SN08 · θ・vanta・8: @jr_zeus0707_22986
+  SN09 · ι・ioτa・9: @unknown
+
+📋 Full: github.com/thaneclaw/bittensor-reports
