@@ -67,41 +67,41 @@ function toggleDetails(idx) {
 <div class="container">
 <header>
     <h1>📊 Bittensor Daily Report</h1>
-    <div class="meta">2026-05-27 · 45 signals · 128 active subnets · 3 quiet</div>
+    <div class="meta">2026-05-27 · 38 signals · 128 active subnets · 3 quiet</div>
 </header>
 
 <div class="stats">
-    <div class="stat"><div class="v">45</div><div class="l">Signals</div></div>
-    <div class="stat"><div class="v">17</div><div class="l">Urgent</div></div>
+    <div class="stat"><div class="v">38</div><div class="l">Signals</div></div>
+    <div class="stat"><div class="v">14</div><div class="l">Urgent</div></div>
     <div class="stat"><div class="v">128</div><div class="l">Active</div></div>
     <div class="stat"><div class="v">3</div><div class="l">Quiet</div></div>
 </div>
 
 <div class="synthesis"><div class="section"><h2>🧠 Intelligence Summary</h2><p class="section-desc">LLM-synthesized daily analysis</p>🔹 <b>REGISTRY CHANGES</b>:  <br>
-No registry changes today.<br>
+<li>No registry changes today.</li>
 <br>
 ⚡ <b>HEADLINE</b>:  <br>
-Multiple subnets adjusted burn mechanics; several critical validator updates and protocol shifts reported.<br>
+Multiple subnets adjusted burn mechanics; critical infrastructure updates deployed across validator and miner nodes.<br>
 <br>
 |🎯 <b>CONST WATCH</b>:  <br>
-<li><b>consttt</b> (founder of <b>SN97</b>) is assembling a team and testing process reward models.  </li>
-<li>Also noted issues with validator status and reverted to burn-based mechanics.  </li>
-<li>Emphasized use of llms.txt for finetuning data context.</li>
+<li><b>Distil (SN97)</b>: Exploring process reward incentives using Chutes models.  </li>
+<li><b>Distil (SN97)</b>: Indicated return to burn-focused mechanisms.  </li>
+<li><b>Unclaimed (SN38)</b>: Founder revealed quiet subnet acquisition months ago.</li>
 <br>
 |🌐 <b>ECOSYSTEM</b>:  <br>
-<li><b>SN51</b>, <b>SN104</b>, <b>SN122</b> sharply increased min_burn, signaling economic tightening.  </li>
-<li><b>SN14</b>, <b>SN103</b>, <b>SN18</b>, <b>SN83</b> made targeted hyperparameter adjustments.  </li>
-<li>Validator updates and breaking changes reported in <b>SN36</b>, <b>SN102</b>, <b>SN105</b>, and <b>SN2</b>.</li>
+<li><b>SN51, SN104, SN122</b>: Significant hyperparameter shifts, especially burn-related values increased.  </li>
+<li><b>SN14, SN103, SN18, SN83</b>: Moderate protocol adjustments including activity cutoffs and commit-reveal weights.  </li>
+<li><b>SN2, SN105, SN112</b>: Validator code updates, breaking changes, and deployment rollouts ongoing.</li>
 <br>
 |👁 <b>WATCHLIST</b>:  <br>
-<li><b>SN97</b>: Founder activity high but no validator currently running.  </li>
-<li><b>SN105</b>: Breaking orchestrator changes may disrupt existing setups.  </li>
-<li><b>SN36</b>: Dashboard and leaderboard fixes suggest recent instability.</li>
+<li><b>SN104</b>: Max and min burn both increased over 1000x—potential access restriction or spam control.  </li>
+<li><b>SN122</b>: Target registrations and burn rates sharply increased—possible defensive or growth move.  </li>
+<li><b>SN2 (Dspersed)</b>: Active version rollout ongoing; validators and miners must update immediately.</li>
 <br>
 |🎬 <b>What to Do</b>:  <br>
-<li><b>SN51</b>, <b>SN104</b>, <b>SN122</b> operators: Confirm new burn thresholds are supported in your stack.  </li>
-<li><b>SN105</b> orchestrators: Update immediately to maintain compatibility with gateway changes.  </li>
-<li><b>SN97</b> miners: Monitor for validator launch; prepare for process reward model testing.</li></div></div>
+<li><b>SN104 & SN122 Operators</b>: Review new burn requirements and adjust operational capital accordingly.  </li>
+<li><b>SN2 Validators/Miners</b>: Upgrade to version `14.8.7` to maintain network compatibility.  </li>
+<li><b>All Subnets</b>: Monitor for further unclaimed founder reveals or stealth launches in coming weeks.</li></div></div>
 
 
         <div class="section" id="sn-2">
@@ -278,76 +278,11 @@ Miners, feel free to review and ingest those base miner changes checked into `ma
             </div>
         </div>
         
-        <div class="section" id="sn-21">
-            <h2>SN21 (1 signals)</h2>
+        <div class="section" id="sn-36">
+            <h2>SN36 (1 signals)</h2>
             <div class="subnet-signals">
                 
         <div class="signal" style="border-left-color:#444" id="sig-7">
-            <div class="sig-header">
-                <span class="sn-tag">SN21</span>
-                <span class="snd">robwarner</span>
-                <span class="stype" style="color:#444">[announcement]</span>
-                <span class="urg-tag" style="background:#5599ff">BRIEF WORTHY — READ IN DAILY BRIEF</span>
-                
-            </div>
-            <div class="sum">For any miner waiting for the leaderboard update you can follow the instructions in the repo to check your score on chain:
-
- docs/miner_quickstart.md §7 &quot;Check your score&quot; + scripts/verify_epoch.py le...</div>
-            <button class="toggle" onclick="toggleDetails(7)">📄 Show full message</button>
-            <div id="det-7" class="details" style="display:none">
-                <div class="full-msg">For any miner waiting for the leaderboard update you can follow the instructions in the repo to check your score on chain:
-
- docs/miner_quickstart.md §7 &quot;Check your score&quot; + scripts/verify_epoch.py let any miner reproduce the validator&#x27;s score against their own bundle. The verifier reads chain, fetches archives, runs the open-source scoring code, and either confirms or contradicts our claim. Miners can also just query Weights[21][uid] directly via btcli or chain RPC to see their assigned weight from us.</div>
-                <button class="toggle" onclick="toggleDetails(7)">🔼 Hide</button>
-            </div>
-        </div>
-        
-            </div>
-        </div>
-        
-        <div class="section" id="sn-36">
-            <h2>SN36 (2 signals)</h2>
-            <div class="subnet-signals">
-                
-        <div class="signal" style="border-left-color:#444" id="sig-8">
-            <div class="sig-header">
-                <span class="sn-tag">SN36</span>
-                <span class="snd">seal1112567</span>
-                <span class="stype" style="color:#444">[announcement]</span>
-                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
-                
-            </div>
-            <div class="sum">**Subnet Update**:
-
-- **Leaderboard fix**: Past run winners now display the submission that was actually evaluated during that run — resubmissions after a completed run no longer overwrite earlier res...</div>
-            <button class="toggle" onclick="toggleDetails(8)">📄 Show full message</button>
-            <div id="det-8" class="details" style="display:none">
-                <div class="full-msg">**Subnet Update**:
-
-- **Leaderboard fix**: Past run winners now display the submission that was actually evaluated during that run — resubmissions after a completed run no longer overwrite earlier results.
-- **New Submissions tab**: Dashboard now shows fresh submissions awaiting the next run cycle in a dedicated tab; &quot;received&quot; and &quot;build_failed&quot; statuses surface in the UI instead of being CLI-only.
-- **Friendlier error messages**: Build/readiness failures now show actionable hints (e.g. &quot;did your agent bind to 0.0.0.0:8000 and respond to /healthz in under 60s?&quot;) instead of raw runtime errors.
-- **Eager build verification**: Every new submission gets immediately built + booted + health-checked at upload time. Miners see the verdict (built / build_failed / pending) on GET /v1/submissions/mine without waiting for a run to start.
-https://github.com/RendixNetwork/eirel-ai/commit/333cf35e5d4116c1656e9398456b7800bbe604ac
-
-** eirel CLI v0.5.1 is out** 🛠️ 
-  
-`eirel status` now shows your full submission history with a human-readable summary instead of raw JSON.
- What you&#x27;ll see for each submission:
-  - **Build verdict **— `built ✓`, `build_failed ✗`, `verifying…`, or `pending…`
-  - **Reason **when a build fails (or when verification is deferred at peak capacity)
-  - **Submission status** and **latest score**
-
-Upgrade:
-  `pip install --upgrade eirel`
-
-That&#x27;s it — same command, more useful output.</div>
-                <button class="toggle" onclick="toggleDetails(8)">🔼 Hide</button>
-            </div>
-        </div>
-        
-
-        <div class="signal" style="border-left-color:#444" id="sig-9">
             <div class="sig-header">
                 <span class="sn-tag">SN36</span>
                 <span class="snd">Rendix</span>
@@ -360,8 +295,8 @@ That&#x27;s it — same command, more useful output.</div>
 **Translation: your container builds fine, then dies immediately when started. The validator expects a long-running FastAPI server, not a script that runs and exits.** ⚔️🪦
 
 ## Top 5 caus...</div>
-            <button class="toggle" onclick="toggleDetails(9)">📄 Show full message</button>
-            <div id="det-9" class="details" style="display:none">
+            <button class="toggle" onclick="toggleDetails(7)">📄 Show full message</button>
+            <div id="det-7" class="details" style="display:none">
                 <div class="full-msg">Hey Dustin 👋
 
 **Translation: your container builds fine, then dies immediately when started. The validator expects a long-running FastAPI server, not a script that runs and exits.** ⚔️🪦
@@ -395,7 +330,7 @@ If it dies locally, `docker logs &lt;container&gt;` will show the actual stack t
 **TL;DR: container exits = either bad host/port binding or entrypoint isn&#x27;t long-running. Test with `docker run` locally and check logs before re-submitting.** 🏆
 
 Paste your `Dockerfile` CMD + the uvicorn/server launch line and I can spot it. ⚡</div>
-                <button class="toggle" onclick="toggleDetails(9)">🔼 Hide</button>
+                <button class="toggle" onclick="toggleDetails(7)">🔼 Hide</button>
             </div>
         </div>
         
@@ -406,7 +341,7 @@ Paste your `Dockerfile` CMD + the uvicorn/server launch line and I can spot it. 
             <h2>SN38 (1 signals)</h2>
             <div class="subnet-signals">
                 
-        <div class="signal" style="border-left-color:#ff6b35" id="sig-10">
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-8">
             <div class="sig-header">
                 <span class="sn-tag">SN38</span>
                 <span class="snd">consttt</span>
@@ -417,8 +352,8 @@ Paste your `Dockerfile` CMD + the uvicorn/server launch line and I can spot it. 
             <div class="sum">FYI here is what happened here.
 
 I secretly bought this subnet for a team a few months ago. I told no one. Apparently someone found out. Possibly a set of speculators who do blockchain analysis figure...</div>
-            <button class="toggle" onclick="toggleDetails(10)">📄 Show full message</button>
-            <div id="det-10" class="details" style="display:none">
+            <button class="toggle" onclick="toggleDetails(8)">📄 Show full message</button>
+            <div id="det-8" class="details" style="display:none">
                 <div class="full-msg">FYI here is what happened here.
 
 I secretly bought this subnet for a team a few months ago. I told no one. Apparently someone found out. Possibly a set of speculators who do blockchain analysis figured out it was me and tried to front run others. 
@@ -428,7 +363,7 @@ This caused two problems for me
 2) I could no longer sell the slot because the funds on the key reached almost 2700 TAO.
 
 I have sold out 800 Tao from the owner key and will be kee</div>
-                <button class="toggle" onclick="toggleDetails(10)">🔼 Hide</button>
+                <button class="toggle" onclick="toggleDetails(8)">🔼 Hide</button>
             </div>
         </div>
         
@@ -439,7 +374,7 @@ I have sold out 800 Tao from the owner key and will be kee</div>
             <h2>SN51 (2 signals)</h2>
             <div class="subnet-signals">
                 
-        <div class="signal" style="border-left-color:#aa88ff" id="sig-11">
+        <div class="signal" style="border-left-color:#aa88ff" id="sig-9">
             <div class="sig-header">
                 <span class="sn-tag">SN51</span>
                 <span class="snd">sn51 h-param tracker</span>
@@ -449,16 +384,16 @@ I have sold out 800 Tao from the owner key and will be kee</div>
             </div>
             <div class="sum">### Hyperparams changed on subnet 51
 - `min_burn` `5000000` → `500000000`</div>
-            <button class="toggle" onclick="toggleDetails(11)">📄 Show full message</button>
-            <div id="det-11" class="details" style="display:none">
+            <button class="toggle" onclick="toggleDetails(9)">📄 Show full message</button>
+            <div id="det-9" class="details" style="display:none">
                 <div class="full-msg">### Hyperparams changed on subnet 51
 - `min_burn` `5000000` → `500000000`</div>
-                <button class="toggle" onclick="toggleDetails(11)">🔼 Hide</button>
+                <button class="toggle" onclick="toggleDetails(9)">🔼 Hide</button>
             </div>
         </div>
         
 
-        <div class="signal" style="border-left-color:#aa88ff" id="sig-12">
+        <div class="signal" style="border-left-color:#aa88ff" id="sig-10">
             <div class="sig-header">
                 <span class="sn-tag">SN51</span>
                 <span class="snd">sn51 h-param tracker</span>
@@ -468,11 +403,11 @@ I have sold out 800 Tao from the owner key and will be kee</div>
             </div>
             <div class="sum">### Hyperparams changed on subnet 51
 - `max_burn` `100000001` → `10000000000`</div>
-            <button class="toggle" onclick="toggleDetails(12)">📄 Show full message</button>
-            <div id="det-12" class="details" style="display:none">
+            <button class="toggle" onclick="toggleDetails(10)">📄 Show full message</button>
+            <div id="det-10" class="details" style="display:none">
                 <div class="full-msg">### Hyperparams changed on subnet 51
 - `max_burn` `100000001` → `10000000000`</div>
-                <button class="toggle" onclick="toggleDetails(12)">🔼 Hide</button>
+                <button class="toggle" onclick="toggleDetails(10)">🔼 Hide</button>
             </div>
         </div>
         
@@ -483,7 +418,7 @@ I have sold out 800 Tao from the owner key and will be kee</div>
             <h2>SN56 (1 signals)</h2>
             <div class="subnet-signals">
                 
-        <div class="signal" style="border-left-color:#444" id="sig-13">
+        <div class="signal" style="border-left-color:#444" id="sig-11">
             <div class="sig-header">
                 <span class="sn-tag">SN56</span>
                 <span class="snd">_miner52</span>
@@ -495,8 +430,8 @@ I have sold out 800 Tao from the owner key and will be kee</div>
 And also in this tourn, the model name is changed to random string from model id.
 I didn&#x27;t see about this in miner.md file.
 In my opinion, you shou...</div>
-            <button class="toggle" onclick="toggleDetails(13)">📄 Show full message</button>
-            <div id="det-13" class="details" style="display:none">
+            <button class="toggle" onclick="toggleDetails(11)">📄 Show full message</button>
+            <div id="det-11" class="details" style="display:none">
                 <div class="full-msg">Hi, &lt;@1497252016961884300&gt; , &lt;@464034973041688595&gt; .
 And also in this tourn, the model name is changed to random string from model id.
 I didn&#x27;t see about this in miner.md file.
@@ -505,7 +440,7 @@ I configured it as before, and got issue in this tourn 🥵
 So could you re-run training for all miners?
 Miners didn&#x27;t know about change updates for 2 things.
 Thanks.</div>
-                <button class="toggle" onclick="toggleDetails(13)">🔼 Hide</button>
+                <button class="toggle" onclick="toggleDetails(11)">🔼 Hide</button>
             </div>
         </div>
         
@@ -516,7 +451,7 @@ Thanks.</div>
             <h2>SN60 (1 signals)</h2>
             <div class="subnet-signals">
                 
-        <div class="signal" style="border-left-color:#444" id="sig-14">
+        <div class="signal" style="border-left-color:#444" id="sig-12">
             <div class="sig-header">
                 <span class="sn-tag">SN60</span>
                 <span class="snd">lordnadejde.eth</span>
@@ -525,10 +460,10 @@ Thanks.</div>
                 
             </div>
             <div class="sum">you can push new versions of your agent o the same hotkey</div>
-            <button class="toggle" onclick="toggleDetails(14)">📄 Show full message</button>
-            <div id="det-14" class="details" style="display:none">
+            <button class="toggle" onclick="toggleDetails(12)">📄 Show full message</button>
+            <div id="det-12" class="details" style="display:none">
                 <div class="full-msg">you can push new versions of your agent o the same hotkey</div>
-                <button class="toggle" onclick="toggleDetails(14)">🔼 Hide</button>
+                <button class="toggle" onclick="toggleDetails(12)">🔼 Hide</button>
             </div>
         </div>
         
@@ -539,7 +474,7 @@ Thanks.</div>
             <h2>SN66 (1 signals)</h2>
             <div class="subnet-signals">
                 
-        <div class="signal" style="border-left-color:#444" id="sig-15">
+        <div class="signal" style="border-left-color:#444" id="sig-13">
             <div class="sig-header">
                 <span class="sn-tag">SN66</span>
                 <span class="snd">wejh</span>
@@ -548,10 +483,10 @@ Thanks.</div>
                 
             </div>
             <div class="sum">i will provide the local settings i am using to run the inference, so you can launch with vllm yourself if you please, although you can also probably use openrouter too. determinism isnt so important ...</div>
-            <button class="toggle" onclick="toggleDetails(15)">📄 Show full message</button>
-            <div id="det-15" class="details" style="display:none">
+            <button class="toggle" onclick="toggleDetails(13)">📄 Show full message</button>
+            <div id="det-13" class="details" style="display:none">
                 <div class="full-msg">i will provide the local settings i am using to run the inference, so you can launch with vllm yourself if you please, although you can also probably use openrouter too. determinism isnt so important for testing, but for eval its critical.</div>
-                <button class="toggle" onclick="toggleDetails(15)">🔼 Hide</button>
+                <button class="toggle" onclick="toggleDetails(13)">🔼 Hide</button>
             </div>
         </div>
         
@@ -562,7 +497,7 @@ Thanks.</div>
             <h2>SN69 (1 signals)</h2>
             <div class="subnet-signals">
                 
-        <div class="signal" style="border-left-color:#ff4444" id="sig-16">
+        <div class="signal" style="border-left-color:#ff4444" id="sig-14">
             <div class="sig-header">
                 <span class="sn-tag">SN69</span>
                 <span class="snd">mamslbb</span>
@@ -573,12 +508,12 @@ Thanks.</div>
             <div class="sum">70+% of staked supply.
 
 And no, not a single subnet at launch had this much concentrated ownership, owners had to accumulate through their 18% emission share . And this won&#x27;t happen again since it has...</div>
-            <button class="toggle" onclick="toggleDetails(16)">📄 Show full message</button>
-            <div id="det-16" class="details" style="display:none">
+            <button class="toggle" onclick="toggleDetails(14)">📄 Show full message</button>
+            <div id="det-14" class="details" style="display:none">
                 <div class="full-msg">70+% of staked supply.
 
 And no, not a single subnet at launch had this much concentrated ownership, owners had to accumulate through their 18% emission share . And this won&#x27;t happen again since it has been hotfixed right after sn69 registration</div>
-                <button class="toggle" onclick="toggleDetails(16)">🔼 Hide</button>
+                <button class="toggle" onclick="toggleDetails(14)">🔼 Hide</button>
             </div>
         </div>
         
@@ -589,7 +524,7 @@ And no, not a single subnet at launch had this much concentrated ownership, owne
             <h2>SN76 (2 signals)</h2>
             <div class="subnet-signals">
                 
-        <div class="signal" style="border-left-color:#00c060" id="sig-17">
+        <div class="signal" style="border-left-color:#00c060" id="sig-15">
             <div class="sig-header">
                 <span class="sn-tag">SN76</span>
                 <span class="snd">kat_frenone</span>
@@ -600,17 +535,17 @@ And no, not a single subnet at launch had this much concentrated ownership, owne
             <div class="sum">&lt;@&amp;1404959073283346552&gt; &lt;@224042939087716352&gt; has successfully claimed ownership of the channel and has let me know that it&#x27;s up for sale.
 
 **Please be advised that this channel is not for purchase ne...</div>
-            <button class="toggle" onclick="toggleDetails(17)">📄 Show full message</button>
-            <div id="det-17" class="details" style="display:none">
+            <button class="toggle" onclick="toggleDetails(15)">📄 Show full message</button>
+            <div id="det-15" class="details" style="display:none">
                 <div class="full-msg">&lt;@&amp;1404959073283346552&gt; &lt;@224042939087716352&gt; has successfully claimed ownership of the channel and has let me know that it&#x27;s up for sale.
 
 **Please be advised that this channel is not for purchase negotations, bidding, etc.**  Once &lt;@224042939087716352&gt; has posted contact information or a preferred method to handle offers, which will not be in this channel, you&#x27;ll be able to follow those instruct</div>
-                <button class="toggle" onclick="toggleDetails(17)">🔼 Hide</button>
+                <button class="toggle" onclick="toggleDetails(15)">🔼 Hide</button>
             </div>
         </div>
         
 
-        <div class="signal" style="border-left-color:#00c060" id="sig-18">
+        <div class="signal" style="border-left-color:#00c060" id="sig-16">
             <div class="sig-header">
                 <span class="sn-tag">SN76</span>
                 <span class="snd">kat_frenone</span>
@@ -621,12 +556,12 @@ And no, not a single subnet at launch had this much concentrated ownership, owne
             <div class="sum">&lt;@&amp;1404959073283346552&gt; &lt;@224042939087716352&gt; has successfully claimed ownership of the channel and has let me know that it&#x27;s up for sale.
 
 **Please be advised that this channel is not for purchase ne...</div>
-            <button class="toggle" onclick="toggleDetails(18)">📄 Show full message</button>
-            <div id="det-18" class="details" style="display:none">
+            <button class="toggle" onclick="toggleDetails(16)">📄 Show full message</button>
+            <div id="det-16" class="details" style="display:none">
                 <div class="full-msg">&lt;@&amp;1404959073283346552&gt; &lt;@224042939087716352&gt; has successfully claimed ownership of the channel and has let me know that it&#x27;s up for sale.
 
 **Please be advised that this channel is not for purchase negotations, bidding, etc.**  Once &lt;@224042939087716352&gt; has posted contact information or a preferred</div>
-                <button class="toggle" onclick="toggleDetails(18)">🔼 Hide</button>
+                <button class="toggle" onclick="toggleDetails(16)">🔼 Hide</button>
             </div>
         </div>
         
@@ -637,7 +572,7 @@ And no, not a single subnet at launch had this much concentrated ownership, owne
             <h2>SN79 (1 signals)</h2>
             <div class="subnet-signals">
                 
-        <div class="signal" style="border-left-color:#444" id="sig-19">
+        <div class="signal" style="border-left-color:#444" id="sig-17">
             <div class="sig-header">
                 <span class="sn-tag">SN79</span>
                 <span class="snd">6.taos.im</span>
@@ -646,10 +581,10 @@ And no, not a single subnet at launch had this much concentrated ownership, owne
                 
             </div>
             <div class="sum">Still simulation on mainnet, expecting to launch exchange functionality at localnet by next week, then careful path to test and main.</div>
-            <button class="toggle" onclick="toggleDetails(19)">📄 Show full message</button>
-            <div id="det-19" class="details" style="display:none">
+            <button class="toggle" onclick="toggleDetails(17)">📄 Show full message</button>
+            <div id="det-17" class="details" style="display:none">
                 <div class="full-msg">Still simulation on mainnet, expecting to launch exchange functionality at localnet by next week, then careful path to test and main.</div>
-                <button class="toggle" onclick="toggleDetails(19)">🔼 Hide</button>
+                <button class="toggle" onclick="toggleDetails(17)">🔼 Hide</button>
             </div>
         </div>
         
@@ -660,7 +595,7 @@ And no, not a single subnet at launch had this much concentrated ownership, owne
             <h2>SN83 (1 signals)</h2>
             <div class="subnet-signals">
                 
-        <div class="signal" style="border-left-color:#aa88ff" id="sig-20">
+        <div class="signal" style="border-left-color:#aa88ff" id="sig-18">
             <div class="sig-header">
                 <span class="sn-tag">SN83</span>
                 <span class="snd">sn83 h-param tracker</span>
@@ -670,11 +605,11 @@ And no, not a single subnet at launch had this much concentrated ownership, owne
             </div>
             <div class="sum">### Hyperparams changed on subnet 83
 - `min_burn` `300000000` → `150000000`</div>
-            <button class="toggle" onclick="toggleDetails(20)">📄 Show full message</button>
-            <div id="det-20" class="details" style="display:none">
+            <button class="toggle" onclick="toggleDetails(18)">📄 Show full message</button>
+            <div id="det-18" class="details" style="display:none">
                 <div class="full-msg">### Hyperparams changed on subnet 83
 - `min_burn` `300000000` → `150000000`</div>
-                <button class="toggle" onclick="toggleDetails(20)">🔼 Hide</button>
+                <button class="toggle" onclick="toggleDetails(18)">🔼 Hide</button>
             </div>
         </div>
         
@@ -685,7 +620,7 @@ And no, not a single subnet at launch had this much concentrated ownership, owne
             <h2>SN96 (1 signals)</h2>
             <div class="subnet-signals">
                 
-        <div class="signal" style="border-left-color:#ffaa00" id="sig-21">
+        <div class="signal" style="border-left-color:#ffaa00" id="sig-19">
             <div class="sig-header">
                 <span class="sn-tag">SN96</span>
                 <span class="snd">kepler_1803</span>
@@ -696,8 +631,8 @@ And no, not a single subnet at launch had this much concentrated ownership, owne
             <div class="sum">🚀 **Verathos API is live on mainnet.** Pay-per-token verified inference, machine-payable via x402 (Permit2).
 
 Any wallet with USDC on Base can call the API directly. No signup, no API key, no human in...</div>
-            <button class="toggle" onclick="toggleDetails(21)">📄 Show full message</button>
-            <div id="det-21" class="details" style="display:none">
+            <button class="toggle" onclick="toggleDetails(19)">📄 Show full message</button>
+            <div id="det-19" class="details" style="display:none">
                 <div class="full-msg">🚀 **Verathos API is live on mainnet.** Pay-per-token verified inference, machine-payable via x402 (Permit2).
 
 Any wallet with USDC on Base can call the API directly. No signup, no API key, no human in the loop. Every response carries a sumcheck proof tied to on-chain Merkle commitments of the model weights.
@@ -705,7 +640,7 @@ Any wallet with USDC on Base can call the API directly. No signup, no API key, n
 **Endpoint:** `POST https://api.verathos.ai/v1/chat/completions`
 
 **Models live (auto-rout</div>
-                <button class="toggle" onclick="toggleDetails(21)">🔼 Hide</button>
+                <button class="toggle" onclick="toggleDetails(19)">🔼 Hide</button>
             </div>
         </div>
         
@@ -713,27 +648,10 @@ Any wallet with USDC on Base can call the API directly. No signup, no API key, n
         </div>
         
         <div class="section" id="sn-97">
-            <h2>SN97 (4 signals)</h2>
+            <h2>SN97 (3 signals)</h2>
             <div class="subnet-signals">
                 
-        <div class="signal" style="border-left-color:#ff6b35" id="sig-22">
-            <div class="sig-header">
-                <span class="sn-tag">SN97</span>
-                <span class="snd">consttt</span>
-                <span class="stype" style="color:#ff6b35">[founder]</span>
-                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
-                
-            </div>
-            <div class="sum">I am in the process of bringing a team in please be patient, but no there is no validator running rn</div>
-            <button class="toggle" onclick="toggleDetails(22)">📄 Show full message</button>
-            <div id="det-22" class="details" style="display:none">
-                <div class="full-msg">I am in the process of bringing a team in please be patient, but no there is no validator running rn</div>
-                <button class="toggle" onclick="toggleDetails(22)">🔼 Hide</button>
-            </div>
-        </div>
-        
-
-        <div class="signal" style="border-left-color:#ff6b35" id="sig-23">
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-20">
             <div class="sig-header">
                 <span class="sn-tag">SN97</span>
                 <span class="snd">consttt</span>
@@ -742,15 +660,15 @@ Any wallet with USDC on Base can call the API directly. No signup, no API key, n
                 
             </div>
             <div class="sum">We are going to try using process reward incentives using chutes models</div>
-            <button class="toggle" onclick="toggleDetails(23)">📄 Show full message</button>
-            <div id="det-23" class="details" style="display:none">
+            <button class="toggle" onclick="toggleDetails(20)">📄 Show full message</button>
+            <div id="det-20" class="details" style="display:none">
                 <div class="full-msg">We are going to try using process reward incentives using chutes models</div>
-                <button class="toggle" onclick="toggleDetails(23)">🔼 Hide</button>
+                <button class="toggle" onclick="toggleDetails(20)">🔼 Hide</button>
             </div>
         </div>
         
 
-        <div class="signal" style="border-left-color:#ff6b35" id="sig-24">
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-21">
             <div class="sig-header">
                 <span class="sn-tag">SN97</span>
                 <span class="snd">consttt</span>
@@ -759,15 +677,15 @@ Any wallet with USDC on Base can call the API directly. No signup, no API key, n
                 
             </div>
             <div class="sum">Need to go back to burn</div>
-            <button class="toggle" onclick="toggleDetails(24)">📄 Show full message</button>
-            <div id="det-24" class="details" style="display:none">
+            <button class="toggle" onclick="toggleDetails(21)">📄 Show full message</button>
+            <div id="det-21" class="details" style="display:none">
                 <div class="full-msg">Need to go back to burn</div>
-                <button class="toggle" onclick="toggleDetails(24)">🔼 Hide</button>
+                <button class="toggle" onclick="toggleDetails(21)">🔼 Hide</button>
             </div>
         </div>
         
 
-        <div class="signal" style="border-left-color:#ff6b35" id="sig-25">
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-22">
             <div class="sig-header">
                 <span class="sn-tag">SN97</span>
                 <span class="snd">consttt</span>
@@ -776,58 +694,10 @@ Any wallet with USDC on Base can call the API directly. No signup, no API key, n
                 
             </div>
             <div class="sum">The llms.txt will explain everythign you need to know if you want to finetune on the data</div>
-            <button class="toggle" onclick="toggleDetails(25)">📄 Show full message</button>
-            <div id="det-25" class="details" style="display:none">
+            <button class="toggle" onclick="toggleDetails(22)">📄 Show full message</button>
+            <div id="det-22" class="details" style="display:none">
                 <div class="full-msg">The llms.txt will explain everythign you need to know if you want to finetune on the data</div>
-                <button class="toggle" onclick="toggleDetails(25)">🔼 Hide</button>
-            </div>
-        </div>
-        
-            </div>
-        </div>
-        
-        <div class="section" id="sn-100">
-            <h2>SN100 (1 signals)</h2>
-            <div class="subnet-signals">
-                
-        <div class="signal" style="border-left-color:#444" id="sig-26">
-            <div class="sig-header">
-                <span class="sn-tag">SN100</span>
-                <span class="snd">cortextao</span>
-                <span class="stype" style="color:#444">[announcement]</span>
-                <span class="urg-tag" style="background:#5599ff">BRIEF WORTHY — READ IN DAILY BRIEF</span>
-                
-            </div>
-            <div class="sum">The code has been deployed https://github.com/PlatformNetwork/agent-challenge. We are waiting for the master validator to update automatically (5–10 minutes), and then we can start mining.</div>
-            <button class="toggle" onclick="toggleDetails(26)">📄 Show full message</button>
-            <div id="det-26" class="details" style="display:none">
-                <div class="full-msg">The code has been deployed https://github.com/PlatformNetwork/agent-challenge. We are waiting for the master validator to update automatically (5–10 minutes), and then we can start mining.</div>
-                <button class="toggle" onclick="toggleDetails(26)">🔼 Hide</button>
-            </div>
-        </div>
-        
-            </div>
-        </div>
-        
-        <div class="section" id="sn-102">
-            <h2>SN102 (1 signals)</h2>
-            <div class="subnet-signals">
-                
-        <div class="signal" style="border-left-color:#444" id="sig-27">
-            <div class="sig-header">
-                <span class="sn-tag">SN102</span>
-                <span class="snd">georgeconnito</span>
-                <span class="stype" style="color:#444">[announcement]</span>
-                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
-                
-            </div>
-            <div class="sum">Thanks for flagging the dashboard API issues. We identified an inefficiency in how the API served requests and have deployed a fix.
-This should significantly reduce the 502/504 errors. Appreciate the ...</div>
-            <button class="toggle" onclick="toggleDetails(27)">📄 Show full message</button>
-            <div id="det-27" class="details" style="display:none">
-                <div class="full-msg">Thanks for flagging the dashboard API issues. We identified an inefficiency in how the API served requests and have deployed a fix.
-This should significantly reduce the 502/504 errors. Appreciate the heads-up!</div>
-                <button class="toggle" onclick="toggleDetails(27)">🔼 Hide</button>
+                <button class="toggle" onclick="toggleDetails(22)">🔼 Hide</button>
             </div>
         </div>
         
@@ -838,7 +708,7 @@ This should significantly reduce the 502/504 errors. Appreciate the heads-up!</d
             <h2>SN103 (1 signals)</h2>
             <div class="subnet-signals">
                 
-        <div class="signal" style="border-left-color:#aa88ff" id="sig-28">
+        <div class="signal" style="border-left-color:#aa88ff" id="sig-23">
             <div class="sig-header">
                 <span class="sn-tag">SN103</span>
                 <span class="snd">sn103 h-param tracker</span>
@@ -848,11 +718,11 @@ This should significantly reduce the 502/504 errors. Appreciate the heads-up!</d
             </div>
             <div class="sum">### Hyperparams changed on subnet 103
 - `min_burn` `500000` → `100000000`</div>
-            <button class="toggle" onclick="toggleDetails(28)">📄 Show full message</button>
-            <div id="det-28" class="details" style="display:none">
+            <button class="toggle" onclick="toggleDetails(23)">📄 Show full message</button>
+            <div id="det-23" class="details" style="display:none">
                 <div class="full-msg">### Hyperparams changed on subnet 103
 - `min_burn` `500000` → `100000000`</div>
-                <button class="toggle" onclick="toggleDetails(28)">🔼 Hide</button>
+                <button class="toggle" onclick="toggleDetails(23)">🔼 Hide</button>
             </div>
         </div>
         
@@ -863,7 +733,7 @@ This should significantly reduce the 502/504 errors. Appreciate the heads-up!</d
             <h2>SN104 (5 signals)</h2>
             <div class="subnet-signals">
                 
-        <div class="signal" style="border-left-color:#aa88ff" id="sig-29">
+        <div class="signal" style="border-left-color:#aa88ff" id="sig-24">
             <div class="sig-header">
                 <span class="sn-tag">SN104</span>
                 <span class="snd">sn104 h-param tracker</span>
@@ -874,17 +744,17 @@ This should significantly reduce the 502/504 errors. Appreciate the heads-up!</d
             <div class="sum">### Hyperparams changed on subnet 104
 - `max_burn` `100000001` → `100000000000`
 - `min_burn` `100000000` → `999999999`</div>
-            <button class="toggle" onclick="toggleDetails(29)">📄 Show full message</button>
-            <div id="det-29" class="details" style="display:none">
+            <button class="toggle" onclick="toggleDetails(24)">📄 Show full message</button>
+            <div id="det-24" class="details" style="display:none">
                 <div class="full-msg">### Hyperparams changed on subnet 104
 - `max_burn` `100000001` → `100000000000`
 - `min_burn` `100000000` → `999999999`</div>
-                <button class="toggle" onclick="toggleDetails(29)">🔼 Hide</button>
+                <button class="toggle" onclick="toggleDetails(24)">🔼 Hide</button>
             </div>
         </div>
         
 
-        <div class="signal" style="border-left-color:#aa88ff" id="sig-30">
+        <div class="signal" style="border-left-color:#aa88ff" id="sig-25">
             <div class="sig-header">
                 <span class="sn-tag">SN104</span>
                 <span class="snd">sn104 h-param tracker</span>
@@ -894,16 +764,16 @@ This should significantly reduce the 502/504 errors. Appreciate the heads-up!</d
             </div>
             <div class="sum">### Hyperparams changed on subnet 104
 - `immunity_period` `0` → `720`</div>
-            <button class="toggle" onclick="toggleDetails(30)">📄 Show full message</button>
-            <div id="det-30" class="details" style="display:none">
+            <button class="toggle" onclick="toggleDetails(25)">📄 Show full message</button>
+            <div id="det-25" class="details" style="display:none">
                 <div class="full-msg">### Hyperparams changed on subnet 104
 - `immunity_period` `0` → `720`</div>
-                <button class="toggle" onclick="toggleDetails(30)">🔼 Hide</button>
+                <button class="toggle" onclick="toggleDetails(25)">🔼 Hide</button>
             </div>
         </div>
         
 
-        <div class="signal" style="border-left-color:#aa88ff" id="sig-31">
+        <div class="signal" style="border-left-color:#aa88ff" id="sig-26">
             <div class="sig-header">
                 <span class="sn-tag">SN104</span>
                 <span class="snd">sn104 h-param tracker</span>
@@ -914,17 +784,17 @@ This should significantly reduce the 502/504 errors. Appreciate the heads-up!</d
             <div class="sum">### Hyperparams changed on subnet 104
 - `max_burn` `100000000000` → `100000001`
 - `min_burn` `999999999` → `100000000`</div>
-            <button class="toggle" onclick="toggleDetails(31)">📄 Show full message</button>
-            <div id="det-31" class="details" style="display:none">
+            <button class="toggle" onclick="toggleDetails(26)">📄 Show full message</button>
+            <div id="det-26" class="details" style="display:none">
                 <div class="full-msg">### Hyperparams changed on subnet 104
 - `max_burn` `100000000000` → `100000001`
 - `min_burn` `999999999` → `100000000`</div>
-                <button class="toggle" onclick="toggleDetails(31)">🔼 Hide</button>
+                <button class="toggle" onclick="toggleDetails(26)">🔼 Hide</button>
             </div>
         </div>
         
 
-        <div class="signal" style="border-left-color:#aa88ff" id="sig-32">
+        <div class="signal" style="border-left-color:#aa88ff" id="sig-27">
             <div class="sig-header">
                 <span class="sn-tag">SN104</span>
                 <span class="snd">sn104 h-param tracker</span>
@@ -934,16 +804,16 @@ This should significantly reduce the 502/504 errors. Appreciate the heads-up!</d
             </div>
             <div class="sum">### Hyperparams changed on subnet 104
 - `commit_reveal_weights_enabled` `False` → `True`</div>
-            <button class="toggle" onclick="toggleDetails(32)">📄 Show full message</button>
-            <div id="det-32" class="details" style="display:none">
+            <button class="toggle" onclick="toggleDetails(27)">📄 Show full message</button>
+            <div id="det-27" class="details" style="display:none">
                 <div class="full-msg">### Hyperparams changed on subnet 104
 - `commit_reveal_weights_enabled` `False` → `True`</div>
-                <button class="toggle" onclick="toggleDetails(32)">🔼 Hide</button>
+                <button class="toggle" onclick="toggleDetails(27)">🔼 Hide</button>
             </div>
         </div>
         
 
-        <div class="signal" style="border-left-color:#aa88ff" id="sig-33">
+        <div class="signal" style="border-left-color:#aa88ff" id="sig-28">
             <div class="sig-header">
                 <span class="sn-tag">SN104</span>
                 <span class="snd">sn104 h-param tracker</span>
@@ -953,11 +823,11 @@ This should significantly reduce the 502/504 errors. Appreciate the heads-up!</d
             </div>
             <div class="sum">### Hyperparams changed on subnet 104
 - `commit_reveal_weights_enabled` `True` → `False`</div>
-            <button class="toggle" onclick="toggleDetails(33)">📄 Show full message</button>
-            <div id="det-33" class="details" style="display:none">
+            <button class="toggle" onclick="toggleDetails(28)">📄 Show full message</button>
+            <div id="det-28" class="details" style="display:none">
                 <div class="full-msg">### Hyperparams changed on subnet 104
 - `commit_reveal_weights_enabled` `True` → `False`</div>
-                <button class="toggle" onclick="toggleDetails(33)">🔼 Hide</button>
+                <button class="toggle" onclick="toggleDetails(28)">🔼 Hide</button>
             </div>
         </div>
         
@@ -968,7 +838,7 @@ This should significantly reduce the 502/504 errors. Appreciate the heads-up!</d
             <h2>SN105 (4 signals)</h2>
             <div class="subnet-signals">
                 
-        <div class="signal" style="border-left-color:#444" id="sig-34">
+        <div class="signal" style="border-left-color:#444" id="sig-29">
             <div class="sig-header">
                 <span class="sn-tag">SN105</span>
                 <span class="snd">fx_mar</span>
@@ -980,8 +850,8 @@ This should significantly reduce the 502/504 errors. Appreciate the heads-up!</d
 A breaking change has been introduced for orchestrators using the public-worker-gateway.
 
 **list_workers** is now deprecated and has been replaced with: **list_public_wor...</div>
-            <button class="toggle" onclick="toggleDetails(34)">📄 Show full message</button>
-            <div id="det-34" class="details" style="display:none">
+            <button class="toggle" onclick="toggleDetails(29)">📄 Show full message</button>
+            <div id="det-29" class="details" style="display:none">
                 <div class="full-msg">**ORCHESTRATOR CODE UPDATE**:
 A breaking change has been introduced for orchestrators using the public-worker-gateway.
 
@@ -996,12 +866,12 @@ Updated payload:
 If your orchestrator is connected to the public gateway, you will need to update your orchestrator code accordingly.
 
 The documentation has been updated.</div>
-                <button class="toggle" onclick="toggleDetails(34)">🔼 Hide</button>
+                <button class="toggle" onclick="toggleDetails(29)">🔼 Hide</button>
             </div>
         </div>
         
 
-        <div class="signal" style="border-left-color:#444" id="sig-35">
+        <div class="signal" style="border-left-color:#444" id="sig-30">
             <div class="sig-header">
                 <span class="sn-tag">SN105</span>
                 <span class="snd">nt_0216</span>
@@ -1012,8 +882,8 @@ The documentation has been updated.</div>
             <div class="sum">&lt;@1420143671684235355&gt; &lt;@847938562221408287&gt; 
 I’m facing the same issue that happened about a week ago.
 I recently registered a new miner. On-chain, it was updated to my hotkey, but the dashboard stil...</div>
-            <button class="toggle" onclick="toggleDetails(35)">📄 Show full message</button>
-            <div id="det-35" class="details" style="display:none">
+            <button class="toggle" onclick="toggleDetails(30)">📄 Show full message</button>
+            <div id="det-30" class="details" style="display:none">
                 <div class="full-msg">&lt;@1420143671684235355&gt; &lt;@847938562221408287&gt; 
 I’m facing the same issue that happened about a week ago.
 I recently registered a new miner. On-chain, it was updated to my hotkey, but the dashboard still hasn’t updated. Because of this, I’m getting the following error on my side and I’m unable to run the orchestrator:
@@ -1021,12 +891,12 @@ I recently registered a new miner. On-chain, it was updated to my hotkey, but th
 `WARNING | clients.subnet_core_client | Orch-gateway authorization rejected hotkey xxxxx: reason=unknown_or_revoked_api_key message=Orchestrator WebSocket authorization failed.`
 
 Could you please check this issue ASAP?</div>
-                <button class="toggle" onclick="toggleDetails(35)">🔼 Hide</button>
+                <button class="toggle" onclick="toggleDetails(30)">🔼 Hide</button>
             </div>
         </div>
         
 
-        <div class="signal" style="border-left-color:#444" id="sig-36">
+        <div class="signal" style="border-left-color:#444" id="sig-31">
             <div class="sig-header">
                 <span class="sn-tag">SN105</span>
                 <span class="snd">benji085138</span>
@@ -1035,15 +905,15 @@ Could you please check this issue ASAP?</div>
                 
             </div>
             <div class="sum">we filled the gaps and simplified the process. also updated the dashboard on the workers tab.</div>
-            <button class="toggle" onclick="toggleDetails(36)">📄 Show full message</button>
-            <div id="det-36" class="details" style="display:none">
+            <button class="toggle" onclick="toggleDetails(31)">📄 Show full message</button>
+            <div id="det-31" class="details" style="display:none">
                 <div class="full-msg">we filled the gaps and simplified the process. also updated the dashboard on the workers tab.</div>
-                <button class="toggle" onclick="toggleDetails(36)">🔼 Hide</button>
+                <button class="toggle" onclick="toggleDetails(31)">🔼 Hide</button>
             </div>
         </div>
         
 
-        <div class="signal" style="border-left-color:#444" id="sig-37">
+        <div class="signal" style="border-left-color:#444" id="sig-32">
             <div class="sig-header">
                 <span class="sn-tag">SN105</span>
                 <span class="snd">benji085138</span>
@@ -1052,10 +922,10 @@ Could you please check this issue ASAP?</div>
                 
             </div>
             <div class="sum">dropping the new doc now. we will make an announce</div>
-            <button class="toggle" onclick="toggleDetails(37)">📄 Show full message</button>
-            <div id="det-37" class="details" style="display:none">
+            <button class="toggle" onclick="toggleDetails(32)">📄 Show full message</button>
+            <div id="det-32" class="details" style="display:none">
                 <div class="full-msg">dropping the new doc now. we will make an announce</div>
-                <button class="toggle" onclick="toggleDetails(37)">🔼 Hide</button>
+                <button class="toggle" onclick="toggleDetails(32)">🔼 Hide</button>
             </div>
         </div>
         
@@ -1066,7 +936,7 @@ Could you please check this issue ASAP?</div>
             <h2>SN112 (2 signals)</h2>
             <div class="subnet-signals">
                 
-        <div class="signal" style="border-left-color:#444" id="sig-38">
+        <div class="signal" style="border-left-color:#444" id="sig-33">
             <div class="sig-header">
                 <span class="sn-tag">SN112</span>
                 <span class="snd">t.slice</span>
@@ -1075,15 +945,15 @@ Could you please check this issue ASAP?</div>
                 
             </div>
             <div class="sum">Launch update: Currently working with validators - onboarding them to new codebase</div>
-            <button class="toggle" onclick="toggleDetails(38)">📄 Show full message</button>
-            <div id="det-38" class="details" style="display:none">
+            <button class="toggle" onclick="toggleDetails(33)">📄 Show full message</button>
+            <div id="det-33" class="details" style="display:none">
                 <div class="full-msg">Launch update: Currently working with validators - onboarding them to new codebase</div>
-                <button class="toggle" onclick="toggleDetails(38)">🔼 Hide</button>
+                <button class="toggle" onclick="toggleDetails(33)">🔼 Hide</button>
             </div>
         </div>
         
 
-        <div class="signal" style="border-left-color:#ff88aa" id="sig-39">
+        <div class="signal" style="border-left-color:#ff88aa" id="sig-34">
             <div class="sig-header">
                 <span class="sn-tag">SN112</span>
                 <span class="snd">t.slice</span>
@@ -1093,11 +963,11 @@ Could you please check this issue ASAP?</div>
             </div>
             <div class="sum">All links to our open source release in minotaurs latest tweet - next set: taking code live.
 https://x.com/minotaursubnet/status/2052503289523290496</div>
-            <button class="toggle" onclick="toggleDetails(39)">📄 Show full message</button>
-            <div id="det-39" class="details" style="display:none">
+            <button class="toggle" onclick="toggleDetails(34)">📄 Show full message</button>
+            <div id="det-34" class="details" style="display:none">
                 <div class="full-msg">All links to our open source release in minotaurs latest tweet - next set: taking code live.
 https://x.com/minotaursubnet/status/2052503289523290496</div>
-                <button class="toggle" onclick="toggleDetails(39)">🔼 Hide</button>
+                <button class="toggle" onclick="toggleDetails(34)">🔼 Hide</button>
             </div>
         </div>
         
@@ -1105,39 +975,10 @@ https://x.com/minotaursubnet/status/2052503289523290496</div>
         </div>
         
         <div class="section" id="sn-114">
-            <h2>SN114 (2 signals)</h2>
+            <h2>SN114 (1 signals)</h2>
             <div class="subnet-signals">
                 
-        <div class="signal" style="border-left-color:#444" id="sig-40">
-            <div class="sig-header">
-                <span class="sn-tag">SN114</span>
-                <span class="snd">oli37.</span>
-                <span class="stype" style="color:#444">[announcement]</span>
-                <span class="urg-tag" style="background:#5599ff">BRIEF WORTHY — READ IN DAILY BRIEF</span>
-                
-            </div>
-            <div class="sum">Hey guys, please see the repositories below: 
-• Our custom plugin: https://github.com/DendriteHQ/SOMA-plugin 
-• Our validation benchmark: https://github.com/DendriteHQ/SOMA-benchmark
-
-Upload window is...</div>
-            <button class="toggle" onclick="toggleDetails(40)">📄 Show full message</button>
-            <div id="det-40" class="details" style="display:none">
-                <div class="full-msg">Hey guys, please see the repositories below: 
-• Our custom plugin: https://github.com/DendriteHQ/SOMA-plugin 
-• Our validation benchmark: https://github.com/DendriteHQ/SOMA-benchmark
-
-Upload window is officially open! We&#x27;re still not fully satisfied with the stability around the OpenClaw gateway issues, so we won&#x27;t start evaluation immediately. We&#x27;re continuing to work on fixes to run the competition smoothly. 
-
-As soon as the evaluation starts, we&#x27;ll also release the dashboard for this round, so you can monitor your results just like in previous rounds.
-
-I&#x27;ll keep you posted!</div>
-                <button class="toggle" onclick="toggleDetails(40)">🔼 Hide</button>
-            </div>
-        </div>
-        
-
-        <div class="signal" style="border-left-color:#444" id="sig-41">
+        <div class="signal" style="border-left-color:#444" id="sig-35">
             <div class="sig-header">
                 <span class="sn-tag">SN114</span>
                 <span class="snd">oli37.</span>
@@ -1146,10 +987,10 @@ I&#x27;ll keep you posted!</div>
                 
             </div>
             <div class="sum">Until now we had one overall winner and winner per compression ratio, so up to 5 miners were getting incentive. Now we are considering few scoring layers, we will update soon</div>
-            <button class="toggle" onclick="toggleDetails(41)">📄 Show full message</button>
-            <div id="det-41" class="details" style="display:none">
+            <button class="toggle" onclick="toggleDetails(35)">📄 Show full message</button>
+            <div id="det-35" class="details" style="display:none">
                 <div class="full-msg">Until now we had one overall winner and winner per compression ratio, so up to 5 miners were getting incentive. Now we are considering few scoring layers, we will update soon</div>
-                <button class="toggle" onclick="toggleDetails(41)">🔼 Hide</button>
+                <button class="toggle" onclick="toggleDetails(35)">🔼 Hide</button>
             </div>
         </div>
         
@@ -1160,7 +1001,7 @@ I&#x27;ll keep you posted!</div>
             <h2>SN122 (1 signals)</h2>
             <div class="subnet-signals">
                 
-        <div class="signal" style="border-left-color:#aa88ff" id="sig-42">
+        <div class="signal" style="border-left-color:#aa88ff" id="sig-36">
             <div class="sig-header">
                 <span class="sn-tag">SN122</span>
                 <span class="snd">sn122 h-param tracker</span>
@@ -1173,15 +1014,15 @@ I&#x27;ll keep you posted!</div>
 - `min_burn` `1000000` → `999999999`
 - `max_difficulty` `18446744073709551615` → `4611686018427387903`
 - `commit_reveal_per...</div>
-            <button class="toggle" onclick="toggleDetails(42)">📄 Show full message</button>
-            <div id="det-42" class="details" style="display:none">
+            <button class="toggle" onclick="toggleDetails(36)">📄 Show full message</button>
+            <div id="det-36" class="details" style="display:none">
                 <div class="full-msg">### Hyperparams changed on subnet 122
 - `target_regs_per_interval` `1` → `2`
 - `min_burn` `1000000` → `999999999`
 - `max_difficulty` `18446744073709551615` → `4611686018427387903`
 - `commit_reveal_period` `2` → `1`
 - `min_difficulty` `18446744073709551615` → `10000000`</div>
-                <button class="toggle" onclick="toggleDetails(42)">🔼 Hide</button>
+                <button class="toggle" onclick="toggleDetails(36)">🔼 Hide</button>
             </div>
         </div>
         
@@ -1189,54 +1030,10 @@ I&#x27;ll keep you posted!</div>
         </div>
         
         <div class="section" id="sn-124">
-            <h2>SN124 (2 signals)</h2>
+            <h2>SN124 (1 signals)</h2>
             <div class="subnet-signals">
                 
-        <div class="signal" style="border-left-color:#444" id="sig-43">
-            <div class="sig-header">
-                <span class="sn-tag">SN124</span>
-                <span class="snd">miguelikk</span>
-                <span class="stype" style="color:#444">[announcement]</span>
-                <span class="urg-tag" style="background:#5599ff">BRIEF WORTHY — READ IN DAILY BRIEF</span>
-                
-            </div>
-            <div class="sum">SWARM is going all-in. &lt;@&amp;1386718522453004358&gt; 
-
-Our mission has always been to unlock real-world autonomy for drones. Now we are accelerating.
-
-We are moving beyond one challenge at a time — autopilo...</div>
-            <button class="toggle" onclick="toggleDetails(43)">📄 Show full message</button>
-            <div id="det-43" class="details" style="display:none">
-                <div class="full-msg">SWARM is going all-in. &lt;@&amp;1386718522453004358&gt; 
-
-Our mission has always been to unlock real-world autonomy for drones. Now we are accelerating.
-
-We are moving beyond one challenge at a time — autopilot, search and rescue, navigation — and expanding toward challenge families: a broader framework to train autonomous flying agents across many missions, environments, and real-world constraints.
-
-We already **rented our physical lab** and are actively building it out. This is where we will close the sim-to-real gap.
-
-We will also announce a new **CTO**: a robotics expert with deep experience in autonomous systems. She will lead the technical side, from drone development to real-world testing.
-
-For miners: starting with the next challenge, we will reduce **burn to 80%**, effectively making emissions 4x more impactful than today. 
-
-Huge thanks to EBG for supporting this decision.
-
-No more little-by-little.
-
-We are building the lab.
-We are bringing in robotics leadership.
-We are expanding the benchmark.
-We are going after general autonomous flying agents.
-
-The next phase of SWARM starts now.
-
-Sneak peak of the office attached BTW</div>
-                <button class="toggle" onclick="toggleDetails(43)">🔼 Hide</button>
-            </div>
-        </div>
-        
-
-        <div class="signal" style="border-left-color:#444" id="sig-44">
+        <div class="signal" style="border-left-color:#444" id="sig-37">
             <div class="sig-header">
                 <span class="sn-tag">SN124</span>
                 <span class="snd">remoa0242_34615</span>
@@ -1248,8 +1045,8 @@ Sneak peak of the office attached BTW</div>
 Feels like **SWARM** is entering a completely different phase now.
 Moving from isolated problems to building general autonomous flying agents is a massive step.
 And the Grandval...</div>
-            <button class="toggle" onclick="toggleDetails(44)">📄 Show full message</button>
-            <div id="det-44" class="details" style="display:none">
+            <button class="toggle" onclick="toggleDetails(37)">📄 Show full message</button>
+            <div id="det-37" class="details" style="display:none">
                 <div class="full-msg">This is honestly huge.
 Feels like **SWARM** is entering a completely different phase now.
 Moving from isolated problems to building general autonomous flying agents is a massive step.
@@ -1257,7 +1054,7 @@ And the Grandvalira pilot sounds super strategic too, reel deployment, real pain
 That&#x27;s how real autonomy gets built.
 Really love seeing you guys go all-in on sim-to-real, robotics leadership, and actual field testing instead of staying purely theoretical.
 Excited to see what comes next.</div>
-                <button class="toggle" onclick="toggleDetails(44)">🔼 Hide</button>
+                <button class="toggle" onclick="toggleDetails(37)">🔼 Hide</button>
             </div>
         </div>
         
@@ -1267,12 +1064,12 @@ Excited to see what comes next.</div>
 
 
             <div class="section">
-                <h2>💬 Active Channels — No Signals (104)</h2>
+                <h2>💬 Active Channels — No Signals (107)</h2>
                 <p class="section-desc">Subnets with message activity but no classified signals.</p>
                 <div class="active-row"><span class="sn-tag">?</span> <span class="ch-name">Announcements</span> <span class="msg-count">1 msgs</span> <span class="owner-tag">no signals</span></div>
 <div class="active-row"><span class="sn-tag">SN90</span> <span class="ch-name">_・unclaimed・90</span> <span class="msg-count">1 msgs</span> <span class="owner-tag">no signals</span></div>
-<div class="active-row"><span class="sn-tag">?</span> <span class="ch-name">general</span> <span class="msg-count">33 msgs</span> <span class="owner-tag">no signals</span></div>
-<div class="active-row"><span class="sn-tag">?</span> <span class="ch-name">rao</span> <span class="msg-count">20 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">?</span> <span class="ch-name">general</span> <span class="msg-count">32 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">?</span> <span class="ch-name">rao</span> <span class="msg-count">28 msgs</span> <span class="owner-tag">no signals</span></div>
 <div class="active-row"><span class="sn-tag">SN12</span> <span class="ch-name">µ・horde・12</span> <span class="msg-count">10 msgs</span> <span class="owner-tag">no signals</span></div>
 <div class="active-row"><span class="sn-tag">SN3</span> <span class="ch-name">γ・τeuτonic・3</span> <span class="msg-count">32 msgs</span> <span class="owner-tag">no signals</span></div>
 <div class="active-row"><span class="sn-tag">SN5</span> <span class="ch-name">ε・hone・5</span> <span class="msg-count">2 msgs</span> <span class="owner-tag">no signals</span></div>
@@ -1280,26 +1077,26 @@ Excited to see what comes next.</div>
 <div class="active-row"><span class="sn-tag">SN8</span> <span class="ch-name">θ・vanta・8</span> <span class="msg-count">9 msgs</span> <span class="owner-tag">no signals</span></div>
 <div class="active-row"><span class="sn-tag">SN9</span> <span class="ch-name">ι・ioτa・9</span> <span class="msg-count">11 msgs</span> <span class="owner-tag">no signals</span></div>
 <div class="active-row"><span class="sn-tag">SN10</span> <span class="ch-name">κ・unclaimed・10</span> <span class="msg-count">3 msgs</span> <span class="owner-tag">no signals</span></div>
-<div class="active-row"><span class="sn-tag">SN11</span> <span class="ch-name">λ・trajectory-rl・11</span> <span class="msg-count">43 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN11</span> <span class="ch-name">λ・trajectory-rl・11</span> <span class="msg-count">44 msgs</span> <span class="owner-tag">no signals</span></div>
 <div class="active-row"><span class="sn-tag">SN13</span> <span class="ch-name">ν・daτaverse・13</span> <span class="msg-count">6 msgs</span> <span class="owner-tag">no signals</span></div>
-<div class="active-row"><span class="sn-tag">SN15</span> <span class="ch-name">ο・oro・15</span> <span class="msg-count">131 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN15</span> <span class="ch-name">ο・oro・15</span> <span class="msg-count">136 msgs</span> <span class="owner-tag">no signals</span></div>
 <div class="active-row"><span class="sn-tag">SN16</span> <span class="ch-name">π・biτads・16</span> <span class="msg-count">3 msgs</span> <span class="owner-tag">no signals</span></div>
 <div class="active-row"><span class="sn-tag">SN17</span> <span class="ch-name">ρ・404—gen・17</span> <span class="msg-count">10 msgs</span> <span class="owner-tag">no signals</span></div>
 <div class="active-row"><span class="sn-tag">SN19</span> <span class="ch-name">τ・blockmachine・19</span> <span class="msg-count">9 msgs</span> <span class="owner-tag">no signals</span></div>
 <div class="active-row"><span class="sn-tag">SN20</span> <span class="ch-name">υ・groundlayer・20</span> <span class="msg-count">2 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN21</span> <span class="ch-name">φ・adτao・21</span> <span class="msg-count">38 msgs</span> <span class="owner-tag">no signals</span></div>
 <div class="active-row"><span class="sn-tag">SN22</span> <span class="ch-name">χ・desearch・22</span> <span class="msg-count">5 msgs</span> <span class="owner-tag">no signals</span></div>
-<div class="active-row"><span class="sn-tag">SN23</span> <span class="ch-name">ψ・trishool・23</span> <span class="msg-count">25 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN23</span> <span class="ch-name">ψ・trishool・23</span> <span class="msg-count">26 msgs</span> <span class="owner-tag">no signals</span></div>
 <div class="active-row"><span class="sn-tag">SN24</span> <span class="ch-name">ω・quasar・24</span> <span class="msg-count">38 msgs</span> <span class="owner-tag">no signals</span></div>
 <div class="active-row"><span class="sn-tag">SN116</span> <span class="ch-name">ъ・τaolend・116</span> <span class="msg-count">6 msgs</span> <span class="owner-tag">no signals</span></div>
 <div class="active-row"><span class="sn-tag">SN87</span> <span class="ch-name">ы・luminar・87</span> <span class="msg-count">5 msgs</span> <span class="owner-tag">no signals</span></div>
-<div class="active-row"><span class="sn-tag">SN110</span> <span class="ch-name">ѐ・greencompute・110</span> <span class="msg-count">16 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN110</span> <span class="ch-name">ѐ・greencompute・110</span> <span class="msg-count">15 msgs</span> <span class="owner-tag">no signals</span></div>
 <div class="active-row"><span class="sn-tag">SN111</span> <span class="ch-name">ё・oneoneone・111</span> <span class="msg-count">10 msgs</span> <span class="owner-tag">no signals</span></div>
 <div class="active-row"><span class="sn-tag">SN113</span> <span class="ch-name">ѓ・tensorusd・113</span> <span class="msg-count">2 msgs</span> <span class="owner-tag">no signals</span></div>
 <div class="active-row"><span class="sn-tag">SN115</span> <span class="ch-name">ѕ・soulx・115</span> <span class="msg-count">2 msgs</span> <span class="owner-tag">no signals</span></div>
-<div class="active-row"><span class="sn-tag">SN80</span> <span class="ch-name">՞・dogelayer・80</span> <span class="msg-count">34 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN80</span> <span class="ch-name">՞・dogelayer・80</span> <span class="msg-count">33 msgs</span> <span class="owner-tag">no signals</span></div>
 <div class="active-row"><span class="sn-tag">SN106</span> <span class="ch-name">դ・voidai・106</span> <span class="msg-count">10 msgs</span> <span class="owner-tag">no signals</span></div>
-<div class="active-row"><span class="sn-tag">SN108</span> <span class="ch-name">զ・talkhead・108</span> <span class="msg-count">1 msgs</span> <span class="owner-tag">no signals</span></div>
-                <div class="quiet-note">+ 74 more</div>
+                <div class="quiet-note">+ 77 more</div>
             </div>
             
 
@@ -1307,7 +1104,7 @@ Excited to see what comes next.</div>
         <div class="section">
             <h2>🟢 Active Subnets (128)</h2>
             <p class="section-desc">Subnets with message activity today, ordered by volume.</p>
-            <div class="active-row"><span class="sn-tag">SN15</span> <span class="ch-name">ο・oro・15</span> <span class="msg-count">131 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN97</span> <span class="ch-name">ა・distil・97</span> <span class="msg-count">99 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN66</span> <span class="ch-name">ض・ninja・66</span> <span class="msg-count">93 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN78</span> <span class="ch-name">و・vocence・78</span> <span class="msg-count">73 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN105</span> <span class="ch-name">գ・beam・105</span> <span class="msg-count">65 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN114</span> <span class="ch-name">є・soma・114</span> <span class="msg-count">57 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN120</span> <span class="ch-name">ⴷ・ⴷffine・120</span> <span class="msg-count">49 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN11</span> <span class="ch-name">λ・trajectory-rl・11</span> <span class="msg-count">43 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN64</span> <span class="ch-name">ش・chutes・64</span> <span class="msg-count">39 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN95</span> <span class="ch-name">ᚅ・actual・95</span> <span class="msg-count">39 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN21</span> <span class="ch-name">φ・adτao・21</span> <span class="msg-count">38 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN24</span> <span class="ch-name">ω・quasar・24</span> <span class="msg-count">38 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN39</span> <span class="ch-name">מ・cathedral・39</span> <span class="msg-count">37 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN80</span> <span class="ch-name">՞・dogelayer・80</span> <span class="msg-count">34 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">?</span> <span class="ch-name">general</span> <span class="msg-count">33 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN26</span> <span class="ch-name">ב・perτurb・26</span> <span class="msg-count">33 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN3</span> <span class="ch-name">γ・τeuτonic・3</span> <span class="msg-count">32 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN60</span> <span class="ch-name">ذ・bitsec・60</span> <span class="msg-count">29 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN124</span> <span class="ch-name">𑀁・swarm・124</span> <span class="msg-count">28 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN28</span> <span class="ch-name">ד・fish・28</span> <span class="msg-count">27 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN23</span> <span class="ch-name">ψ・trishool・23</span> <span class="msg-count">25 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN71</span> <span class="ch-name">ف・leadpoeτ・71</span> <span class="msg-count">25 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN74</span> <span class="ch-name">ل・giττensor・74</span> <span class="msg-count">23 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN47</span> <span class="ch-name">צ・evolai・47</span> <span class="msg-count">22 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN100</span> <span class="ch-name">დ・plaτform・100</span> <span class="msg-count">22 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN50</span> <span class="ch-name">ש・synth・50</span> <span class="msg-count">21 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">?</span> <span class="ch-name">rao</span> <span class="msg-count">20 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN49</span> <span class="ch-name">ר・nepher・49</span> <span class="msg-count">20 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN55</span> <span class="ch-name">ث・niome・55</span> <span class="msg-count">19 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN109</span> <span class="ch-name">ى・academia・109</span> <span class="msg-count">18 msgs</span> <span class="owner-tag">Owner: unknown</span></div>
+            <div class="active-row"><span class="sn-tag">SN15</span> <span class="ch-name">ο・oro・15</span> <span class="msg-count">136 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN97</span> <span class="ch-name">ა・distil・97</span> <span class="msg-count">99 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN66</span> <span class="ch-name">ض・ninja・66</span> <span class="msg-count">92 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN78</span> <span class="ch-name">و・vocence・78</span> <span class="msg-count">73 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN105</span> <span class="ch-name">գ・beam・105</span> <span class="msg-count">66 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN114</span> <span class="ch-name">є・soma・114</span> <span class="msg-count">57 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN120</span> <span class="ch-name">ⴷ・ⴷffine・120</span> <span class="msg-count">48 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN11</span> <span class="ch-name">λ・trajectory-rl・11</span> <span class="msg-count">44 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN64</span> <span class="ch-name">ش・chutes・64</span> <span class="msg-count">40 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN21</span> <span class="ch-name">φ・adτao・21</span> <span class="msg-count">38 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN24</span> <span class="ch-name">ω・quasar・24</span> <span class="msg-count">38 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN95</span> <span class="ch-name">ᚅ・actual・95</span> <span class="msg-count">38 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN26</span> <span class="ch-name">ב・perτurb・26</span> <span class="msg-count">36 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN39</span> <span class="ch-name">מ・cathedral・39</span> <span class="msg-count">36 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN80</span> <span class="ch-name">՞・dogelayer・80</span> <span class="msg-count">33 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">?</span> <span class="ch-name">general</span> <span class="msg-count">32 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN3</span> <span class="ch-name">γ・τeuτonic・3</span> <span class="msg-count">32 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN60</span> <span class="ch-name">ذ・bitsec・60</span> <span class="msg-count">29 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">?</span> <span class="ch-name">rao</span> <span class="msg-count">28 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN28</span> <span class="ch-name">ד・fish・28</span> <span class="msg-count">27 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN23</span> <span class="ch-name">ψ・trishool・23</span> <span class="msg-count">26 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN47</span> <span class="ch-name">צ・evolai・47</span> <span class="msg-count">24 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN74</span> <span class="ch-name">ل・giττensor・74</span> <span class="msg-count">23 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN50</span> <span class="ch-name">ש・synth・50</span> <span class="msg-count">22 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN124</span> <span class="ch-name">𑀁・swarm・124</span> <span class="msg-count">21 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN100</span> <span class="ch-name">დ・plaτform・100</span> <span class="msg-count">20 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN55</span> <span class="ch-name">ث・niome・55</span> <span class="msg-count">18 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN109</span> <span class="ch-name">ى・academia・109</span> <span class="msg-count">18 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN71</span> <span class="ch-name">ف・leadpoeτ・71</span> <span class="msg-count">17 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN25</span> <span class="ch-name">א・mainframe・25</span> <span class="msg-count">16 msgs</span> <span class="owner-tag">Owner: unknown</span></div>
         </div>
         
 
