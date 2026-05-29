@@ -1,0 +1,2286 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bittensor Report — 2026-05-29</title>
+<style>
+:root{--bg:#0a0a12;--card:#141420;--text:#d0d0e0;--dim:#777;--orange:#ff6b35;--red:#ff4444;--green:#00c060;--blue:#5599ff}
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif}
+body{background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+.container{max-width:1000px;margin:0 auto;padding:12px}
+header{text-align:center;padding:24px 0 16px;border-bottom:1px solid #222;margin-bottom:20px}
+h1{color:var(--orange);font-size:clamp(1.4em,4vw,1.8em);font-weight:700}
+.meta{color:var(--dim);font-size:.9em;margin-top:6px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:14px;background:var(--card);border-radius:12px;margin-bottom:20px}
+.stat{text-align:center;padding:8px}
+.v{color:var(--orange);font-size:clamp(1.6em,5vw,2em);font-weight:700}
+.l{font-size:.75em;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+.section{background:var(--card);border-radius:12px;padding:16px;margin-bottom:16px;border:1px solid #1e1e2e}
+h2{color:var(--orange);font-size:1.15em;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid #222;font-weight:600}
+.section-desc{color:var(--dim);font-size:.85em;margin-bottom:12px;font-style:italic}
+/* Summary grid styles */
+.summary-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;margin-top:10px}
+.summary-sn{background:#0e0e18;border-radius:8px;padding:12px;border-left:3px solid var(--blue);cursor:pointer;transition:background .2s;text-decoration:none;color:var(--text)}
+.summary-sn:hover{background:#151520}
+.summary-sn.urgent{border-left-color:var(--red)}
+.summary-sn.brief{border-left-color:var(--blue)}
+.summary-sn.founder{border-left-color:var(--orange)}
+.summary-sn-header{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.summary-sn-num{background:var(--orange);color:#fff;padding:2px 8px;border-radius:4px;font-weight:700;font-size:.85em}
+.summary-sn-count{background:#1a1a2e;padding:2px 8px;border-radius:4px;font-size:.75em;color:var(--dim)}
+.summary-sn-text{font-size:.85em;color:#aaa;line-height:1.4}
+/* Signal cards */
+.signal{margin:10px 0;padding:12px 14px;border-left:3px solid var(--blue);border-radius:6px;background:#0e0e18;transition:background .2s}
+.signal:hover{background:#151520}
+.sig-header{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:6px;font-size:.82em}
+.sn-tag{background:#222;color:var(--orange);padding:2px 8px;border-radius:4px;font-weight:700;font-size:.85em}
+.snd{color:var(--orange);font-weight:600}
+.stype{font-size:.8em;opacity:.8}
+.urg-tag{font-size:.7em;padding:2px 8px;border-radius:3px;color:#fff;font-weight:600}
+.sum{margin-top:6px;font-size:.95em;line-height:1.5;color:var(--text)}
+.toggle{background:#1a1a2e;border:1px solid #333;color:var(--orange);padding:6px 14px;border-radius:6px;cursor:pointer;font-size:.8em;margin-top:10px;width:100%}
+.toggle:hover{background:#222}
+.details{margin-top:10px;padding-top:10px;border-top:1px solid #222}
+.full-msg{background:#0a0a12;padding:12px;border-radius:6px;font-size:.9em;color:#aaa;white-space:pre-wrap;word-break:break-word;max-height:400px;overflow-y:auto}
+.active-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #1a1a2a;font-size:.9em;flex-wrap:wrap}
+.active-row:last-child{border-bottom:none}
+.ch-name{color:var(--dim);font-size:.85em}
+.msg-count{background:#1a1a2e;padding:2px 8px;border-radius:4px;font-size:.75em;color:var(--dim)}
+.owner-tag{color:#888;font-size:.8em}
+.quiet-list{display:flex;flex-wrap:wrap;gap:8px;padding:8px 0}
+.quiet-tag{background:#0e0e18;padding:6px 10px;border-radius:6px;font-size:.85em;color:#666}
+.quiet-note{color:var(--dim);font-size:.8em;margin-top:10px;text-align:center}
+footer{text-align:center;padding:30px 0;color:var(--dim);font-size:.8em;border-top:1px solid #222;margin-top:20px}
+@media (max-width:600px){
+    .stats{grid-template-columns:repeat(2,1fr)}
+    .summary-grid{grid-template-columns:1fr}
+    .sig-header{gap:4px}
+    .active-row{flex-direction:column;align-items:flex-start;gap:4px}
+}
+.synthesis{background:var(--card);border-radius:12px;padding:20px;margin-bottom:16px;border:1px solid #1e1e2e;line-height:1.6}
+.synthesis h3{color:var(--orange);font-size:1em;margin:14px 0 6px}
+.synthesis p{margin-bottom:10px}
+.synthesis ul{margin:0 0 12px 20px}
+.synthesis li{margin-bottom:6px}
+</style>
+<script>
+function toggleDetails(idx) {
+    var el = document.getElementById('det-' + idx);
+    if (el.style.display === 'none') {
+        el.style.display = 'block';
+    } else {
+        el.style.display = 'none';
+    }
+}
+</script>
+</head>
+<body>
+<div class="container">
+<header>
+    <h1>📊 Bittensor Daily Report</h1>
+    <div class="meta">2026-05-29 · 137 signals · 106 active subnets · 26 quiet</div>
+</header>
+
+<div class="stats">
+    <div class="stat"><div class="v">137</div><div class="l">Signals</div></div>
+    <div class="stat"><div class="v">121</div><div class="l">Urgent</div></div>
+    <div class="stat"><div class="v">106</div><div class="l">Active</div></div>
+    <div class="stat"><div class="v">26</div><div class="l">Quiet</div></div>
+</div>
+
+
+    <div class="section">
+        <h2>📋 Subnet Summary</h2>
+        <p class="section-desc">Click any subnet to jump to its detailed signals. Sorted numerically (SN1, SN2, SN3...).</p>
+        <div class="summary-grid">
+            
+        <a class="summary-sn urgent" href="#sn-?">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">ANN</span>
+                <span class="summary-sn-count">🔥 22 urgent · 📋 8 brief · 👤 3 consttt</span>
+            </div>
+            <div class="summary-sn-text">Hello @everyone in the Bittensor family. 
+
+Public service an...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-1">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN1</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-2">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN2</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-4">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN4</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-5">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN5</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-7">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN7</span>
+                <span class="summary-sn-count">🔥 2 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-9">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN9</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-10">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN10</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-12">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN12</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-13">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN13</span>
+                <span class="summary-sn-count">🔥 1 urgent</span>
+            </div>
+            <div class="summary-sn-text">data-universe-api.api.macrocosmos.ai partial outage — /on-de...</div>
+        </a>
+        
+        <a class="summary-sn brief" href="#sn-14">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN14</span>
+                <span class="summary-sn-count">📋 2 brief</span>
+            </div>
+            <div class="summary-sn-text">### Hyperparams changed on subnet 14
+- `activity_cutoff` `50...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-16">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN16</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-17">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN17</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-18">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN18</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-19">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN19</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-20">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN20</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-22">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN22</span>
+                <span class="summary-sn-count">🔥 1 urgent · 📋 1 brief · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-25">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN25</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">&lt;@769552026329022474&gt; need to launch</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-27">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN27</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-29">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN29</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-30">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN30</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-31">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN31</span>
+                <span class="summary-sn-count">🔥 1 urgent</span>
+            </div>
+            <div class="summary-sn-text">&lt;@&amp;1404959073283346552&gt; &lt;@1020187154502144072&gt; has successfu...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-32">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN32</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-33">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN33</span>
+                <span class="summary-sn-count">🔥 3 urgent · 👤 2 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-34">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN34</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-35">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN35</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-37">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN37</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-38">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN38</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-40">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN40</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-41">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN41</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-42">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN42</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-43">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN43</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-45">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN45</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-47">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN47</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-48">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN48</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-49">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN49</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-51">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN51</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-52">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN52</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-53">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN53</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-54">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN54</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-56">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN56</span>
+                <span class="summary-sn-count">🔥 1 urgent · 📋 1 brief · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-57">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN57</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-58">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN58</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-59">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN59</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-61">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN61</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-62">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN62</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">the miners here should work with the team to make this a suc...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-63">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN63</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-65">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN65</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-67">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN67</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-68">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN68</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-69">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN69</span>
+                <span class="summary-sn-count">🔥 1 urgent · 📋 1 brief · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-70">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN70</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-71">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN71</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-72">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN72</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-73">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN73</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-75">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN75</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-76">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN76</span>
+                <span class="summary-sn-count">🔥 2 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-77">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN77</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-79">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN79</span>
+                <span class="summary-sn-count">🔥 2 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-82">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN82</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-83">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN83</span>
+                <span class="summary-sn-count">🔥 1 urgent · 📋 2 brief · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-84">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN84</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-85">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN85</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-86">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN86</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-87">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN87</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-88">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN88</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-89">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN89</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-90">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN90</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-91">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN91</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-93">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN93</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-94">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN94</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-96">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN96</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-98">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN98</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn brief" href="#sn-99">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN99</span>
+                <span class="summary-sn-count">📋 1 brief</span>
+            </div>
+            <div class="summary-sn-text">Hey Zhiyan 🤙
+
+**Honest answer: the whitepaper doesn&#x27;t give a...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-101">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN101</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-102">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN102</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-103">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN103</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-104">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN104</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-106">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN106</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-107">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN107</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-108">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN108</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-109">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN109</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-110">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN110</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-111">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN111</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-112">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN112</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-113">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN113</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-115">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN115</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-116">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN116</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-117">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN117</span>
+                <span class="summary-sn-count">🔥 2 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-119">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN119</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-121">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN121</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-123">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN123</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-125">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN125</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-126">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN126</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-127">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN127</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-128">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN128</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Miners, thumbs up 👍  if this subnet is legit and 👎  if this ...</div>
+        </a>
+        
+        </div>
+    </div>
+    
+
+<div class="synthesis"><div class="section"><h2>🧠 Intelligence Summary</h2><p class="section-desc">LLM-synthesized daily analysis</p>🔹 <b>REGISTRY CHANGES</b>: No registry changes today.<br>
+<br>
+⚡ <b>HEADLINE</b>: Mainnet was upgraded to spec version 402 with MEV Shield re-enabled, and multiple runtime upgrades occurred on both mainnet and testnet.<br>
+<br>
+|🎯 <b>CONST WATCH</b>:  <br>
+<li><b>consttt</b> urged miners in subnets <b>SN25</b>, <b>SN62</b>, and <b>SN117</b> to collaborate for success.  </li>
+<li><b>consttt</b> asked miners to validate legitimacy of <b>SN1</b> via emoji reactions.  </li>
+<li><b>consttt</b> announced an upcoming talk on Novelty Search and hinted at next week’s major changes.  </li>
+<li><b>consttt</b> confirmed launch timing for <b>SN25</b> is pending.  </li>
+<li><b>consttt</b> emphasized need for long-context dataset for <b>SN33</b> pretraining.  </li>
+<li>No other high-authority signals from verified founders today.</li>
+<br>
+|🌐 <b>ECOSYSTEM</b>:  <br>
+<li><b>SN33</b>: Preparing major anti-DDoS release with encrypted endpoint commitments.  </li>
+<li><b>SN79</b>: GenTRX v0.4.3 launched on mainnet enabling distributed gradient training.  </li>
+<li><b>SN13</b>: Partial API outage reported on data-universe-api.api.macrocosmos.ai.</li>
+<br>
+|👁 <b>WATCHLIST</b>:  <br>
+<li><b>SN33</b>: Critical infrastructure update imminent; anti-DDoS feature releasing tomorrow.  </li>
+<li><b>SN13</b>: Ongoing partial API issues may affect miner job submission and file uploads.  </li>
+<li><b>Multiple SNs</b>: Repeated runtime upgrades suggest ongoing stability or feature deployment phase.</li>
+<br>
+🎬 <b>What to Do</b>:  <br>
+<li><b>SN33</b>: Prepare for mandatory upgrade to support encrypted commitments and avoid downtime.  </li>
+<li><b>SN13</b>: Monitor API endpoints and coordinate with team on resolution timeline.  </li>
+<li><b>All Subnets</b>: Confirm compatibility with latest mainnet spec version 402 and MEV Shield re-enablement.</li></div></div>
+
+
+        <div class="section" id="sn-?">
+            <h2>SN? (30 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-0">
+            <div class="sig-header">
+                <span class="sn-tag">?</span>
+                <span class="snd">consttt</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">Hello @everyone in the Bittensor family. 
+
+Public service announcement: Starting next week we will be introducing an interim measure to block emissions on Bittensor subnets which are engaging in activ...</div>
+            <button class="toggle" onclick="toggleDetails(0)">📄 Show full message</button>
+            <div id="det-0" class="details" style="display:none">
+                <div class="full-msg">Hello @everyone in the Bittensor family. 
+
+Public service announcement: Starting next week we will be introducing an interim measure to block emissions on Bittensor subnets which are engaging in active foul play and or with no clear path to adding value into the Bittensor ecosystem. 
+
+This will need to be done on a case-by-case basis, however the criteria for blocked emissions will revolve around the following:
+
+1) Long-term burning of 100% miner emissions with no plan from the team to bring the</div>
+                <button class="toggle" onclick="toggleDetails(0)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-1">
+            <div class="sig-header">
+                <span class="sn-tag">?</span>
+                <span class="snd">consttt</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">Hey @everyone
+
+Ill be on NS tonight chatting more about next weeks exciting changes to subtensor. 
+
+This will be a solo call with an AMA but if there is a team that hasn&#x27;t had the opportunity to talk ...</div>
+            <button class="toggle" onclick="toggleDetails(1)">📄 Show full message</button>
+            <div id="det-1" class="details" style="display:none">
+                <div class="full-msg">Hey @everyone
+
+Ill be on NS tonight chatting more about next weeks exciting changes to subtensor. 
+
+This will be a solo call with an AMA but if there is a team that hasn&#x27;t had the opportunity to talk on NS there is space today, send me a DM.
+
+https://discord.com/events/799672011265015819/1392986791140917408
+
+Best
+&lt;@389189199514959893&gt;</div>
+                <button class="toggle" onclick="toggleDetails(1)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-2">
+            <div class="sig-header">
+                <span class="sn-tag">?</span>
+                <span class="snd">sam0x17</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">Hey @everyone!
+
+Moments ago, the Triumvirate upgraded mainnet to spec version 402 via hotfix. This hotfix reverts the change made that issues alpha outstanding to the subnet owner on new subnet regist...</div>
+            <button class="toggle" onclick="toggleDetails(2)">📄 Show full message</button>
+            <div id="det-2" class="details" style="display:none">
+                <div class="full-msg">Hey @everyone!
+
+Moments ago, the Triumvirate upgraded mainnet to spec version 402 via hotfix. This hotfix reverts the change made that issues alpha outstanding to the subnet owner on new subnet registration. The pool liquidity injection still occurs, but liquidity is no longer minted specifically for the subnet owner, as this was leading to undesirable tokeneconomic effects.
+
+For more information please see: https://github.com/opentensor/subtensor/releases/tag/v3.3.15-402
+
+Thank you!</div>
+                <button class="toggle" onclick="toggleDetails(2)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-3">
+            <div class="sig-header">
+                <span class="sn-tag">?</span>
+                <span class="snd">consttt</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">Hey @everyone
+
+Excited to host &lt;@&amp;1346133673451327542&gt; tonight on Novelty Search with an additional talk covering the testnet upgrade for conviction.
+
+https://discord.com/events/799672011265015819/139...</div>
+            <button class="toggle" onclick="toggleDetails(3)">📄 Show full message</button>
+            <div id="det-3" class="details" style="display:none">
+                <div class="full-msg">Hey @everyone
+
+Excited to host &lt;@&amp;1346133673451327542&gt; tonight on Novelty Search with an additional talk covering the testnet upgrade for conviction.
+
+https://discord.com/events/799672011265015819/1392986791140917408
+
+See you there
+&lt;@389189199514959893&gt;</div>
+                <button class="toggle" onclick="toggleDetails(3)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-4">
+            <div class="sig-header">
+                <span class="sn-tag">?</span>
+                <span class="snd">sam0x17</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">Hey @everyone!
+
+Just now **testnet** was upgraded to spec version 403, which includes the initial implementation of the much-anticipated **conviction locks** feature.
+
+This also includes a slight twea...</div>
+            <button class="toggle" onclick="toggleDetails(4)">📄 Show full message</button>
+            <div id="det-4" class="details" style="display:none">
+                <div class="full-msg">Hey @everyone!
+
+Just now **testnet** was upgraded to spec version 403, which includes the initial implementation of the much-anticipated **conviction locks** feature.
+
+This also includes a slight tweak to the new subnet registration liquidity injection feature that was released in the previous upgrade: namely the initial lock cost (still evaluated at the median subnet price) will still be injected into the liquidity pool, but **the subnet owner will no longer be given additional liquidity direct</div>
+                <button class="toggle" onclick="toggleDetails(4)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-5">
+            <div class="sig-header">
+                <span class="sn-tag">?</span>
+                <span class="snd">sam0x17</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">Hey @everyone!
+
+The Triumvirate has upgraded mainnet to spec version 401, which includes the batch of changes that have been on testnet for the last week (many of these have been waiting to go out for...</div>
+            <button class="toggle" onclick="toggleDetails(5)">📄 Show full message</button>
+            <div id="det-5" class="details" style="display:none">
+                <div class="full-msg">Hey @everyone!
+
+The Triumvirate has upgraded mainnet to spec version 401, which includes the batch of changes that have been on testnet for the last week (many of these have been waiting to go out for many weeks at this point) and a few other small fixes that accumulated over the last few days.
+
+The full list of changes can be found at https://github.com/opentensor/subtensor/releases/tag/v3.3.14-401.
+
+The overall theme of this release is a large number of changes designed to make the onboarding </div>
+                <button class="toggle" onclick="toggleDetails(5)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-6">
+            <div class="sig-header">
+                <span class="sn-tag">?</span>
+                <span class="snd">sam0x17</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">Hey @everyone!
+
+Just a reminder that with the neuron registration re-work that is deploying this evening as part of the planned mainnet upgrade that has been on testnet for the last week, the cost of ...</div>
+            <button class="toggle" onclick="toggleDetails(6)">📄 Show full message</button>
+            <div id="det-6" class="details" style="display:none">
+                <div class="full-msg">Hey @everyone!
+
+Just a reminder that with the neuron registration re-work that is deploying this evening as part of the planned mainnet upgrade that has been on testnet for the last week, the cost of `burned_register` will now be dynamic based on demand. In scenarios where your registration would have previously failed due to rate limits, the call will now instead go through, and will simply cost more TAO based on demand.
+
+Thank you!</div>
+                <button class="toggle" onclick="toggleDetails(6)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-7">
+            <div class="sig-header">
+                <span class="sn-tag">?</span>
+                <span class="snd">sam0x17</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">Hey @everyone
+
+As a final step in the process of Latent taking over client development of the CLI, SDK, etc., and as one step further in the healthy decentralization of the ecosystem, OTF just transfe...</div>
+            <button class="toggle" onclick="toggleDetails(7)">📄 Show full message</button>
+            <div id="det-7" class="details" style="display:none">
+                <div class="full-msg">Hey @everyone
+
+As a final step in the process of Latent taking over client development of the CLI, SDK, etc., and as one step further in the healthy decentralization of the ecosystem, OTF just transferred ownership of the following GitHub repositories to `latent-to`, which is the GitHub organization for Latent:
+
+- `bittensor`
+- `btcli`
+- `btwallet`
+- `bt-decode`
+- `bittensor-drand`
+- `async-substrate-interface`
+- `subnet-template`
+- `bittensor-subnet-template`
+- `cubit`
+
+Old links to these repos</div>
+                <button class="toggle" onclick="toggleDetails(7)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-8">
+            <div class="sig-header">
+                <span class="sn-tag">?</span>
+                <span class="snd">sam0x17</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">✅  final step, 2nd runtime upgrade complete, upgrade is live, MEV Shield re-enabled 🔥 @everyone
+
+these are all now live (descending order):
+- https://github.com/opentensor/subtensor/releases/tag/v3.3....</div>
+            <button class="toggle" onclick="toggleDetails(8)">📄 Show full message</button>
+            <div id="det-8" class="details" style="display:none">
+                <div class="full-msg">✅  final step, 2nd runtime upgrade complete, upgrade is live, MEV Shield re-enabled 🔥 @everyone
+
+these are all now live (descending order):
+- https://github.com/opentensor/subtensor/releases/tag/v3.3.12-391
+- https://github.com/opentensor/subtensor/releases/tag/v3.3.11-385
+- https://github.com/opentensor/subtensor/releases/tag/v3.3.10-380</div>
+                <button class="toggle" onclick="toggleDetails(8)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-9">
+            <div class="sig-header">
+                <span class="sn-tag">?</span>
+                <span class="snd">sam0x17</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">Hey @everyone,
+
+At 6:00 PM EDT the Triumvirate is planning to perform the runtime upgrade outlined above in https://discord.com/channels/799672011265015819/830075335084474390/1481503583684792431. This...</div>
+            <button class="toggle" onclick="toggleDetails(9)">📄 Show full message</button>
+            <div id="det-9" class="details" style="display:none">
+                <div class="full-msg">Hey @everyone,
+
+At 6:00 PM EDT the Triumvirate is planning to perform the runtime upgrade outlined above in https://discord.com/channels/799672011265015819/830075335084474390/1481503583684792431. This will be a multi-stage upgrade consisting of a runtime upgrade that disables MEV Shield (all MEV Shield transactions submitted during this maintenance period will simply fail and never decrypt), immediately followed by a node upgrade of the chain validators performed by Medulla, followed by a second</div>
+                <button class="toggle" onclick="toggleDetails(9)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-10">
+            <div class="sig-header">
+                <span class="sn-tag">?</span>
+                <span class="snd">sam0x17</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">Hey @everyone,
+
+Mainnet deploy will be tomorrow, not this afternoon. Will announce exact timing tomorrow but we are hoping for around 4 PM EDT.
+
+Thanks!</div>
+            <button class="toggle" onclick="toggleDetails(10)">📄 Show full message</button>
+            <div id="det-10" class="details" style="display:none">
+                <div class="full-msg">Hey @everyone,
+
+Mainnet deploy will be tomorrow, not this afternoon. Will announce exact timing tomorrow but we are hoping for around 4 PM EDT.
+
+Thanks!</div>
+                <button class="toggle" onclick="toggleDetails(10)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-11">
+            <div class="sig-header">
+                <span class="sn-tag">?</span>
+                <span class="snd">sam0x17</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">Hey @everyone!
+
+## New Release Cadence
+
+As we mentioned this week at OpenDev, from now on we are going to commit to a strict release schedule where we target Tuesdays for deploys and allow non-hotfix ...</div>
+            <button class="toggle" onclick="toggleDetails(11)">📄 Show full message</button>
+            <div id="det-11" class="details" style="display:none">
+                <div class="full-msg">Hey @everyone!
+
+## New Release Cadence
+
+As we mentioned this week at OpenDev, from now on we are going to commit to a strict release schedule where we target Tuesdays for deploys and allow non-hotfix upgrades to sit on testnet for ~1 week before going to mainnet. Thus ideally every Tuesday will either be a testnet deploy or a mainnet deploy, alternating every week. This will make the ecosystem more predictable and stable for client and indexer teams as well as subnet validators and miners, and s</div>
+                <button class="toggle" onclick="toggleDetails(11)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-12">
+            <div class="sig-header">
+                <span class="sn-tag">?</span>
+                <span class="snd">sam0x17</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">Hey @everyone!
+
+## Upcoming Release + Breaking Changes
+
+We are postponing our regular release that was slated for this week to early next week in order to give client teams more time to adapt. This wi...</div>
+            <button class="toggle" onclick="toggleDetails(12)">📄 Show full message</button>
+            <div id="det-12" class="details" style="display:none">
+                <div class="full-msg">Hey @everyone!
+
+## Upcoming Release + Breaking Changes
+
+We are postponing our regular release that was slated for this week to early next week in order to give client teams more time to adapt. This will include a number of highly anticipated features including but not limited to:
+
+* &quot;voting power&quot; capability within subnets
+* coldkey swap rework
+* balancer upgrade (breaking change for clients)
+* `add_stake_burn` feature
+* transaction fee changes, see below
+
+You can find the full list here: https:</div>
+                <button class="toggle" onclick="toggleDetails(12)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-13">
+            <div class="sig-header">
+                <span class="sn-tag">?</span>
+                <span class="snd">sam0x17</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">Hey @everyone,
+
+A few hours ago the Triumvirate upgraded mainnet to spec version 377. This includes several hotfixes:
+* PR 2409 introduces a number of changes designed to remove operational priority f...</div>
+            <button class="toggle" onclick="toggleDetails(13)">📄 Show full message</button>
+            <div id="det-13" class="details" style="display:none">
+                <div class="full-msg">Hey @everyone,
+
+A few hours ago the Triumvirate upgraded mainnet to spec version 377. This includes several hotfixes:
+* PR 2409 introduces a number of changes designed to remove operational priority from everything but sudo calls, which should prevent a number of persistent priority bugs that have been exploited by MEVers
+* PR 2416 fixes a potential DoS vulnerability involving storage reads in EVM
+* PR 2368 fixes some rare AURA and frontier-related consensus edge cases related to our upcoming tr</div>
+                <button class="toggle" onclick="toggleDetails(13)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-14">
+            <div class="sig-header">
+                <span class="sn-tag">?</span>
+                <span class="snd">sam0x17</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">Hey @everyone!
+
+An hour ago the Triumvirate upgraded mainnet to spec version 374 which includes several hotfixes designed to combat MEV. Since the upgrade went live it looks like the current MEV explo...</div>
+            <button class="toggle" onclick="toggleDetails(14)">📄 Show full message</button>
+            <div id="det-14" class="details" style="display:none">
+                <div class="full-msg">Hey @everyone!
+
+An hour ago the Triumvirate upgraded mainnet to spec version 374 which includes several hotfixes designed to combat MEV. Since the upgrade went live it looks like the current MEV exploits involving elevating priority have been squashed, but we will continue to observe in the coming days. Soon we will be doing an additional change that provides stronger protection for MevShield that represents a half step from v1 to v2, specifically it will become impossible to preempt the executi</div>
+                <button class="toggle" onclick="toggleDetails(14)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-15">
+            <div class="sig-header">
+                <span class="sn-tag">?</span>
+                <span class="snd">sam0x17</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">Hey @everyone!
+
+A few hours ago the Triumvirate upgraded mainnet to spec version 373. This includes some hotfixes designed to disable an exploit with EVM priority that was being used to perform MEV by...</div>
+            <button class="toggle" onclick="toggleDetails(15)">📄 Show full message</button>
+            <div id="det-15" class="details" style="display:none">
+                <div class="full-msg">Hey @everyone!
+
+A few hours ago the Triumvirate upgraded mainnet to spec version 373. This includes some hotfixes designed to disable an exploit with EVM priority that was being used to perform MEV by creating transactions that get sorted before target transactions in the mempool after the target transaction has been observed by the attacker.
+
+Some other small testing/CI improvements were also included in this release. For full details please see https://github.com/opentensor/subtensor/releases/</div>
+                <button class="toggle" onclick="toggleDetails(15)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-16">
+            <div class="sig-header">
+                <span class="sn-tag">?</span>
+                <span class="snd">sam0x17</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">Hey @everyone
+
+Moments ago mainnet was upgraded to spec version 367. This upgrade includes two hotfixes:
+
+1. Prevent user liquidity from enabling automatically upon new subnet creation
+2. Increase fee...</div>
+            <button class="toggle" onclick="toggleDetails(16)">📄 Show full message</button>
+            <div id="det-16" class="details" style="display:none">
+                <div class="full-msg">Hey @everyone
+
+Moments ago mainnet was upgraded to spec version 367. This upgrade includes two hotfixes:
+
+1. Prevent user liquidity from enabling automatically upon new subnet creation
+2. Increase fee for `announce_next_key` to prevent attempts to impact MEV Shield in some way via spam
+
+For more information please see https://github.com/opentensor/subtensor/releases/tag/v3.3.4-367
+
+Thank you!</div>
+                <button class="toggle" onclick="toggleDetails(16)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-17">
+            <div class="sig-header">
+                <span class="sn-tag">?</span>
+                <span class="snd">sam0x17</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">Hey @everyone!
+
+Moments ago mainnet was upgraded to spec version 365. Two major changes are included in this release:
+
+## MeV Shield / EVM Priority Vulnerability Fix
+
+EVM priority fees were being abus...</div>
+            <button class="toggle" onclick="toggleDetails(17)">📄 Show full message</button>
+            <div id="det-17" class="details" style="display:none">
+                <div class="full-msg">Hey @everyone!
+
+Moments ago mainnet was upgraded to spec version 365. Two major changes are included in this release:
+
+## MeV Shield / EVM Priority Vulnerability Fix
+
+EVM priority fees were being abused by MeVers to frontrun MeV Shield transactions, whereby the MeVers paid to have their EVM transaction included in the block before all other regular transactions (including already decoded MeV Shield transactions in the current block). Since we don&#x27;t have any priority fee notion elsewhere in Bitte</div>
+                <button class="toggle" onclick="toggleDetails(17)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-18">
+            <div class="sig-header">
+                <span class="sn-tag">?</span>
+                <span class="snd">sam0x17</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">Hey @everyone!
+
+Moments ago the Triumvirate changed `NetworkRateLimit` from `28_800` to `14_400` to ensure `NetworkRateLimit` halves properly with the halving. This ensures that registration price wil...</div>
+            <button class="toggle" onclick="toggleDetails(18)">📄 Show full message</button>
+            <div id="det-18" class="details" style="display:none">
+                <div class="full-msg">Hey @everyone!
+
+Moments ago the Triumvirate changed `NetworkRateLimit` from `28_800` to `14_400` to ensure `NetworkRateLimit` halves properly with the halving. This ensures that registration price will trend upward again, as it was designed to do. For future halvings we plan to have this automatically handled in the code.
+
+Thank you!</div>
+                <button class="toggle" onclick="toggleDetails(18)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-19">
+            <div class="sig-header">
+                <span class="sn-tag">?</span>
+                <span class="snd">sam0x17</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">Hey @everyone!
+
+Earlier this evening we performed a runtime upgrade on mainnet upgrading to spec version 361. This includes two major features:
+
+## MeV Shield 🛡️ 
+
+As discussed in https://discord.com/...</div>
+            <button class="toggle" onclick="toggleDetails(19)">📄 Show full message</button>
+            <div id="det-19" class="details" style="display:none">
+                <div class="full-msg">Hey @everyone!
+
+Earlier this evening we performed a runtime upgrade on mainnet upgrading to spec version 361. This includes two major features:
+
+## MeV Shield 🛡️ 
+
+As discussed in https://discord.com/channels/799672011265015819/830075335084474390/1445540971600154757, MeV Shield is Bittensor&#x27;s new opt-in encrypted mempool solution and is now live on mainnet. In short, you can use it to wrap any transaction or call you want in an encrypted shell that cannot be decrypted by third parties until it h</div>
+                <button class="toggle" onclick="toggleDetails(19)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#444" id="sig-20">
+            <div class="sig-header">
+                <span class="sn-tag">?</span>
+                <span class="snd">vune</span>
+                <span class="stype" style="color:#444">[announcement]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">Hey @everyone,
+
+Important heads-up: A compromised version of the python packages `bittensor-wallet@4.0.2` and `bittensor-cli@9.18.2` (btcli) that exfiltrates wallet funds were maliciously published ar...</div>
+            <button class="toggle" onclick="toggleDetails(20)">📄 Show full message</button>
+            <div id="det-20" class="details" style="display:none">
+                <div class="full-msg">Hey @everyone,
+
+Important heads-up: A compromised version of the python packages `bittensor-wallet@4.0.2` and `bittensor-cli@9.18.2` (btcli) that exfiltrates wallet funds were maliciously published around Sunday March 15th at 1:00 AM until 8:05 am March 17th.
+
+The affected release has been fully removed, and the build is now stable. However, if during that time window you pulled either package (or one depending on `bittensor-wallet`) or upgraded `btcli` , it is strongly recommend you perform a coldkey swap or transfer your funds as a precaution.
+
+&gt; **Important:** anyone building the SDK (`bittensor`) from source, or from pypi, in this time period would have likely pulled the compromised `bittensor-wallet`
+
+You can check to see if you likely downloaded one of the compromised `bittensor-wallet` package or `btcli` versions. All other wallets, extensions, mobile apps, and packages are not affected. You can verify your version by running  `pip freeze | grep bittensor`
+
+You are potentially compromised if you saw this:
+```bash
+bittensor-cli==9.18.2
+bittensor-wallet==4.0.2
+```
+&gt; **Note**: your package manager may cache yanked versions locally. You can run (`pip cache purge`) to fully remove those packages.
+
+What we know is that the this malicious code was introduced via our GitHub CI likely via a compromised org key that has since been revoked. If you have any questions there will continue to be updates in the &lt;#799672011814862902&gt; channel and &lt;#1483459730163761203&gt; where you can ask questions.
+
+Thank you.</div>
+                <button class="toggle" onclick="toggleDetails(20)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-21">
+            <div class="sig-header">
+                <span class="sn-tag">?</span>
+                <span class="snd">sam0x17</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">Hey @everyone!
+
+Moments ago mainnet was upgraded to spec version 411, which introduces the changes that have been on testnet for the past week, covered in https://discord.com/channels/7996720112650158...</div>
+            <button class="toggle" onclick="toggleDetails(21)">📄 Show full message</button>
+            <div id="det-21" class="details" style="display:none">
+                <div class="full-msg">Hey @everyone!
+
+Moments ago mainnet was upgraded to spec version 411, which introduces the changes that have been on testnet for the past week, covered in https://discord.com/channels/799672011265015819/830075335084474390/1507143778937344131 as well as several small tweaks that accumulated over the past week. The full upgrade info is available here: https://github.com/opentensor/subtensor/pull/2643.
+
+**Conviction updates**
+- now all locks made to owner&#x27;s hotkey receive immediate conviction, not </div>
+                <button class="toggle" onclick="toggleDetails(21)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-22">
+            <div class="sig-header">
+                <span class="sn-tag">?</span>
+                <span class="snd">sam0x17</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">Hey @everyone!
+
+About an hour ago, **testnet** was upgraded to spec version 408, which includes the initial implementation of the **conviction lock primitive** along with several other much anticipate...</div>
+            <button class="toggle" onclick="toggleDetails(22)">📄 Show full message</button>
+            <div id="det-22" class="details" style="display:none">
+                <div class="full-msg">Hey @everyone!
+
+About an hour ago, **testnet** was upgraded to spec version 408, which includes the initial implementation of the **conviction lock primitive** along with several other much anticipated features and fixes. 
+
+The conviction lock primitive that is on **testnet** now works as follows:
+- Coldkeys can lock alpha to one hotkey per subnet
+- Locked alpha receives staking rewards
+- Locked alpha cannot be unstaked or moved to a different subnet
+- Default lock behavior is perpetual, but it </div>
+                <button class="toggle" onclick="toggleDetails(22)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-23">
+            <div class="sig-header">
+                <span class="sn-tag">?</span>
+                <span class="snd">sam0x17</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">Hey @everyone!
+
+Last week OTF upgraded testnet with the changes from https://github.com/opentensor/subtensor/pull/2562 (https://discord.com/channels/1120750674595024897/1242998080501186620/14894761004...</div>
+            <button class="toggle" onclick="toggleDetails(23)">📄 Show full message</button>
+            <div id="det-23" class="details" style="display:none">
+                <div class="full-msg">Hey @everyone!
+
+Last week OTF upgraded testnet with the changes from https://github.com/opentensor/subtensor/pull/2562 (https://discord.com/channels/1120750674595024897/1242998080501186620/1489476100433121390) which contains changes designed to make registering a new subnet on bittensor smoother and less chaotic. OTF has been actively working with the community and with validators to make some concessions and adjustments to these changes, which are being worked on now and will be going on testne</div>
+                <button class="toggle" onclick="toggleDetails(23)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-24">
+            <div class="sig-header">
+                <span class="sn-tag">?</span>
+                <span class="snd">sam0x17</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">Hey @everyone,
+
+The changes outlined above (**minus balancer, which has been ripped out**) have been revised and tested on devnet + testnet at this point and are now on testnet after significant feedb...</div>
+            <button class="toggle" onclick="toggleDetails(24)">📄 Show full message</button>
+            <div id="det-24" class="details" style="display:none">
+                <div class="full-msg">Hey @everyone,
+
+The changes outlined above (**minus balancer, which has been ripped out**) have been revised and tested on devnet + testnet at this point and are now on testnet after significant feedback from the community and a series of fixes and improvements (thank you all!). 
+
+We will be delivering both the MEV Shield hotfix and the regular release **tomorrow** in a two-step deploy identical to what we just did on testnet. The deployment will work as follows:
+
+1. 1st runtime upgrade that int</div>
+                <button class="toggle" onclick="toggleDetails(24)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-25">
+            <div class="sig-header">
+                <span class="sn-tag">?</span>
+                <span class="snd">sam0x17</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">Hey @everyone!
+
+Moments ago, the triumvirate upgraded mainnet to spec version 372, which includes a number of features, bug fixes, and quality of life improvements, including but not limited to:
+* A f...</div>
+            <button class="toggle" onclick="toggleDetails(25)">📄 Show full message</button>
+            <div id="det-25" class="details" style="display:none">
+                <div class="full-msg">Hey @everyone!
+
+Moments ago, the triumvirate upgraded mainnet to spec version 372, which includes a number of features, bug fixes, and quality of life improvements, including but not limited to:
+* A fix that ensures user liquidity providers are fully disabled (2369)
+* Make it so only sudo can set staking fees (2370)
+* Improved error visibility for MevShield (2340 + 2283 + 2261)
+
+For a full list of changes, please see https://github.com/opentensor/subtensor/releases/tag/v3.3.6-372 and https://git</div>
+                <button class="toggle" onclick="toggleDetails(25)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-26">
+            <div class="sig-header">
+                <span class="sn-tag">?</span>
+                <span class="snd">sam0x17</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">Hey @everyone!
+
+## SubnetMovingAlpha Change
+
+Tomorrow there will be a regular release on mainnet. A notable item in this release is that EMA price should be less aggressive, thanks to  the`SubnetMovin...</div>
+            <button class="toggle" onclick="toggleDetails(26)">📄 Show full message</button>
+            <div id="det-26" class="details" style="display:none">
+                <div class="full-msg">Hey @everyone!
+
+## SubnetMovingAlpha Change
+
+Tomorrow there will be a regular release on mainnet. A notable item in this release is that EMA price should be less aggressive, thanks to  the`SubnetMovingAlpha` parameter changing so that EMA catches up in ~2 days instead of ~10 hours. This will in effect give the market more time to react to subnets suddenly being at risk of deregistration.
+
+For a full list of the changes that will likely be included, please see the current state of `devnet-ready` </div>
+                <button class="toggle" onclick="toggleDetails(26)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-27">
+            <div class="sig-header">
+                <span class="sn-tag">?</span>
+                <span class="snd">sam0x17</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">Hey @everyone!
+
+Moments ago, mainnet was upgraded to spec version 362 with a small pre-halving change which caps Alpha-in liquidity injection based on TAO-in liquidity injection, making liquidity inje...</div>
+            <button class="toggle" onclick="toggleDetails(27)">📄 Show full message</button>
+            <div id="det-27" class="details" style="display:none">
+                <div class="full-msg">Hey @everyone!
+
+Moments ago, mainnet was upgraded to spec version 362 with a small pre-halving change which caps Alpha-in liquidity injection based on TAO-in liquidity injection, making liquidity injection follow current behavior after the TAO halving. For more information please see https://github.com/opentensor/subtensor/releases/tag/v3.3.1-362.
+
+Thank you!</div>
+                <button class="toggle" onclick="toggleDetails(27)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#444" id="sig-28">
+            <div class="sig-header">
+                <span class="sn-tag">?</span>
+                <span class="snd">bdhimes</span>
+                <span class="stype" style="color:#444">[announcement]</span>
+                <span class="urg-tag" style="background:#5599ff">BRIEF WORTHY — READ IN DAILY BRIEF</span>
+                
+            </div>
+            <div class="sum">### Non-breaking improvements:
+
+- Better DiskCached behavior. Loading from cache is 2-3x faster, and dumping to cache 3-∞ faster (does not dump if the
+  object is unchanged).
+
+- Mypy support added.
+
+#...</div>
+            <button class="toggle" onclick="toggleDetails(28)">📄 Show full message</button>
+            <div id="det-28" class="details" style="display:none">
+                <div class="full-msg">### Non-breaking improvements:
+
+- Better DiskCached behavior. Loading from cache is 2-3x faster, and dumping to cache 3-∞ faster (does not dump if the
+  object is unchanged).
+
+- Mypy support added.
+
+### Important for upgrade:
+
+Because of the change from the combination py-scale-codec and bt-decode to cyscale, we no longer support having the
+py-scale-codec installed (cyscale fits the same namespace, `scalecodec`). If you attempt to run ASI with py-scale-codec
+installed, you will receive an error and instructions to uninstall that first. To prevent this, before upgrade, you can
+remove it as such:
+
+```sh
+pip uninstall scalecodec -y
+pip install -U cyscale 
+```
+
+PyPI: https://pypi.org/project/async-substrate-interface/2.0.0/
+SHA256: acb1641fdb9309da444fa0d7dfbcf8e2f3506f56fa3cdb68477a2e8f4e8db905
+GH: https://github.com/latent-to/async-substrate-interface/releases/tag/v2.0.0
+
+# If you use async-substrate-interface indirectly (e.g. as part of btcli or bittensor), the releases that support ASI 2.0 will be released soon.</div>
+                <button class="toggle" onclick="toggleDetails(28)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#444" id="sig-29">
+            <div class="sig-header">
+                <span class="sn-tag">?</span>
+                <span class="snd">mars.here</span>
+                <span class="stype" style="color:#444">[announcement]</span>
+                <span class="urg-tag" style="background:#5599ff">BRIEF WORTHY — READ IN DAILY BRIEF</span>
+                
+            </div>
+            <div class="sum">Hey @everyone τ
+
+Novelty Search is back this week. 
+&lt;@389189199514959893&gt; is joined by Subnet 64 feat. &lt;@1110466046500020325&gt; &amp; team.
+
+Chutes Serverless AI compute 🪂
++ TEE rollouts,
++ CPU only infrast...</div>
+            <button class="toggle" onclick="toggleDetails(29)">📄 Show full message</button>
+            <div id="det-29" class="details" style="display:none">
+                <div class="full-msg">Hey @everyone τ
+
+Novelty Search is back this week. 
+&lt;@389189199514959893&gt; is joined by Subnet 64 feat. &lt;@1110466046500020325&gt; &amp; team.
+
+Chutes Serverless AI compute 🪂
++ TEE rollouts,
++ CPU only infrastructure,
++ Incentive mechanism changes,
++ Chutes revenue &amp; new product launch,
+++ Major subnet announcements.
+&lt;@&amp;1320739375793049630&gt; 
+
+Chutes X: https://x.com/chutes_ai
+Chutes website: https://chutes.ai/
+
+See you &lt;t:1770325222:R&gt; via Novelty search stage on Bittensor Discord
+:: &lt;t:1770325222:F&gt;. 
+https://discord.com/events/799672011265015819/1392986791140917408/1469075108659200000</div>
+                <button class="toggle" onclick="toggleDetails(29)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+        <div class="section" id="sn-1">
+            <h2>SN1 (1 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-30">
+            <div class="sig-header">
+                <span class="sn-tag">SN1</span>
+                <span class="snd">consttt</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                <span style="color:#888;font-size:.75em;margin-left:8px;">(also 88 subnets)</span>
+            </div>
+            <div class="sum">Miners, thumbs up 👍  if this subnet is legit and 👎  if this subnet is bunk.</div>
+            <button class="toggle" onclick="toggleDetails(30)">📄 Show full message</button>
+            <div id="det-30" class="details" style="display:none">
+                <div class="full-msg">Miners, thumbs up 👍  if this subnet is legit and 👎  if this subnet is bunk.</div>
+                <button class="toggle" onclick="toggleDetails(30)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+        <div class="section" id="sn-7">
+            <h2>SN7 (1 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#ff4444" id="sig-31">
+            <div class="sig-header">
+                <span class="sn-tag">SN7</span>
+                <span class="snd">e35strap</span>
+                <span class="stype" style="color:#ff4444">[critical_fix]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">### Allways Network Resumed + Update — v1.0.4  
+&lt;@&amp;1437497690077397065&gt;
+
+We&#x27;re back up. This round was mostly bug fixes across the dashboard and validator, plus some touch-ups to the base miner.
+
+Vali...</div>
+            <button class="toggle" onclick="toggleDetails(31)">📄 Show full message</button>
+            <div id="det-31" class="details" style="display:none">
+                <div class="full-msg">### Allways Network Resumed + Update — v1.0.4  
+&lt;@&amp;1437497690077397065&gt;
+
+We&#x27;re back up. This round was mostly bug fixes across the dashboard and validator, plus some touch-ups to the base miner.
+
+Validators, if not running docker watchtower, please pull `main` and update.
+Miners, feel free to review and ingest those base miner changes checked into `main`. Command: `docker compose -f docker-compose</div>
+                <button class="toggle" onclick="toggleDetails(31)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+        <div class="section" id="sn-13">
+            <h2>SN13 (1 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#444" id="sig-32">
+            <div class="sig-header">
+                <span class="sn-tag">SN13</span>
+                <span class="snd">cryptoinmyhat</span>
+                <span class="stype" style="color:#444">[version_deploy]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">data-universe-api.api.macrocosmos.ai partial outage — /on-demand/miner/jobs/submit and /get-file-upload-url both returning 404 since approximately 17:35 PDT today. /healthcheck returns 200 so the serv...</div>
+            <button class="toggle" onclick="toggleDetails(32)">📄 Show full message</button>
+            <div id="det-32" class="details" style="display:none">
+                <div class="full-msg">data-universe-api.api.macrocosmos.ai partial outage — /on-demand/miner/jobs/submit and /get-file-upload-url both returning 404 since approximately 17:35 PDT today. /healthcheck returns 200 so the server is up but those routes are broken. Likely related to the v1.18.57 deploy. Miners can&#x27;t submit OD jobs or upload S3 files. &lt;@1037429727272652902&gt;</div>
+                <button class="toggle" onclick="toggleDetails(32)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+        <div class="section" id="sn-14">
+            <h2>SN14 (2 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#aa88ff" id="sig-33">
+            <div class="sig-header">
+                <span class="sn-tag">SN14</span>
+                <span class="snd">sn14 h-param tracker</span>
+                <span class="stype" style="color:#aa88ff">[protocol_change]</span>
+                <span class="urg-tag" style="background:#5599ff">BRIEF WORTHY — READ IN DAILY BRIEF</span>
+                
+            </div>
+            <div class="sum">### Hyperparams changed on subnet 14
+- `activity_cutoff` `5000` → `7200`</div>
+            <button class="toggle" onclick="toggleDetails(33)">📄 Show full message</button>
+            <div id="det-33" class="details" style="display:none">
+                <div class="full-msg">### Hyperparams changed on subnet 14
+- `activity_cutoff` `5000` → `7200`</div>
+                <button class="toggle" onclick="toggleDetails(33)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#aa88ff" id="sig-34">
+            <div class="sig-header">
+                <span class="sn-tag">SN14</span>
+                <span class="snd">sn14 h-param tracker</span>
+                <span class="stype" style="color:#aa88ff">[protocol_change]</span>
+                <span class="urg-tag" style="background:#5599ff">BRIEF WORTHY — READ IN DAILY BRIEF</span>
+                
+            </div>
+            <div class="sum">### Hyperparams changed on subnet 14
+- `commit_reveal_weights_enabled` `True` → `False`</div>
+            <button class="toggle" onclick="toggleDetails(34)">📄 Show full message</button>
+            <div id="det-34" class="details" style="display:none">
+                <div class="full-msg">### Hyperparams changed on subnet 14
+- `commit_reveal_weights_enabled` `True` → `False`</div>
+                <button class="toggle" onclick="toggleDetails(34)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+        <div class="section" id="sn-22">
+            <h2>SN22 (1 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#ff4444" id="sig-35">
+            <div class="sig-header">
+                <span class="sn-tag">SN22</span>
+                <span class="snd">okradze</span>
+                <span class="stype" style="color:#ff4444">[critical_fix]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">Hey &lt;#1189589759065067580&gt; ,
+
+We&#x27;ve been benchmarking Desearch against the major AI-search providers (GPT-5-mini, Perplexity, Tavily, Exa) on the same questions and using what we learn to improve our ...</div>
+            <button class="toggle" onclick="toggleDetails(35)">📄 Show full message</button>
+            <div id="det-35" class="details" style="display:none">
+                <div class="full-msg">Hey &lt;#1189589759065067580&gt; ,
+
+We&#x27;ve been benchmarking Desearch against the major AI-search providers (GPT-5-mini, Perplexity, Tavily, Exa) on the same questions and using what we learn to improve our validator&#x27;s relevance prompts and scoring. We&#x27;ll publish the full benchmark publicly once it&#x27;s polished, and after that we plan to update it frequently as we keep measuring against providers and shipp</div>
+                <button class="toggle" onclick="toggleDetails(35)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+        <div class="section" id="sn-25">
+            <h2>SN25 (1 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-36">
+            <div class="sig-header">
+                <span class="sn-tag">SN25</span>
+                <span class="snd">consttt</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">&lt;@769552026329022474&gt; need to launch</div>
+            <button class="toggle" onclick="toggleDetails(36)">📄 Show full message</button>
+            <div id="det-36" class="details" style="display:none">
+                <div class="full-msg">&lt;@769552026329022474&gt; need to launch</div>
+                <button class="toggle" onclick="toggleDetails(36)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+        <div class="section" id="sn-31">
+            <h2>SN31 (1 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#00c060" id="sig-37">
+            <div class="sig-header">
+                <span class="sn-tag">SN31</span>
+                <span class="snd">kat_frenone</span>
+                <span class="stype" style="color:#00c060">[kat]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">&lt;@&amp;1404959073283346552&gt; &lt;@1020187154502144072&gt; has successfully claimed ownership of this channel. **Please hold all requests for info until he&#x27;s had a chance to post and pin his info posts, thanks!**</div>
+            <button class="toggle" onclick="toggleDetails(37)">📄 Show full message</button>
+            <div id="det-37" class="details" style="display:none">
+                <div class="full-msg">&lt;@&amp;1404959073283346552&gt; &lt;@1020187154502144072&gt; has successfully claimed ownership of this channel. **Please hold all requests for info until he&#x27;s had a chance to post and pin his info posts, thanks!**</div>
+                <button class="toggle" onclick="toggleDetails(37)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+        <div class="section" id="sn-33">
+            <h2>SN33 (2 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#ff4444" id="sig-38">
+            <div class="sig-header">
+                <span class="sn-tag">SN33</span>
+                <span class="snd">papiercirer</span>
+                <span class="stype" style="color:#ff4444">[critical_fix]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum"># 🚀 SN33 ReadyAI - Encrypted Endpoint Commitments (Anti-DDoS) Release Dropping Tomorrow
+  
+This release ships a major networking change: miner IPs are no longer exposed in the metagraph. Endpoints are...</div>
+            <button class="toggle" onclick="toggleDetails(38)">📄 Show full message</button>
+            <div id="det-38" class="details" style="display:none">
+                <div class="full-msg"># 🚀 SN33 ReadyAI - Encrypted Endpoint Commitments (Anti-DDoS) Release Dropping Tomorrow
+  
+This release ships a major networking change: miner IPs are no longer exposed in the metagraph. Endpoints are now encrypted on-chain and only decryptable by validators holding the subnet private key.
+
+We will be released tomorrow &lt;t:1779976800:f&gt;
+
+## 🔒 What&#x27;s new
+- Encrypted endpoint commitments: Miners publ</div>
+                <button class="toggle" onclick="toggleDetails(38)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-39">
+            <div class="sig-header">
+                <span class="sn-tag">SN33</span>
+                <span class="snd">consttt</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">we need a long context dataset for subnet 3 pretraining</div>
+            <button class="toggle" onclick="toggleDetails(39)">📄 Show full message</button>
+            <div id="det-39" class="details" style="display:none">
+                <div class="full-msg">we need a long context dataset for subnet 3 pretraining</div>
+                <button class="toggle" onclick="toggleDetails(39)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+        <div class="section" id="sn-56">
+            <h2>SN56 (1 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#ff4444" id="sig-40">
+            <div class="sig-header">
+                <span class="sn-tag">SN56</span>
+                <span class="snd">wand3r1ngw31ght5</span>
+                <span class="stype" style="color:#ff4444">[critical_fix]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">The repos are always released a week or so early, only minor bug fixes are changed in the code thereafter.</div>
+            <button class="toggle" onclick="toggleDetails(40)">📄 Show full message</button>
+            <div id="det-40" class="details" style="display:none">
+                <div class="full-msg">The repos are always released a week or so early, only minor bug fixes are changed in the code thereafter.</div>
+                <button class="toggle" onclick="toggleDetails(40)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+        <div class="section" id="sn-62">
+            <h2>SN62 (1 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-41">
+            <div class="sig-header">
+                <span class="sn-tag">SN62</span>
+                <span class="snd">consttt</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">the miners here should work with the team to make this a success.</div>
+            <button class="toggle" onclick="toggleDetails(41)">📄 Show full message</button>
+            <div id="det-41" class="details" style="display:none">
+                <div class="full-msg">the miners here should work with the team to make this a success.</div>
+                <button class="toggle" onclick="toggleDetails(41)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+        <div class="section" id="sn-69">
+            <h2>SN69 (1 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#ff4444" id="sig-42">
+            <div class="sig-header">
+                <span class="sn-tag">SN69</span>
+                <span class="snd">mamslbb</span>
+                <span class="stype" style="color:#ff4444">[critical_fix]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">70+% of staked supply.
+
+And no, not a single subnet at launch had this much concentrated ownership, owners had to accumulate through their 18% emission share . And this won&#x27;t happen again since it has...</div>
+            <button class="toggle" onclick="toggleDetails(42)">📄 Show full message</button>
+            <div id="det-42" class="details" style="display:none">
+                <div class="full-msg">70+% of staked supply.
+
+And no, not a single subnet at launch had this much concentrated ownership, owners had to accumulate through their 18% emission share . And this won&#x27;t happen again since it has been hotfixed right after sn69 registration</div>
+                <button class="toggle" onclick="toggleDetails(42)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+        <div class="section" id="sn-76">
+            <h2>SN76 (1 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#00c060" id="sig-43">
+            <div class="sig-header">
+                <span class="sn-tag">SN76</span>
+                <span class="snd">kat_frenone</span>
+                <span class="stype" style="color:#00c060">[kat]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">&lt;@&amp;1404959073283346552&gt; &lt;@224042939087716352&gt; has successfully claimed ownership of the channel and has let me know that it&#x27;s up for sale.
+
+**Please be advised that this channel is not for purchase ne...</div>
+            <button class="toggle" onclick="toggleDetails(43)">📄 Show full message</button>
+            <div id="det-43" class="details" style="display:none">
+                <div class="full-msg">&lt;@&amp;1404959073283346552&gt; &lt;@224042939087716352&gt; has successfully claimed ownership of the channel and has let me know that it&#x27;s up for sale.
+
+**Please be advised that this channel is not for purchase negotations, bidding, etc.**  Once &lt;@224042939087716352&gt; has posted contact information or a preferred method to handle offers, which will not be in this channel, you&#x27;ll be able to follow those instruct</div>
+                <button class="toggle" onclick="toggleDetails(43)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+        <div class="section" id="sn-79">
+            <h2>SN79 (1 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#ffaa00" id="sig-44">
+            <div class="sig-header">
+                <span class="sn-tag">SN79</span>
+                <span class="snd">6.taos.im</span>
+                <span class="stype" style="color:#ffaa00">[launch]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">&lt;@&amp;1356318576386244648&gt; ☯️ 
+# **GenTRX is live on mainnet (v0.4.3)**
+
+Distributed gradient training for SN-79 is now running on mainnet. 
+Miners can start earning emissions for gradient submissions.
+
+...</div>
+            <button class="toggle" onclick="toggleDetails(44)">📄 Show full message</button>
+            <div id="det-44" class="details" style="display:none">
+                <div class="full-msg">&lt;@&amp;1356318576386244648&gt; ☯️ 
+# **GenTRX is live on mainnet (v0.4.3)**
+
+Distributed gradient training for SN-79 is now running on mainnet. 
+Miners can start earning emissions for gradient submissions.
+
+Thanks to everyone who ran with us on testnet.
+
+**Get started:**
+- Code: https://github.com/taos-im/sn-79
+- Setup guide: https://github.com/taos-im/sn-79/blob/main/doc/gentrx/miner_setup.md
+
+GenTRX is</div>
+                <button class="toggle" onclick="toggleDetails(44)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+        <div class="section" id="sn-83">
+            <h2>SN83 (2 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#aa88ff" id="sig-45">
+            <div class="sig-header">
+                <span class="sn-tag">SN83</span>
+                <span class="snd">sn83 h-param tracker</span>
+                <span class="stype" style="color:#aa88ff">[protocol_change]</span>
+                <span class="urg-tag" style="background:#5599ff">BRIEF WORTHY — READ IN DAILY BRIEF</span>
+                
+            </div>
+            <div class="sum">### Hyperparams changed on subnet 83
+- `immunity_period` `5000` → `6000`</div>
+            <button class="toggle" onclick="toggleDetails(45)">📄 Show full message</button>
+            <div id="det-45" class="details" style="display:none">
+                <div class="full-msg">### Hyperparams changed on subnet 83
+- `immunity_period` `5000` → `6000`</div>
+                <button class="toggle" onclick="toggleDetails(45)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#aa88ff" id="sig-46">
+            <div class="sig-header">
+                <span class="sn-tag">SN83</span>
+                <span class="snd">sn83 h-param tracker</span>
+                <span class="stype" style="color:#aa88ff">[protocol_change]</span>
+                <span class="urg-tag" style="background:#5599ff">BRIEF WORTHY — READ IN DAILY BRIEF</span>
+                
+            </div>
+            <div class="sum">### Hyperparams changed on subnet 83
+- `min_burn` `150000000` → `141421356`</div>
+            <button class="toggle" onclick="toggleDetails(46)">📄 Show full message</button>
+            <div id="det-46" class="details" style="display:none">
+                <div class="full-msg">### Hyperparams changed on subnet 83
+- `min_burn` `150000000` → `141421356`</div>
+                <button class="toggle" onclick="toggleDetails(46)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+        <div class="section" id="sn-99">
+            <h2>SN99 (1 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#444" id="sig-47">
+            <div class="sig-header">
+                <span class="sn-tag">SN99</span>
+                <span class="snd">Rendix</span>
+                <span class="stype" style="color:#444">[version_deploy]</span>
+                <span class="urg-tag" style="background:#5599ff">BRIEF WORTHY — READ IN DAILY BRIEF</span>
+                
+            </div>
+            <div class="sum">Hey Zhiyan 🤙
+
+**Honest answer: the whitepaper doesn&#x27;t give a v2 date — and I won&#x27;t invent one.**
+
+## What the whitepaper actually commits to
+
+- **v0 (now):** miners fine-tune Wan 2.2 (~14B)
+- **v1:** ...</div>
+            <button class="toggle" onclick="toggleDetails(47)">📄 Show full message</button>
+            <div id="det-47" class="details" style="display:none">
+                <div class="full-msg">Hey Zhiyan 🤙
+
+**Honest answer: the whitepaper doesn&#x27;t give a v2 date — and I won&#x27;t invent one.**
+
+## What the whitepaper actually commits to
+
+- **v0 (now):** miners fine-tune Wan 2.2 (~14B)
+- **v1:** production model — target was **April 30** (already shipped/shipping per the doc)
+- **v1.x:** iterative refinement, dataset/eval expansion, partial merging + distillation
+- **v2:** the **25B+ Leoma-na</div>
+                <button class="toggle" onclick="toggleDetails(47)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+        <div class="section" id="sn-117">
+            <h2>SN117 (1 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#00c060" id="sig-48">
+            <div class="sig-header">
+                <span class="sn-tag">SN117</span>
+                <span class="snd">kat_frenone</span>
+                <span class="stype" style="color:#00c060">[kat]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">&lt;@&amp;1404959073283346552&gt; &lt;@698321394773000262&gt; has successfully claimed ownership of this channel.  **Please wait until informational posts are posted and pinned before spamming the channel with reques...</div>
+            <button class="toggle" onclick="toggleDetails(48)">📄 Show full message</button>
+            <div id="det-48" class="details" style="display:none">
+                <div class="full-msg">&lt;@&amp;1404959073283346552&gt; &lt;@698321394773000262&gt; has successfully claimed ownership of this channel.  **Please wait until informational posts are posted and pinned before spamming the channel with requests for information, thanks.**</div>
+                <button class="toggle" onclick="toggleDetails(48)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+
+
+            <div class="section">
+                <h2>💬 Active Channels — No Signals (34)</h2>
+                <p class="section-desc">Subnets with message activity but no classified signals.</p>
+                <div class="active-row"><span class="sn-tag">?</span> <span class="ch-name">general</span> <span class="msg-count">83 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">?</span> <span class="ch-name">novelty-search</span> <span class="msg-count">19 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">?</span> <span class="ch-name">rao</span> <span class="msg-count">31 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN3</span> <span class="ch-name">γ・τeuτonic・3</span> <span class="msg-count">39 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN6</span> <span class="ch-name">ζ・numinous・6</span> <span class="msg-count">9 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN8</span> <span class="ch-name">θ・vanta・8</span> <span class="msg-count">24 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN11</span> <span class="ch-name">λ・trajectory-rl・11</span> <span class="msg-count">56 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN15</span> <span class="ch-name">ο・oro・15</span> <span class="msg-count">122 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN21</span> <span class="ch-name">φ・adτao・21</span> <span class="msg-count">11 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN23</span> <span class="ch-name">ψ・trishool・23</span> <span class="msg-count">45 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN24</span> <span class="ch-name">ω・quasar・24</span> <span class="msg-count">60 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN114</span> <span class="ch-name">є・soma・114</span> <span class="msg-count">62 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN80</span> <span class="ch-name">՞・dogelayer・80</span> <span class="msg-count">13 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN105</span> <span class="ch-name">գ・beam・105</span> <span class="msg-count">131 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN26</span> <span class="ch-name">ב・perτurb・26</span> <span class="msg-count">27 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN28</span> <span class="ch-name">ד・fish・28</span> <span class="msg-count">78 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN36</span> <span class="ch-name">כ・eirel・36</span> <span class="msg-count">24 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN39</span> <span class="ch-name">מ・cathedral・39</span> <span class="msg-count">34 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN44</span> <span class="ch-name">ף・score・44</span> <span class="msg-count">22 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN46</span> <span class="ch-name">ץ・zipcode・46</span> <span class="msg-count">5 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN50</span> <span class="ch-name">ש・synth・50</span> <span class="msg-count">8 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN55</span> <span class="ch-name">ث・niome・55</span> <span class="msg-count">15 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN60</span> <span class="ch-name">ذ・bitsec・60</span> <span class="msg-count">18 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN64</span> <span class="ch-name">ش・chutes・64</span> <span class="msg-count">53 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN66</span> <span class="ch-name">ض・ninja・66</span> <span class="msg-count">79 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN74</span> <span class="ch-name">ل・giττensor・74</span> <span class="msg-count">11 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN78</span> <span class="ch-name">و・vocence・78</span> <span class="msg-count">31 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN97</span> <span class="ch-name">ა・albedo・97</span> <span class="msg-count">77 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN100</span> <span class="ch-name">დ・plaτform・100</span> <span class="msg-count">7 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN95</span> <span class="ch-name">ᚅ・actual・95</span> <span class="msg-count">9 msgs</span> <span class="owner-tag">no signals</span></div>
+                <div class="quiet-note">+ 4 more</div>
+            </div>
+            
+
+
+        <div class="section">
+            <h2>🟢 Active Subnets (106)</h2>
+            <p class="section-desc">Subnets with message activity today, ordered by volume.</p>
+            <div class="active-row"><span class="sn-tag">SN105</span> <span class="ch-name">գ・beam・105</span> <span class="msg-count">131 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN15</span> <span class="ch-name">ο・oro・15</span> <span class="msg-count">122 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN120</span> <span class="ch-name">ⴷ・ⴷffine・120</span> <span class="msg-count">100 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">?</span> <span class="ch-name">general</span> <span class="msg-count">83 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN66</span> <span class="ch-name">ض・ninja・66</span> <span class="msg-count">79 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN28</span> <span class="ch-name">ד・fish・28</span> <span class="msg-count">78 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN97</span> <span class="ch-name">ა・albedo・97</span> <span class="msg-count">77 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN114</span> <span class="ch-name">є・soma・114</span> <span class="msg-count">62 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN24</span> <span class="ch-name">ω・quasar・24</span> <span class="msg-count">60 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN11</span> <span class="ch-name">λ・trajectory-rl・11</span> <span class="msg-count">56 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN64</span> <span class="ch-name">ش・chutes・64</span> <span class="msg-count">53 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN23</span> <span class="ch-name">ψ・trishool・23</span> <span class="msg-count">45 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN3</span> <span class="ch-name">γ・τeuτonic・3</span> <span class="msg-count">39 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN39</span> <span class="ch-name">מ・cathedral・39</span> <span class="msg-count">34 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">?</span> <span class="ch-name">rao</span> <span class="msg-count">31 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN108</span> <span class="ch-name">զ・talkhead・108</span> <span class="msg-count">31 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN78</span> <span class="ch-name">و・vocence・78</span> <span class="msg-count">31 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN83</span> <span class="ch-name">ᚦ・cliqueai・83</span> <span class="msg-count">30 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN19</span> <span class="ch-name">τ・blockmachine・19</span> <span class="msg-count">27 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN26</span> <span class="ch-name">ב・perτurb・26</span> <span class="msg-count">27 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN118</span> <span class="ch-name">ⲁ・ditto・118</span> <span class="msg-count">27 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN49</span> <span class="ch-name">ר・nepher・49</span> <span class="msg-count">26 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN67</span> <span class="ch-name">ط・harnyx・67</span> <span class="msg-count">26 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN8</span> <span class="ch-name">θ・vanta・8</span> <span class="msg-count">24 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN36</span> <span class="ch-name">כ・eirel・36</span> <span class="msg-count">24 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN71</span> <span class="ch-name">ف・leadpoeτ・71</span> <span class="msg-count">24 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN44</span> <span class="ch-name">ף・score・44</span> <span class="msg-count">22 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">?</span> <span class="ch-name">novelty-search</span> <span class="msg-count">19 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN102</span> <span class="ch-name">ვ・connito-ai・102</span> <span class="msg-count">19 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN94</span> <span class="ch-name">ᚄ・biτsoτa・94</span> <span class="msg-count">19 msgs</span> <span class="owner-tag">Owner: unknown</span></div>
+        </div>
+        
+
+        <div class="section">
+            <h2>⚫ Quiet Subnets (26)</h2>
+            <p class="section-desc">Subnets with no message activity in the last 24 hours.</p>
+            <div class="quiet-list"><span class="quiet-tag">SN14</span> <span class="quiet-tag">SN20</span> <span class="quiet-tag">SN27</span> <span class="quiet-tag">SN29</span> <span class="quiet-tag">SN30</span> <span class="quiet-tag">SN42</span> <span class="quiet-tag">SN52</span> <span class="quiet-tag">SN53</span> <span class="quiet-tag">SN63</span> <span class="quiet-tag">SN69</span> <span class="quiet-tag">SN72</span> <span class="quiet-tag">SN73</span> <span class="quiet-tag">SN76</span> <span class="quiet-tag">SN84</span> <span class="quiet-tag">SN86</span> <span class="quiet-tag">SN87</span> <span class="quiet-tag">SN90</span> <span class="quiet-tag">SN91</span> <span class="quiet-tag">SN92</span> <span class="quiet-tag">SN104</span> <span class="quiet-tag">SN106</span> <span class="quiet-tag">SN115</span> <span class="quiet-tag">SN116</span> <span class="quiet-tag">SN119</span> <span class="quiet-tag">SN121</span> <span class="quiet-tag">SN122</span></div>
+            
+        </div>
+        
+
+<footer>Generated by Hermes · Bittensor Intelligence Monitor · <a href="https://thaneclaw.github.io/bittensor-reports" style="color:var(--dim)">All Reports</a></footer>
+</div>
+</body>
+</html>
