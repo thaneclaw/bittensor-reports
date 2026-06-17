@@ -1,0 +1,957 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bittensor Report — 2026-06-17</title>
+<style>
+:root{--bg:#0a0a12;--card:#141420;--text:#d0d0e0;--dim:#777;--orange:#ff6b35;--red:#ff4444;--green:#00c060;--blue:#5599ff}
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif}
+body{background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+.container{max-width:1000px;margin:0 auto;padding:12px}
+header{text-align:center;padding:24px 0 16px;border-bottom:1px solid #222;margin-bottom:20px}
+h1{color:var(--orange);font-size:clamp(1.4em,4vw,1.8em);font-weight:700}
+.meta{color:var(--dim);font-size:.9em;margin-top:6px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:14px;background:var(--card);border-radius:12px;margin-bottom:20px}
+.stat{text-align:center;padding:8px}
+.v{color:var(--orange);font-size:clamp(1.6em,5vw,2em);font-weight:700}
+.l{font-size:.75em;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+.section{background:var(--card);border-radius:12px;padding:16px;margin-bottom:16px;border:1px solid #1e1e2e}
+h2{color:var(--orange);font-size:1.15em;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid #222;font-weight:600}
+.section-desc{color:var(--dim);font-size:.85em;margin-bottom:12px;font-style:italic}
+/* Summary grid styles */
+.summary-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;margin-top:10px}
+.summary-sn{background:#0e0e18;border-radius:8px;padding:12px;border-left:3px solid var(--blue);cursor:pointer;transition:background .2s;text-decoration:none;color:var(--text)}
+.summary-sn:hover{background:#151520}
+.summary-sn.urgent{border-left-color:var(--red)}
+.summary-sn.brief{border-left-color:var(--blue)}
+.summary-sn.founder{border-left-color:var(--orange)}
+.summary-sn-header{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.summary-sn-num{background:var(--orange);color:#fff;padding:2px 8px;border-radius:4px;font-weight:700;font-size:.85em}
+.summary-sn-count{background:#1a1a2e;padding:2px 8px;border-radius:4px;font-size:.75em;color:var(--dim)}
+.summary-sn-text{font-size:.85em;color:#aaa;line-height:1.4}
+/* Signal cards */
+.signal{margin:10px 0;padding:12px 14px;border-left:3px solid var(--blue);border-radius:6px;background:#0e0e18;transition:background .2s}
+.signal:hover{background:#151520}
+.sig-header{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:6px;font-size:.82em}
+.sn-tag{background:#222;color:var(--orange);padding:2px 8px;border-radius:4px;font-weight:700;font-size:.85em}
+.snd{color:var(--orange);font-weight:600}
+.stype{font-size:.8em;opacity:.8}
+.urg-tag{font-size:.7em;padding:2px 8px;border-radius:3px;color:#fff;font-weight:600}
+.sum{margin-top:6px;font-size:.95em;line-height:1.5;color:var(--text)}
+.toggle{background:#1a1a2e;border:1px solid #333;color:var(--orange);padding:6px 14px;border-radius:6px;cursor:pointer;font-size:.8em;margin-top:10px;width:100%}
+.toggle:hover{background:#222}
+.details{margin-top:10px;padding-top:10px;border-top:1px solid #222}
+.full-msg{background:#0a0a12;padding:12px;border-radius:6px;font-size:.9em;color:#aaa;white-space:pre-wrap;word-break:break-word;max-height:400px;overflow-y:auto}
+.active-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #1a1a2a;font-size:.9em;flex-wrap:wrap}
+.active-row:last-child{border-bottom:none}
+.ch-name{color:var(--dim);font-size:.85em}
+.msg-count{background:#1a1a2e;padding:2px 8px;border-radius:4px;font-size:.75em;color:var(--dim)}
+.owner-tag{color:#888;font-size:.8em}
+.quiet-list{display:flex;flex-wrap:wrap;gap:8px;padding:8px 0}
+.quiet-tag{background:#0e0e18;padding:6px 10px;border-radius:6px;font-size:.85em;color:#666}
+.quiet-note{color:var(--dim);font-size:.8em;margin-top:10px;text-align:center}
+footer{text-align:center;padding:30px 0;color:var(--dim);font-size:.8em;border-top:1px solid #222;margin-top:20px}
+@media (max-width:600px){
+    .stats{grid-template-columns:repeat(2,1fr)}
+    .summary-grid{grid-template-columns:1fr}
+    .sig-header{gap:4px}
+    .active-row{flex-direction:column;align-items:flex-start;gap:4px}
+}
+.synthesis{background:var(--card);border-radius:12px;padding:20px;margin-bottom:16px;border:1px solid #1e1e2e;line-height:1.6}
+.synthesis h3{color:var(--orange);font-size:1em;margin:14px 0 6px}
+.synthesis p{margin-bottom:10px}
+.synthesis ul{margin:0 0 12px 20px}
+.synthesis li{margin-bottom:6px}
+</style>
+<script>
+function toggleDetails(idx) {
+    var el = document.getElementById('det-' + idx);
+    if (el.style.display === 'none') {
+        el.style.display = 'block';
+    } else {
+        el.style.display = 'none';
+    }
+}
+</script>
+</head>
+<body>
+<div class="container">
+<header>
+    <h1>📊 Bittensor Daily Report</h1>
+    <div class="meta">2026-06-17 · 25 signals · 99 active subnets · 31 quiet</div>
+</header>
+
+<div class="stats">
+    <div class="stat"><div class="v">25</div><div class="l">Signals</div></div>
+    <div class="stat"><div class="v">15</div><div class="l">Urgent</div></div>
+    <div class="stat"><div class="v">99</div><div class="l">Active</div></div>
+    <div class="stat"><div class="v">31</div><div class="l">Quiet</div></div>
+</div>
+
+
+    <div class="section">
+        <h2>📋 Subnet Summary</h2>
+        <p class="section-desc">Click any subnet to jump to its detailed signals. Sorted numerically (SN1, SN2, SN3...).</p>
+        <div class="summary-grid">
+            
+        <a class="summary-sn urgent" href="#sn-?">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">ANN</span>
+                <span class="summary-sn-count">🔥 4 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">hey @everyone 
+
+Note the latest release of the btcli and bit...</div>
+        </a>
+        
+        <a class="summary-sn brief" href="#sn-14">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN14</span>
+                <span class="summary-sn-count">📋 4 brief</span>
+            </div>
+            <div class="summary-sn-text">### Hyperparams changed on subnet 14
+- `commit_reveal_weight...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-21">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN21</span>
+                <span class="summary-sn-count">🔥 1 urgent</span>
+            </div>
+            <div class="summary-sn-text">### Hyperparams changed on subnet 21
+- `min_burn` `500000` →...</div>
+        </a>
+        
+        <a class="summary-sn brief" href="#sn-33">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN33</span>
+                <span class="summary-sn-count">📋 1 brief</span>
+            </div>
+            <div class="summary-sn-text">I was actually thinking about bringing this up the other day...</div>
+        </a>
+        
+        <a class="summary-sn brief" href="#sn-69">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN69</span>
+                <span class="summary-sn-count">📋 1 brief</span>
+            </div>
+            <div class="summary-sn-text">70+% of staked supply.
+
+And no, not a single subnet at launc...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-76">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN76</span>
+                <span class="summary-sn-count">🔥 1 urgent</span>
+            </div>
+            <div class="summary-sn-text">&lt;@&amp;1404959073283346552&gt; &lt;@224042939087716352&gt; has successful...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-82">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN82</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">&lt;@1272394607874936856&gt; if you can audit the incentive scores...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-84">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN84</span>
+                <span class="summary-sn-count">🔥 2 urgent</span>
+            </div>
+            <div class="summary-sn-text">I have deleted the original post since it doesn&#x27;t seem to be...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-92">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN92</span>
+                <span class="summary-sn-count">🔥 2 urgent</span>
+            </div>
+            <div class="summary-sn-text">### Hyperparams changed on subnet 92
+- `min_burn` `500000` →...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-104">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN104</span>
+                <span class="summary-sn-count">🔥 1 urgent · 📋 2 brief</span>
+            </div>
+            <div class="summary-sn-text">### Hyperparams changed on subnet 104
+- `max_burn` `10000000...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-116">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN116</span>
+                <span class="summary-sn-count">🔥 1 urgent</span>
+            </div>
+            <div class="summary-sn-text">### Hyperparams changed on subnet 116
+- `target_regs_per_int...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-117">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN117</span>
+                <span class="summary-sn-count">🔥 1 urgent</span>
+            </div>
+            <div class="summary-sn-text">&lt;@&amp;1404959073283346552&gt; &lt;@698321394773000262&gt; has successful...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-122">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN122</span>
+                <span class="summary-sn-count">🔥 1 urgent</span>
+            </div>
+            <div class="summary-sn-text">### Hyperparams changed on subnet 122
+- `target_regs_per_int...</div>
+        </a>
+        
+        <a class="summary-sn brief" href="#sn-123">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN123</span>
+                <span class="summary-sn-count">📋 1 brief</span>
+            </div>
+            <div class="summary-sn-text">### Hyperparams changed on subnet 123
+- `min_burn` `30000000...</div>
+        </a>
+        
+        <a class="summary-sn brief" href="#sn-126">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN126</span>
+                <span class="summary-sn-count">📋 1 brief</span>
+            </div>
+            <div class="summary-sn-text">**Training benchmark update**
+
+We identified and fixed an is...</div>
+        </a>
+        
+        </div>
+    </div>
+    
+
+<div class="synthesis"><div class="section"><h2>🧠 Intelligence Summary</h2><p class="section-desc">LLM-synthesized daily analysis</p>🔹 <b>REGISTRY CHANGES</b>  <br>
+<li>No registry changes today.</li>
+<br>
+🔒 <b>CONVICTION LOCKS</b>  <br>
+<li>No conviction lock activity today.</li>
+<br>
+⚡ <b>HEADLINE</b>  <br>
+Multiple subnets adjusted hyperparameters, with significant burn changes across <b>SN92</b>, <b>SN21</b>, <b>SN104</b>, and others.<br>
+<br>
+|🎯 <b>CONST WATCH</b>  <br>
+<li><b>SN82</b>: consttt urges auditing of incentive scores for potential cheating.  </li>
+<li><b>General</b>: Consttt confirms full conviction tooling now in btcli and SDK.</li>
+<br>
+|🌐 <b>ECOSYSTEM</b>  <br>
+<li><b>SN92</b>, <b>SN21</b>, <b>SN104</b>, <b>SN116</b>, <b>SN122</b>: Major hyperparameter shifts including burn and registration intervals.  </li>
+<li><b>SN14</b>, <b>SN123</b>: Minor adjustments to weight commit/reveal and burn settings.  </li>
+<li>Mainnet upgraded to spec versions 415 and 417 with hotfixes for chain buy accounting and validation checks.</li>
+<br>
+|👁 <b>WATCHLIST</b>  <br>
+<li><b>SN92</b>: Min burn raised to 999,999,999 — signals possible access restriction or value reconfiguration.  </li>
+<li><b>SN104</b>: Max burn increased over 1,000x — extremely high new cap may affect liquidity dynamics.  </li>
+<li><b>SN82</b>: Validator fraud monitoring requested — potential irregularities in incentive scoring.</li>
+<br>
+🎬 <b>What to Do</b>  <br>
+<li><b>SN92</b>, <b>SN21</b>, <b>SN104</b>, <b>SN122</b>: Review impact of burn changes on registration economics.  </li>
+<li><b>SN82</b>: Audit incentive scores to detect and report anomalies.  </li>
+<li>All subnets: Confirm compatibility with mainnet spec 417 and updated SDK tooling.</li></div></div>
+
+
+        <div class="section" id="sn-?">
+            <h2>SN? (4 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-0">
+            <div class="sig-header">
+                <span class="sn-tag">?</span>
+                <span class="snd">sam0x17</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">Hey everyone!
+
+Moments ago, mainnet was upgraded to spec version 417, introducing a hotfix that adds a check that ensures that during a hotkey swap, the new hotkey already exists globally and is owned...</div>
+            <button class="toggle" onclick="toggleDetails(0)">📄 Show full message</button>
+            <div id="det-0" class="details" style="display:none">
+                <div class="full-msg">Hey everyone!
+
+Moments ago, mainnet was upgraded to spec version 417, introducing a hotfix that adds a check that ensures that during a hotkey swap, the new hotkey already exists globally and is owned by corresponding coldkey.
+
+For more details please see: https://github.com/opentensor/subtensor/releases/tag/v3.4.4-417
+
+Thank you!</div>
+                <button class="toggle" onclick="toggleDetails(0)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-1">
+            <div class="sig-header">
+                <span class="sn-tag">?</span>
+                <span class="snd">sam0x17</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">Hey @everyone!
+
+Earlier today, mainnet was upgraded to spec version 415, which included a hotfix for chain buys accounting (https://github.com/opentensor/subtensor/pull/2706).
+
+The previous runtime up...</div>
+            <button class="toggle" onclick="toggleDetails(1)">📄 Show full message</button>
+            <div id="det-1" class="details" style="display:none">
+                <div class="full-msg">Hey @everyone!
+
+Earlier today, mainnet was upgraded to spec version 415, which included a hotfix for chain buys accounting (https://github.com/opentensor/subtensor/pull/2706).
+
+The previous runtime upgrade stopped burning alpha bought during protocol TAO buys and cached it in `SubnetProtocolAlpha`. This PR adds a deployment-block cutover so deregistration can handle legacy and post-upgrade subnets correctly.
+
+Behavior on deregistration:
+- Subnets registered before or at `TaoInRefundDeploymentBlo</div>
+                <button class="toggle" onclick="toggleDetails(1)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-2">
+            <div class="sig-header">
+                <span class="sn-tag">?</span>
+                <span class="snd">sam0x17</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">Hey @everyone!
+
+Moments ago, mainnet was upgraded to spec version 413, which includes a few small additions/changes and an important hotfix for protocol alpha accounting.
+
+The hotfix adds protocol-own...</div>
+            <button class="toggle" onclick="toggleDetails(2)">📄 Show full message</button>
+            <div id="det-2" class="details" style="display:none">
+                <div class="full-msg">Hey @everyone!
+
+Moments ago, mainnet was upgraded to spec version 413, which includes a few small additions/changes and an important hotfix for protocol alpha accounting.
+
+The hotfix adds protocol-owned alpha accounting for subnet chain buys and includes that alpha in subnet deregistration settlement.
+
+This has the following effects:
+- Stops recycling alpha bought during protocol TAO buys
+- Adds per-subnet cached protocol alpha accounting
+- Includes protocol alpha-in and cached protocol alpha in</div>
+                <button class="toggle" onclick="toggleDetails(2)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-3">
+            <div class="sig-header">
+                <span class="sn-tag">?</span>
+                <span class="snd">consttt</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">hey @everyone 
+
+Note the latest release of the btcli and bittensor SDK have the full conviction tooling: https://discord.com/channels/799672011265015819/1359587876563718144/1509697913461276822
+
+Happy ...</div>
+            <button class="toggle" onclick="toggleDetails(3)">📄 Show full message</button>
+            <div id="det-3" class="details" style="display:none">
+                <div class="full-msg">hey @everyone 
+
+Note the latest release of the btcli and bittensor SDK have the full conviction tooling: https://discord.com/channels/799672011265015819/1359587876563718144/1509697913461276822
+
+Happy locking
+&lt;@389189199514959893&gt;</div>
+                <button class="toggle" onclick="toggleDetails(3)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+        <div class="section" id="sn-14">
+            <h2>SN14 (4 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#aa88ff" id="sig-4">
+            <div class="sig-header">
+                <span class="sn-tag">SN14</span>
+                <span class="snd">sn14 h-param tracker</span>
+                <span class="stype" style="color:#aa88ff">[protocol_change]</span>
+                <span class="urg-tag" style="background:#5599ff">BRIEF WORTHY — READ IN DAILY BRIEF</span>
+                
+            </div>
+            <div class="sum">### Hyperparams changed on subnet 14
+- `commit_reveal_weights_enabled` `True` → `False`</div>
+            <button class="toggle" onclick="toggleDetails(4)">📄 Show full message</button>
+            <div id="det-4" class="details" style="display:none">
+                <div class="full-msg">### Hyperparams changed on subnet 14
+- `commit_reveal_weights_enabled` `True` → `False`</div>
+                <button class="toggle" onclick="toggleDetails(4)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#aa88ff" id="sig-5">
+            <div class="sig-header">
+                <span class="sn-tag">SN14</span>
+                <span class="snd">sn14 h-param tracker</span>
+                <span class="stype" style="color:#aa88ff">[protocol_change]</span>
+                <span class="urg-tag" style="background:#5599ff">BRIEF WORTHY — READ IN DAILY BRIEF</span>
+                
+            </div>
+            <div class="sum">### Hyperparams changed on subnet 14
+- `activity_cutoff` `5000` → `7200`</div>
+            <button class="toggle" onclick="toggleDetails(5)">📄 Show full message</button>
+            <div id="det-5" class="details" style="display:none">
+                <div class="full-msg">### Hyperparams changed on subnet 14
+- `activity_cutoff` `5000` → `7200`</div>
+                <button class="toggle" onclick="toggleDetails(5)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#aa88ff" id="sig-6">
+            <div class="sig-header">
+                <span class="sn-tag">SN14</span>
+                <span class="snd">sn14 h-param tracker</span>
+                <span class="stype" style="color:#aa88ff">[protocol_change]</span>
+                <span class="urg-tag" style="background:#5599ff">BRIEF WORTHY — READ IN DAILY BRIEF</span>
+                
+            </div>
+            <div class="sum">### Hyperparams changed on subnet 14
+- `commit_reveal_weights_enabled` `False` → `True`</div>
+            <button class="toggle" onclick="toggleDetails(6)">📄 Show full message</button>
+            <div id="det-6" class="details" style="display:none">
+                <div class="full-msg">### Hyperparams changed on subnet 14
+- `commit_reveal_weights_enabled` `False` → `True`</div>
+                <button class="toggle" onclick="toggleDetails(6)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#aa88ff" id="sig-7">
+            <div class="sig-header">
+                <span class="sn-tag">SN14</span>
+                <span class="snd">sn14 h-param tracker</span>
+                <span class="stype" style="color:#aa88ff">[protocol_change]</span>
+                <span class="urg-tag" style="background:#5599ff">BRIEF WORTHY — READ IN DAILY BRIEF</span>
+                
+            </div>
+            <div class="sum">### Hyperparams changed on subnet 14
+- `weights_version` `28` → `29`</div>
+            <button class="toggle" onclick="toggleDetails(7)">📄 Show full message</button>
+            <div id="det-7" class="details" style="display:none">
+                <div class="full-msg">### Hyperparams changed on subnet 14
+- `weights_version` `28` → `29`</div>
+                <button class="toggle" onclick="toggleDetails(7)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+        <div class="section" id="sn-21">
+            <h2>SN21 (1 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#aa88ff" id="sig-8">
+            <div class="sig-header">
+                <span class="sn-tag">SN21</span>
+                <span class="snd">sn21 h-param tracker</span>
+                <span class="stype" style="color:#aa88ff">[protocol_change]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">### Hyperparams changed on subnet 21
+- `min_burn` `500000` → `100000000`</div>
+            <button class="toggle" onclick="toggleDetails(8)">📄 Show full message</button>
+            <div id="det-8" class="details" style="display:none">
+                <div class="full-msg">### Hyperparams changed on subnet 21
+- `min_burn` `500000` → `100000000`</div>
+                <button class="toggle" onclick="toggleDetails(8)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+        <div class="section" id="sn-33">
+            <h2>SN33 (1 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#ff4444" id="sig-9">
+            <div class="sig-header">
+                <span class="sn-tag">SN33</span>
+                <span class="snd">cookiemonster_65366</span>
+                <span class="stype" style="color:#ff4444">[critical_fix]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">I was actually thinking about bringing this up the other day! Now that DDoS attacks have effectively been mitigated thanks to your work, it’s time to start optimizing things.
+
+I’d suggest reducing the...</div>
+            <button class="toggle" onclick="toggleDetails(9)">📄 Show full message</button>
+            <div id="det-9" class="details" style="display:none">
+                <div class="full-msg">I was actually thinking about bringing this up the other day! Now that DDoS attacks have effectively been mitigated thanks to your work, it’s time to start optimizing things.
+
+I’d suggest reducing the immunity period to 12 hours, since top-performing miners can easily get out of immunity within that timeframe.
+
+This would benefit the subnet because ReadyAI would receive a higher proportion of top-</div>
+                <button class="toggle" onclick="toggleDetails(9)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+        <div class="section" id="sn-69">
+            <h2>SN69 (1 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#ff4444" id="sig-10">
+            <div class="sig-header">
+                <span class="sn-tag">SN69</span>
+                <span class="snd">mamslbb</span>
+                <span class="stype" style="color:#ff4444">[critical_fix]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">70+% of staked supply.
+
+And no, not a single subnet at launch had this much concentrated ownership, owners had to accumulate through their 18% emission share . And this won&#x27;t happen again since it has...</div>
+            <button class="toggle" onclick="toggleDetails(10)">📄 Show full message</button>
+            <div id="det-10" class="details" style="display:none">
+                <div class="full-msg">70+% of staked supply.
+
+And no, not a single subnet at launch had this much concentrated ownership, owners had to accumulate through their 18% emission share . And this won&#x27;t happen again since it has been hotfixed right after sn69 registration</div>
+                <button class="toggle" onclick="toggleDetails(10)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+        <div class="section" id="sn-76">
+            <h2>SN76 (1 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#00c060" id="sig-11">
+            <div class="sig-header">
+                <span class="sn-tag">SN76</span>
+                <span class="snd">kat_frenone</span>
+                <span class="stype" style="color:#00c060">[kat]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">&lt;@&amp;1404959073283346552&gt; &lt;@224042939087716352&gt; has successfully claimed ownership of the channel and has let me know that it&#x27;s up for sale.
+
+**Please be advised that this channel is not for purchase ne...</div>
+            <button class="toggle" onclick="toggleDetails(11)">📄 Show full message</button>
+            <div id="det-11" class="details" style="display:none">
+                <div class="full-msg">&lt;@&amp;1404959073283346552&gt; &lt;@224042939087716352&gt; has successfully claimed ownership of the channel and has let me know that it&#x27;s up for sale.
+
+**Please be advised that this channel is not for purchase negotations, bidding, etc.**  Once &lt;@224042939087716352&gt; has posted contact information or a preferred method to handle offers, which will not be in this channel, you&#x27;ll be able to follow those instruct</div>
+                <button class="toggle" onclick="toggleDetails(11)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+        <div class="section" id="sn-82">
+            <h2>SN82 (1 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-12">
+            <div class="sig-header">
+                <span class="sn-tag">SN82</span>
+                <span class="snd">consttt</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">&lt;@1272394607874936856&gt; if you can audit the incentive scores then you can check to see if there is cheating occuring</div>
+            <button class="toggle" onclick="toggleDetails(12)">📄 Show full message</button>
+            <div id="det-12" class="details" style="display:none">
+                <div class="full-msg">&lt;@1272394607874936856&gt; if you can audit the incentive scores then you can check to see if there is cheating occuring</div>
+                <button class="toggle" onclick="toggleDetails(12)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+        <div class="section" id="sn-84">
+            <h2>SN84 (2 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#00c060" id="sig-13">
+            <div class="sig-header">
+                <span class="sn-tag">SN84</span>
+                <span class="snd">kat_frenone</span>
+                <span class="stype" style="color:#00c060">[kat]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">I have deleted the original post since it doesn&#x27;t seem to be specifically about 84 and if it is, again, no one has claimed ownership other than prime, so any attempts to declaratively claim ownership ...</div>
+            <button class="toggle" onclick="toggleDetails(13)">📄 Show full message</button>
+            <div id="det-13" class="details" style="display:none">
+                <div class="full-msg">I have deleted the original post since it doesn&#x27;t seem to be specifically about 84 and if it is, again, no one has claimed ownership other than prime, so any attempts to declaratively claim ownership of a channel for subnet 84 in this server outside of the regular process will be deleted and the poster timed out.</div>
+                <button class="toggle" onclick="toggleDetails(13)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#00c060" id="sig-14">
+            <div class="sig-header">
+                <span class="sn-tag">SN84</span>
+                <span class="snd">kat_frenone</span>
+                <span class="stype" style="color:#00c060">[kat]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">No one, other than &lt;@1503432716035555522&gt; , has claimed ownership of this channel.  The last major announcement that they they made here was this one: https://discord.com/channels/799672011265015819/1...</div>
+            <button class="toggle" onclick="toggleDetails(14)">📄 Show full message</button>
+            <div id="det-14" class="details" style="display:none">
+                <div class="full-msg">No one, other than &lt;@1503432716035555522&gt; , has claimed ownership of this channel.  The last major announcement that they they made here was this one: https://discord.com/channels/799672011265015819/1499772113484124270/1508092793371889714
+
+If it turns out that this channel has been sold to a new owner, and a new owner approaches me to claim a channel for subnet 84 in this server, then I&#x27;ll archive</div>
+                <button class="toggle" onclick="toggleDetails(14)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+        <div class="section" id="sn-92">
+            <h2>SN92 (2 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#aa88ff" id="sig-15">
+            <div class="sig-header">
+                <span class="sn-tag">SN92</span>
+                <span class="snd">sn92 h-param tracker</span>
+                <span class="stype" style="color:#aa88ff">[protocol_change]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">### Hyperparams changed on subnet 92
+- `min_burn` `500000` → `999999999`</div>
+            <button class="toggle" onclick="toggleDetails(15)">📄 Show full message</button>
+            <div id="det-15" class="details" style="display:none">
+                <div class="full-msg">### Hyperparams changed on subnet 92
+- `min_burn` `500000` → `999999999`</div>
+                <button class="toggle" onclick="toggleDetails(15)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#aa88ff" id="sig-16">
+            <div class="sig-header">
+                <span class="sn-tag">SN92</span>
+                <span class="snd">sn92 h-param tracker</span>
+                <span class="stype" style="color:#aa88ff">[protocol_change]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">### Hyperparams changed on subnet 92
+- `target_regs_per_interval` `1` → `2`
+- `min_burn` `50000000` → `500000`
+- `max_difficulty` `18446744073709551615` → `4611686018427387903`
+- `min_difficulty` `184...</div>
+            <button class="toggle" onclick="toggleDetails(16)">📄 Show full message</button>
+            <div id="det-16" class="details" style="display:none">
+                <div class="full-msg">### Hyperparams changed on subnet 92
+- `target_regs_per_interval` `1` → `2`
+- `min_burn` `50000000` → `500000`
+- `max_difficulty` `18446744073709551615` → `4611686018427387903`
+- `min_difficulty` `18446744073709551615` → `10000000`</div>
+                <button class="toggle" onclick="toggleDetails(16)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+        <div class="section" id="sn-104">
+            <h2>SN104 (3 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#aa88ff" id="sig-17">
+            <div class="sig-header">
+                <span class="sn-tag">SN104</span>
+                <span class="snd">sn104 h-param tracker</span>
+                <span class="stype" style="color:#aa88ff">[protocol_change]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">### Hyperparams changed on subnet 104
+- `max_burn` `100000001` → `100000000000`
+- `min_burn` `100000000` → `999999999`</div>
+            <button class="toggle" onclick="toggleDetails(17)">📄 Show full message</button>
+            <div id="det-17" class="details" style="display:none">
+                <div class="full-msg">### Hyperparams changed on subnet 104
+- `max_burn` `100000001` → `100000000000`
+- `min_burn` `100000000` → `999999999`</div>
+                <button class="toggle" onclick="toggleDetails(17)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#aa88ff" id="sig-18">
+            <div class="sig-header">
+                <span class="sn-tag">SN104</span>
+                <span class="snd">sn104 h-param tracker</span>
+                <span class="stype" style="color:#aa88ff">[protocol_change]</span>
+                <span class="urg-tag" style="background:#5599ff">BRIEF WORTHY — READ IN DAILY BRIEF</span>
+                
+            </div>
+            <div class="sum">### Hyperparams changed on subnet 104
+- `commit_reveal_weights_enabled` `False` → `True`</div>
+            <button class="toggle" onclick="toggleDetails(18)">📄 Show full message</button>
+            <div id="det-18" class="details" style="display:none">
+                <div class="full-msg">### Hyperparams changed on subnet 104
+- `commit_reveal_weights_enabled` `False` → `True`</div>
+                <button class="toggle" onclick="toggleDetails(18)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#aa88ff" id="sig-19">
+            <div class="sig-header">
+                <span class="sn-tag">SN104</span>
+                <span class="snd">sn104 h-param tracker</span>
+                <span class="stype" style="color:#aa88ff">[protocol_change]</span>
+                <span class="urg-tag" style="background:#5599ff">BRIEF WORTHY — READ IN DAILY BRIEF</span>
+                
+            </div>
+            <div class="sum">### Hyperparams changed on subnet 104
+- `commit_reveal_weights_enabled` `True` → `False`</div>
+            <button class="toggle" onclick="toggleDetails(19)">📄 Show full message</button>
+            <div id="det-19" class="details" style="display:none">
+                <div class="full-msg">### Hyperparams changed on subnet 104
+- `commit_reveal_weights_enabled` `True` → `False`</div>
+                <button class="toggle" onclick="toggleDetails(19)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+        <div class="section" id="sn-116">
+            <h2>SN116 (1 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#aa88ff" id="sig-20">
+            <div class="sig-header">
+                <span class="sn-tag">SN116</span>
+                <span class="snd">sn116 h-param tracker</span>
+                <span class="stype" style="color:#aa88ff">[protocol_change]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">### Hyperparams changed on subnet 116
+- `target_regs_per_interval` `1` → `2`
+- `bonds_moving_avg` `500000` → `900000`
+- `activity_cutoff` `1000` → `5000`
+- `max_difficulty` `18446744073709551615` → `4...</div>
+            <button class="toggle" onclick="toggleDetails(20)">📄 Show full message</button>
+            <div id="det-20" class="details" style="display:none">
+                <div class="full-msg">### Hyperparams changed on subnet 116
+- `target_regs_per_interval` `1` → `2`
+- `bonds_moving_avg` `500000` → `900000`
+- `activity_cutoff` `1000` → `5000`
+- `max_difficulty` `18446744073709551615` → `4611686018427387903`
+- `weights_version` `1` → `0`
+- `min_difficulty` `18446744073709551615` → `10000000`
+- `immunity_period` `360` → `5000`</div>
+                <button class="toggle" onclick="toggleDetails(20)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+        <div class="section" id="sn-117">
+            <h2>SN117 (1 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#00c060" id="sig-21">
+            <div class="sig-header">
+                <span class="sn-tag">SN117</span>
+                <span class="snd">kat_frenone</span>
+                <span class="stype" style="color:#00c060">[kat]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">&lt;@&amp;1404959073283346552&gt; &lt;@698321394773000262&gt; has successfully claimed ownership of this channel.  **Please wait until informational posts are posted and pinned before spamming the channel with reques...</div>
+            <button class="toggle" onclick="toggleDetails(21)">📄 Show full message</button>
+            <div id="det-21" class="details" style="display:none">
+                <div class="full-msg">&lt;@&amp;1404959073283346552&gt; &lt;@698321394773000262&gt; has successfully claimed ownership of this channel.  **Please wait until informational posts are posted and pinned before spamming the channel with requests for information, thanks.**</div>
+                <button class="toggle" onclick="toggleDetails(21)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+        <div class="section" id="sn-122">
+            <h2>SN122 (1 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#aa88ff" id="sig-22">
+            <div class="sig-header">
+                <span class="sn-tag">SN122</span>
+                <span class="snd">sn122 h-param tracker</span>
+                <span class="stype" style="color:#aa88ff">[protocol_change]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">### Hyperparams changed on subnet 122
+- `target_regs_per_interval` `1` → `2`
+- `min_burn` `1000000` → `999999999`
+- `max_difficulty` `18446744073709551615` → `4611686018427387903`
+- `commit_reveal_per...</div>
+            <button class="toggle" onclick="toggleDetails(22)">📄 Show full message</button>
+            <div id="det-22" class="details" style="display:none">
+                <div class="full-msg">### Hyperparams changed on subnet 122
+- `target_regs_per_interval` `1` → `2`
+- `min_burn` `1000000` → `999999999`
+- `max_difficulty` `18446744073709551615` → `4611686018427387903`
+- `commit_reveal_period` `2` → `1`
+- `min_difficulty` `18446744073709551615` → `10000000`</div>
+                <button class="toggle" onclick="toggleDetails(22)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+        <div class="section" id="sn-123">
+            <h2>SN123 (1 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#aa88ff" id="sig-23">
+            <div class="sig-header">
+                <span class="sn-tag">SN123</span>
+                <span class="snd">sn123 h-param tracker</span>
+                <span class="stype" style="color:#aa88ff">[protocol_change]</span>
+                <span class="urg-tag" style="background:#5599ff">BRIEF WORTHY — READ IN DAILY BRIEF</span>
+                
+            </div>
+            <div class="sum">### Hyperparams changed on subnet 123
+- `min_burn` `300000000` → `150000000`</div>
+            <button class="toggle" onclick="toggleDetails(23)">📄 Show full message</button>
+            <div id="det-23" class="details" style="display:none">
+                <div class="full-msg">### Hyperparams changed on subnet 123
+- `min_burn` `300000000` → `150000000`</div>
+                <button class="toggle" onclick="toggleDetails(23)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+        <div class="section" id="sn-126">
+            <h2>SN126 (1 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#444" id="sig-24">
+            <div class="sig-header">
+                <span class="sn-tag">SN126</span>
+                <span class="snd">sachhp</span>
+                <span class="stype" style="color:#444">[version_deploy]</span>
+                <span class="urg-tag" style="background:#5599ff">BRIEF WORTHY — READ IN DAILY BRIEF</span>
+                
+            </div>
+            <div class="sum">**Training benchmark update**
+
+We identified and fixed an issue where some bot/human benchmark groups could be too similar at the hand-sequence level. The benchmark has now been regenerated and deploy...</div>
+            <button class="toggle" onclick="toggleDetails(24)">📄 Show full message</button>
+            <div id="det-24" class="details" style="display:none">
+                <div class="full-msg">**Training benchmark update**
+
+We identified and fixed an issue where some bot/human benchmark groups could be too similar at the hand-sequence level. The benchmark has now been regenerated and deployed as v1.12.
+
+What changed:
+
+- bot/human group mirroring has been removed
+- the public API and prediction contract remain unchanged
+- all current benchmark releases have been regenerated
+
+Current stat</div>
+                <button class="toggle" onclick="toggleDetails(24)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+
+
+            <div class="section">
+                <h2>💬 Active Channels — No Signals (90)</h2>
+                <p class="section-desc">Subnets with message activity but no classified signals.</p>
+                <div class="active-row"><span class="sn-tag">?</span> <span class="ch-name">general</span> <span class="msg-count">12 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">?</span> <span class="ch-name">rao</span> <span class="msg-count">114 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN2</span> <span class="ch-name">β・dsperse・2</span> <span class="msg-count">10 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN3</span> <span class="ch-name">γ・τeuτonic・3</span> <span class="msg-count">12 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN6</span> <span class="ch-name">ζ・numinous・6</span> <span class="msg-count">12 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN8</span> <span class="ch-name">θ・vanta・8</span> <span class="msg-count">4 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN9</span> <span class="ch-name">ι・ioτa・9</span> <span class="msg-count">10 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN11</span> <span class="ch-name">λ・trajectory-rl・11</span> <span class="msg-count">43 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN13</span> <span class="ch-name">ν・daτaverse・13</span> <span class="msg-count">18 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN15</span> <span class="ch-name">ο・oro・15</span> <span class="msg-count">99 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN16</span> <span class="ch-name">π・biτads・16</span> <span class="msg-count">7 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN18</span> <span class="ch-name">σ・zeus・18</span> <span class="msg-count">14 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN19</span> <span class="ch-name">τ・blockmachine・19</span> <span class="msg-count">6 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN22</span> <span class="ch-name">χ・desearch・22</span> <span class="msg-count">1 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN23</span> <span class="ch-name">ψ・trishool・23</span> <span class="msg-count">17 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN24</span> <span class="ch-name">ω・quasar・24</span> <span class="msg-count">24 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN110</span> <span class="ch-name">ѐ・greencompute・110</span> <span class="msg-count">7 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN112</span> <span class="ch-name">ђ・minoτaur・112</span> <span class="msg-count">6 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN113</span> <span class="ch-name">ѓ・tensorusd・113</span> <span class="msg-count">4 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN114</span> <span class="ch-name">є・soma・114</span> <span class="msg-count">44 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN80</span> <span class="ch-name">՞・dogelayer・80</span> <span class="msg-count">40 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN103</span> <span class="ch-name">ա・djinn・103</span> <span class="msg-count">14 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN105</span> <span class="ch-name">գ・beam・105</span> <span class="msg-count">62 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN26</span> <span class="ch-name">ב・perτurb・26</span> <span class="msg-count">34 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN27</span> <span class="ch-name">ג・unclaimed・27</span> <span class="msg-count">2 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN28</span> <span class="ch-name">ד・fish・28</span> <span class="msg-count">77 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN29</span> <span class="ch-name">ה・booτsτrap・29</span> <span class="msg-count">1 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN31</span> <span class="ch-name">ז・recall・31</span> <span class="msg-count">2 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN32</span> <span class="ch-name">ח・iτsai・32</span> <span class="msg-count">8 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN34</span> <span class="ch-name">י・mind・34</span> <span class="msg-count">1 msgs</span> <span class="owner-tag">no signals</span></div>
+                <div class="quiet-note">+ 60 more</div>
+            </div>
+            
+
+
+        <div class="section">
+            <h2>🟢 Active Subnets (99)</h2>
+            <p class="section-desc">Subnets with message activity today, ordered by volume.</p>
+            <div class="active-row"><span class="sn-tag">SN66</span> <span class="ch-name">ض・ninja・66</span> <span class="msg-count">149 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN118</span> <span class="ch-name">ⲁ・ditto・118</span> <span class="msg-count">122 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">?</span> <span class="ch-name">rao</span> <span class="msg-count">114 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN15</span> <span class="ch-name">ο・oro・15</span> <span class="msg-count">99 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN97</span> <span class="ch-name">ა・albedo・97</span> <span class="msg-count">81 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN28</span> <span class="ch-name">ד・fish・28</span> <span class="msg-count">77 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN105</span> <span class="ch-name">գ・beam・105</span> <span class="msg-count">62 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN21</span> <span class="ch-name">φ・adτao・21</span> <span class="msg-count">47 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN114</span> <span class="ch-name">є・soma・114</span> <span class="msg-count">44 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN11</span> <span class="ch-name">λ・trajectory-rl・11</span> <span class="msg-count">43 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN80</span> <span class="ch-name">՞・dogelayer・80</span> <span class="msg-count">40 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN88</span> <span class="ch-name">ᛇ・invesτing・88</span> <span class="msg-count">37 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN78</span> <span class="ch-name">و・vocence・78</span> <span class="msg-count">35 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN26</span> <span class="ch-name">ב・perτurb・26</span> <span class="msg-count">34 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN39</span> <span class="ch-name">מ・cathedral・39</span> <span class="msg-count">26 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN60</span> <span class="ch-name">ذ・bitsec・60</span> <span class="msg-count">26 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN24</span> <span class="ch-name">ω・quasar・24</span> <span class="msg-count">24 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN100</span> <span class="ch-name">დ・plaτform・100</span> <span class="msg-count">24 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN40</span> <span class="ch-name">ן・unclaimed・40</span> <span class="msg-count">21 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN36</span> <span class="ch-name">כ・eirel・36</span> <span class="msg-count">20 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN107</span> <span class="ch-name">ミ・minos・107</span> <span class="msg-count">19 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN13</span> <span class="ch-name">ν・daτaverse・13</span> <span class="msg-count">18 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN23</span> <span class="ch-name">ψ・trishool・23</span> <span class="msg-count">17 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN46</span> <span class="ch-name">ץ・zipcode・46</span> <span class="msg-count">17 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN50</span> <span class="ch-name">ש・synth・50</span> <span class="msg-count">17 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN55</span> <span class="ch-name">ث・niome・55</span> <span class="msg-count">17 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN67</span> <span class="ch-name">ط・harnyx・67</span> <span class="msg-count">17 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN102</span> <span class="ch-name">ვ・connito-ai・102</span> <span class="msg-count">17 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN44</span> <span class="ch-name">ף・score・44</span> <span class="msg-count">16 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN94</span> <span class="ch-name">ᚄ・biτsoτa・94</span> <span class="msg-count">16 msgs</span> <span class="owner-tag">Owner: unknown</span></div>
+        </div>
+        
+
+        <div class="section">
+            <h2>⚫ Quiet Subnets (31)</h2>
+            <p class="section-desc">Subnets with no message activity in the last 24 hours.</p>
+            <div class="quiet-list"><span class="quiet-tag">SN5</span> <span class="quiet-tag">SN7</span> <span class="quiet-tag">SN10</span> <span class="quiet-tag">SN12</span> <span class="quiet-tag">SN14</span> <span class="quiet-tag">SN17</span> <span class="quiet-tag">SN20</span> <span class="quiet-tag">SN25</span> <span class="quiet-tag">SN30</span> <span class="quiet-tag">SN35</span> <span class="quiet-tag">SN42</span> <span class="quiet-tag">SN45</span> <span class="quiet-tag">SN52</span> <span class="quiet-tag">SN53</span> <span class="quiet-tag">SN57</span> <span class="quiet-tag">SN69</span> <span class="quiet-tag">SN86</span> <span class="quiet-tag">SN87</span> <span class="quiet-tag">SN90</span> <span class="quiet-tag">SN91</span> <span class="quiet-tag">SN92</span> <span class="quiet-tag">SN98</span> <span class="quiet-tag">SN99</span> <span class="quiet-tag">SN106</span> <span class="quiet-tag">SN108</span> <span class="quiet-tag">SN111</span> <span class="quiet-tag">SN115</span> <span class="quiet-tag">SN116</span> <span class="quiet-tag">SN119</span> <span class="quiet-tag">SN122</span> <span class="quiet-tag">SN125</span></div>
+            
+        </div>
+        
+
+<footer>Generated by Hermes · Bittensor Intelligence Monitor · <a href="https://thaneclaw.github.io/bittensor-reports" style="color:var(--dim)">All Reports</a></footer>
+</div>
+</body>
+</html>
