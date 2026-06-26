@@ -1,0 +1,1021 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bittensor Report — 2026-06-26</title>
+<style>
+:root{--bg:#0a0a12;--card:#141420;--text:#d0d0e0;--dim:#777;--orange:#ff6b35;--red:#ff4444;--green:#00c060;--blue:#5599ff}
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif}
+body{background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+.container{max-width:1000px;margin:0 auto;padding:12px}
+header{text-align:center;padding:24px 0 16px;border-bottom:1px solid #222;margin-bottom:20px}
+h1{color:var(--orange);font-size:clamp(1.4em,4vw,1.8em);font-weight:700}
+.meta{color:var(--dim);font-size:.9em;margin-top:6px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:14px;background:var(--card);border-radius:12px;margin-bottom:20px}
+.stat{text-align:center;padding:8px}
+.v{color:var(--orange);font-size:clamp(1.6em,5vw,2em);font-weight:700}
+.l{font-size:.75em;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+.section{background:var(--card);border-radius:12px;padding:16px;margin-bottom:16px;border:1px solid #1e1e2e}
+h2{color:var(--orange);font-size:1.15em;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid #222;font-weight:600}
+.section-desc{color:var(--dim);font-size:.85em;margin-bottom:12px;font-style:italic}
+/* Summary grid styles */
+.summary-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;margin-top:10px}
+.summary-sn{background:#0e0e18;border-radius:8px;padding:12px;border-left:3px solid var(--blue);cursor:pointer;transition:background .2s;text-decoration:none;color:var(--text)}
+.summary-sn:hover{background:#151520}
+.summary-sn.urgent{border-left-color:var(--red)}
+.summary-sn.brief{border-left-color:var(--blue)}
+.summary-sn.founder{border-left-color:var(--orange)}
+.summary-sn-header{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.summary-sn-num{background:var(--orange);color:#fff;padding:2px 8px;border-radius:4px;font-weight:700;font-size:.85em}
+.summary-sn-count{background:#1a1a2e;padding:2px 8px;border-radius:4px;font-size:.75em;color:var(--dim)}
+.summary-sn-text{font-size:.85em;color:#aaa;line-height:1.4}
+/* Signal cards */
+.signal{margin:10px 0;padding:12px 14px;border-left:3px solid var(--blue);border-radius:6px;background:#0e0e18;transition:background .2s}
+.signal:hover{background:#151520}
+.sig-header{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:6px;font-size:.82em}
+.sn-tag{background:#222;color:var(--orange);padding:2px 8px;border-radius:4px;font-weight:700;font-size:.85em}
+.snd{color:var(--orange);font-weight:600}
+.stype{font-size:.8em;opacity:.8}
+.urg-tag{font-size:.7em;padding:2px 8px;border-radius:3px;color:#fff;font-weight:600}
+.sum{margin-top:6px;font-size:.95em;line-height:1.5;color:var(--text)}
+.toggle{background:#1a1a2e;border:1px solid #333;color:var(--orange);padding:6px 14px;border-radius:6px;cursor:pointer;font-size:.8em;margin-top:10px;width:100%}
+.toggle:hover{background:#222}
+.details{margin-top:10px;padding-top:10px;border-top:1px solid #222}
+.full-msg{background:#0a0a12;padding:12px;border-radius:6px;font-size:.9em;color:#aaa;white-space:pre-wrap;word-break:break-word;max-height:400px;overflow-y:auto}
+.active-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #1a1a2a;font-size:.9em;flex-wrap:wrap}
+.active-row:last-child{border-bottom:none}
+.ch-name{color:var(--dim);font-size:.85em}
+.msg-count{background:#1a1a2e;padding:2px 8px;border-radius:4px;font-size:.75em;color:var(--dim)}
+.owner-tag{color:#888;font-size:.8em}
+.quiet-list{display:flex;flex-wrap:wrap;gap:8px;padding:8px 0}
+.quiet-tag{background:#0e0e18;padding:6px 10px;border-radius:6px;font-size:.85em;color:#666}
+.quiet-note{color:var(--dim);font-size:.8em;margin-top:10px;text-align:center}
+footer{text-align:center;padding:30px 0;color:var(--dim);font-size:.8em;border-top:1px solid #222;margin-top:20px}
+@media (max-width:600px){
+    .stats{grid-template-columns:repeat(2,1fr)}
+    .summary-grid{grid-template-columns:1fr}
+    .sig-header{gap:4px}
+    .active-row{flex-direction:column;align-items:flex-start;gap:4px}
+}
+.synthesis{background:var(--card);border-radius:12px;padding:20px;margin-bottom:16px;border:1px solid #1e1e2e;line-height:1.6}
+.synthesis h3{color:var(--orange);font-size:1em;margin:14px 0 6px}
+.synthesis p{margin-bottom:10px}
+.synthesis ul{margin:0 0 12px 20px}
+.synthesis li{margin-bottom:6px}
+</style>
+<script>
+function toggleDetails(idx) {
+    var el = document.getElementById('det-' + idx);
+    if (el.style.display === 'none') {
+        el.style.display = 'block';
+    } else {
+        el.style.display = 'none';
+    }
+}
+</script>
+</head>
+<body>
+<div class="container">
+<header>
+    <h1>📊 Bittensor Daily Report</h1>
+    <div class="meta">2026-06-26 · 29 signals · 96 active subnets · 36 quiet</div>
+</header>
+
+<div class="stats">
+    <div class="stat"><div class="v">29</div><div class="l">Signals</div></div>
+    <div class="stat"><div class="v">20</div><div class="l">Urgent</div></div>
+    <div class="stat"><div class="v">96</div><div class="l">Active</div></div>
+    <div class="stat"><div class="v">36</div><div class="l">Quiet</div></div>
+</div>
+
+
+    <div class="section">
+        <h2>📋 Subnet Summary</h2>
+        <p class="section-desc">Click any subnet to jump to its detailed signals. Sorted numerically (SN1, SN2, SN3...).</p>
+        <div class="summary-grid">
+            
+        <a class="summary-sn urgent" href="#sn-?">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">ANN</span>
+                <span class="summary-sn-count">🔥 3 urgent · 📋 1 brief</span>
+            </div>
+            <div class="summary-sn-text">Hey @everyone!
+
+The features referenced above have now been ...</div>
+        </a>
+        
+        <a class="summary-sn brief" href="#sn-1">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN1</span>
+                <span class="summary-sn-count">📋 1 brief</span>
+            </div>
+            <div class="summary-sn-text">### Hyperparams changed on subnet 1
+- `activity_cutoff` `500...</div>
+        </a>
+        
+        <a class="summary-sn brief" href="#sn-6">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN6</span>
+                <span class="summary-sn-count">📋 1 brief</span>
+            </div>
+            <div class="summary-sn-text">Hi all!  For those of you using Lightning Rod, we just launc...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-11">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN11</span>
+                <span class="summary-sn-count">🔥 2 urgent</span>
+            </div>
+            <div class="summary-sn-text">### Hyperparams changed on subnet 11
+- `min_burn` `0` → `200...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-29">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN29</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">If you guys can provide me with the code here that is commit...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-36">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN36</span>
+                <span class="summary-sn-count">🔥 1 urgent · 📋 2 brief · 👤 3 consttt</span>
+            </div>
+            <div class="summary-sn-text">So I agree with the concerns from miners here and we need to...</div>
+        </a>
+        
+        <a class="summary-sn brief" href="#sn-38">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN38</span>
+                <span class="summary-sn-count">📋 1 brief</span>
+            </div>
+            <div class="summary-sn-text">### Hyperparams changed on subnet 38
+- `activity_cutoff` `50...</div>
+        </a>
+        
+        <a class="summary-sn brief" href="#sn-40">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN40</span>
+                <span class="summary-sn-count">📋 1 brief</span>
+            </div>
+            <div class="summary-sn-text">### Hyperparams changed on subnet 40
+- `commit_reveal_weight...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-70">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN70</span>
+                <span class="summary-sn-count">🔥 2 urgent · 👤 2 consttt</span>
+            </div>
+            <div class="summary-sn-text">We need to break down that second wall here &lt;@22711235412125...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-82">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN82</span>
+                <span class="summary-sn-count">🔥 2 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Hi Compelle team, what we need is a verification from a seco...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-83">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN83</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">The use of  the centralized API here ```http://lambda.topten...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-84">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN84</span>
+                <span class="summary-sn-count">🔥 1 urgent</span>
+            </div>
+            <div class="summary-sn-text">### Hyperparams changed on subnet 84
+- `commit_reveal_period...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-99">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN99</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">Leoma uses a centralized API `https://api.leoma.ai` to fetch...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-101">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN101</span>
+                <span class="summary-sn-count">🔥 3 urgent · 👤 3 consttt</span>
+            </div>
+            <div class="summary-sn-text">&lt;@1514437986492743841&gt; If we can improve the auditability we...</div>
+        </a>
+        
+        <a class="summary-sn brief" href="#sn-107">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN107</span>
+                <span class="summary-sn-count">📋 2 brief</span>
+            </div>
+            <div class="summary-sn-text">### Hyperparams changed on subnet 107
+- `min_burn` `15000000...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-108">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN108</span>
+                <span class="summary-sn-count">🔥 2 urgent · 👤 2 consttt</span>
+            </div>
+            <div class="summary-sn-text">Validators do not create tasks, distribute work to miners, o...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-110">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN110</span>
+                <span class="summary-sn-count">🔥 1 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">&lt;@910427735376142367&gt; 
+
+I agree here. &lt;@910427735376142367&gt; ...</div>
+        </a>
+        
+        </div>
+    </div>
+    
+
+<div class="synthesis"><div class="section"><h2>🧠 Intelligence Summary</h2><p class="section-desc">LLM-synthesized daily analysis</p>🔹 <b>REGISTRY CHANGES</b>:  <br>
+<li>No registry changes today.</li>
+<br>
+🔒 <b>CONVICTION LOCKS</b>:  <br>
+<li>No conviction lock activity today.</li>
+<br>
+⚡ <b>HEADLINE</b>:  <br>
+Mainnet upgraded to spec version 422, disabling default emission for new subnets. Multiple subnets face auditability concerns raised by consttt and other founders.<br>
+<br>
+|🎯 <b>CONST WATCH</b>:  <br>
+<li>consttt flagged auditability issues across <b>SN29</b>, <b>SN70</b>, <b>SN82</b>, <b>SN83</b>, <b>SN99</b>, <b>SN101</b>, <b>SN108</b>, <b>SN110</b>, and <b>SN36</b>, citing centralized APIs and lack of transparent scoring.  </li>
+<li>sam0x17 confirmed deployment of a mainnet hotfix disabling default emission for new subnets.  </li>
+<li>Multiple subnet teams including <b>SN82</b>, <b>SN101</b>, and <b>SN108</b> were urged to improve auditability before resuming TAO emissions.</li>
+<br>
+|🌐 <b>ECOSYSTEM</b>:  <br>
+<li><b>SN11</b>: min_burn increased from 0 to 20,000,000.  </li>
+<li><b>SN82</b>: min_burn reduced from 990,000,000 to 500,000.  </li>
+<li><b>SN84</b>: commit_reveal_period reduced from 10 to 1.</li>
+<br>
+|👁 <b>WATCHLIST</b>:  <br>
+<li><b>SN83</b>: Uses centralized API, raising trust concerns.  </li>
+<li><b>SN99</b>: Relies on centralized task/weight API, no local validation.  </li>
+<li><b>SN101</b>: Challenge sourcing and scoring methods are not auditable.</li>
+<br>
+|🎬 <b>What to Do</b>:  <br>
+<li><b>SN82</b>, <b>SN83</b>, <b>SN99</b>, <b>SN101</b>, <b>SN108</b>: Address auditability gaps immediately.  </li>
+<li><b>SN11</b>, <b>SN84</b>, <b>SN107</b>: Review impact of recent hyperparameter changes.  </li>
+<li>All subnet teams: Prepare for stricter audit requirements ahead of emission reactivation.</li></div></div>
+
+
+        <div class="section" id="sn-?">
+            <h2>SN? (4 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-0">
+            <div class="sig-header">
+                <span class="sn-tag">?</span>
+                <span class="snd">sam0x17</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">Hey @everyone!
+
+The features referenced above have now been deployed as part of a planned mainnet release in spec version 423.
+
+Major features in this release include:
+- dynamic tempo
+- (relay-based) ...</div>
+            <button class="toggle" onclick="toggleDetails(0)">📄 Show full message</button>
+            <div id="det-0" class="details" style="display:none">
+                <div class="full-msg">Hey @everyone!
+
+The features referenced above have now been deployed as part of a planned mainnet release in spec version 423.
+
+Major features in this release include:
+- dynamic tempo
+- (relay-based) advanced limit orders pallet
+- balancer (should catch a whole host of potential accounting errors at compile-time when dealing with alpha, very positive for the correctness/security stance of the chain)
+- a number of other performance, security, and testing improvements
+
+The full list can be found h</div>
+                <button class="toggle" onclick="toggleDetails(0)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-1">
+            <div class="sig-header">
+                <span class="sn-tag">?</span>
+                <span class="snd">sam0x17</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">Hey @everyone!
+
+Moments ago mainnet was upgraded to spec version 422. This hotfix turns off emission by default for newly registered subnets.
+
+For more information please see https://github.com/opente...</div>
+            <button class="toggle" onclick="toggleDetails(1)">📄 Show full message</button>
+            <div id="det-1" class="details" style="display:none">
+                <div class="full-msg">Hey @everyone!
+
+Moments ago mainnet was upgraded to spec version 422. This hotfix turns off emission by default for newly registered subnets.
+
+For more information please see https://github.com/opentensor/subtensor/releases/tag/v3.4.7-422
+
+Thank you!</div>
+                <button class="toggle" onclick="toggleDetails(1)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-2">
+            <div class="sig-header">
+                <span class="sn-tag">?</span>
+                <span class="snd">sam0x17</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">Hey @everyone!
+
+Moments ago mainnet was upgraded to spec version 421. This includes two hotfixes, one that introduces price-based emissions with miner-burn scaling, and another that adds flags control...</div>
+            <button class="toggle" onclick="toggleDetails(2)">📄 Show full message</button>
+            <div id="det-2" class="details" style="display:none">
+                <div class="full-msg">Hey @everyone!
+
+Moments ago mainnet was upgraded to spec version 421. This includes two hotfixes, one that introduces price-based emissions with miner-burn scaling, and another that adds flags controlling whether an account wishes to receive incoming locked stake transfers or not (by default, not), which should resolve some CEX, wallet, and smart contract issues related to the introduction of locked stake.
+
+&lt;@389189199514959893&gt; has put together an article on this upgrade, available here: https:</div>
+                <button class="toggle" onclick="toggleDetails(2)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-3">
+            <div class="sig-header">
+                <span class="sn-tag">?</span>
+                <span class="snd">sam0x17</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">**For indexer / dashboard / tooling developers**
+
+The above runtime upgrade removed the `Swap.AlphaSqrtPrice` storage item, which impacted a number of folks who have not switched to the runtime APIs f...</div>
+            <button class="toggle" onclick="toggleDetails(3)">📄 Show full message</button>
+            <div id="det-3" class="details" style="display:none">
+                <div class="full-msg">**For indexer / dashboard / tooling developers**
+
+The above runtime upgrade removed the `Swap.AlphaSqrtPrice` storage item, which impacted a number of folks who have not switched to the runtime APIs for accessing this information. If your integration reads subnet price from that storage key, it broke with this upgrade.
+
+A patch is coming shortly that restores `Swap.AlphaSqrtPrice` and keeps it updated, so existing integrations using the lagacy storage read will keep working, but in the mean time</div>
+                <button class="toggle" onclick="toggleDetails(3)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+        <div class="section" id="sn-1">
+            <h2>SN1 (1 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#aa88ff" id="sig-4">
+            <div class="sig-header">
+                <span class="sn-tag">SN1</span>
+                <span class="snd">sn1 h-param tracker</span>
+                <span class="stype" style="color:#aa88ff">[protocol_change]</span>
+                <span class="urg-tag" style="background:#5599ff">BRIEF WORTHY — READ IN DAILY BRIEF</span>
+                
+            </div>
+            <div class="sum">### Hyperparams changed on subnet 1
+- `activity_cutoff` `5000` → `4950`</div>
+            <button class="toggle" onclick="toggleDetails(4)">📄 Show full message</button>
+            <div id="det-4" class="details" style="display:none">
+                <div class="full-msg">### Hyperparams changed on subnet 1
+- `activity_cutoff` `5000` → `4950`</div>
+                <button class="toggle" onclick="toggleDetails(4)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+        <div class="section" id="sn-6">
+            <h2>SN6 (1 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#444" id="sig-5">
+            <div class="sig-header">
+                <span class="sn-tag">SN6</span>
+                <span class="snd">turtles8</span>
+                <span class="stype" style="color:#444">[version_deploy]</span>
+                <span class="urg-tag" style="background:#5599ff">BRIEF WORTHY — READ IN DAILY BRIEF</span>
+                
+            </div>
+            <div class="sum">Hi all!  For those of you using Lightning Rod, we just launched Foresight-v4 in our API. This upgraded model has substantially improved accuracy over Foresight-v3.  
+
+**Low Effort Mode**: This version...</div>
+            <button class="toggle" onclick="toggleDetails(5)">📄 Show full message</button>
+            <div id="det-5" class="details" style="display:none">
+                <div class="full-msg">Hi all!  For those of you using Lightning Rod, we just launched Foresight-v4 in our API. This upgraded model has substantially improved accuracy over Foresight-v3.  
+
+**Low Effort Mode**: This version has a low effort mode (reasoning_effort=&quot;low&quot;) that uses a small fraction of the tokens &amp; per-forecast cost, while still providing better accuracy than frontier AIs.
+
+**Research**: We also now have o</div>
+                <button class="toggle" onclick="toggleDetails(5)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+        <div class="section" id="sn-11">
+            <h2>SN11 (2 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#aa88ff" id="sig-6">
+            <div class="sig-header">
+                <span class="sn-tag">SN11</span>
+                <span class="snd">sn11 h-param tracker</span>
+                <span class="stype" style="color:#aa88ff">[protocol_change]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">### Hyperparams changed on subnet 11
+- `min_burn` `0` → `20000000`</div>
+            <button class="toggle" onclick="toggleDetails(6)">📄 Show full message</button>
+            <div id="det-6" class="details" style="display:none">
+                <div class="full-msg">### Hyperparams changed on subnet 11
+- `min_burn` `0` → `20000000`</div>
+                <button class="toggle" onclick="toggleDetails(6)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#aa88ff" id="sig-7">
+            <div class="sig-header">
+                <span class="sn-tag">SN11</span>
+                <span class="snd">sn11 h-param tracker</span>
+                <span class="stype" style="color:#aa88ff">[protocol_change]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">### Hyperparams changed on subnet 11
+- `min_burn` `200000000` → `0`</div>
+            <button class="toggle" onclick="toggleDetails(7)">📄 Show full message</button>
+            <div id="det-7" class="details" style="display:none">
+                <div class="full-msg">### Hyperparams changed on subnet 11
+- `min_burn` `200000000` → `0`</div>
+                <button class="toggle" onclick="toggleDetails(7)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+        <div class="section" id="sn-29">
+            <h2>SN29 (1 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-8">
+            <div class="sig-header">
+                <span class="sn-tag">SN29</span>
+                <span class="snd">consttt</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">If you guys can provide me with the code here that is commited on the chain and a way for me to audit the mining I will do a review and we can bring you back in.</div>
+            <button class="toggle" onclick="toggleDetails(8)">📄 Show full message</button>
+            <div id="det-8" class="details" style="display:none">
+                <div class="full-msg">If you guys can provide me with the code here that is commited on the chain and a way for me to audit the mining I will do a review and we can bring you back in.</div>
+                <button class="toggle" onclick="toggleDetails(8)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+        <div class="section" id="sn-36">
+            <h2>SN36 (3 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-9">
+            <div class="sig-header">
+                <span class="sn-tag">SN36</span>
+                <span class="snd">consttt</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">So I agree with the concerns from miners here and we need to go through the process of making mining here auditable before we can enable emissions on this subnet. 
+
+I can&#x27;t say one way or another if t...</div>
+            <button class="toggle" onclick="toggleDetails(9)">📄 Show full message</button>
+            <div id="det-9" class="details" style="display:none">
+                <div class="full-msg">So I agree with the concerns from miners here and we need to go through the process of making mining here auditable before we can enable emissions on this subnet. 
+
+I can&#x27;t say one way or another if there is self-mining, however we can see that there is no way to audit this subnet. This needs to be changed and proved in a clear manner. &quot;here is how you can verify yourself, by running a validator or running a secondary auditor script which proves that the weights reflect the results&quot; 
+
+If we can </div>
+                <button class="toggle" onclick="toggleDetails(9)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-10">
+            <div class="sig-header">
+                <span class="sn-tag">SN36</span>
+                <span class="snd">consttt</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">```Weights come from one owner endpoint. validation/validator/engine.py ```</div>
+            <button class="toggle" onclick="toggleDetails(10)">📄 Show full message</button>
+            <div id="det-10" class="details" style="display:none">
+                <div class="full-msg">```Weights come from one owner endpoint. validation/validator/engine.py ```</div>
+                <button class="toggle" onclick="toggleDetails(10)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-11">
+            <div class="sig-header">
+                <span class="sn-tag">SN36</span>
+                <span class="snd">consttt</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">```
+Eirel does have more genuine validator-side work than SN70 — validators really do run a local LLM judge plus a 3-oracle ground-truth layer (OpenAI/Gemini/Grok), paying ~$0.30–0.60 per run out of t...</div>
+            <button class="toggle" onclick="toggleDetails(11)">📄 Show full message</button>
+            <div id="det-11" class="details" style="display:none">
+                <div class="full-msg">```
+Eirel does have more genuine validator-side work than SN70 — validators really do run a local LLM judge plus a 3-oracle ground-truth layer (OpenAI/Gemini/Grok), paying ~$0.30–0.60 per run out of their own pocket. But it doesn&#x27;t matter, because of the last step:
+
+Weights come from one owner endpoint. validation/validator/engine.py → run_weight_setting_loop does GET /v1/weights against the operator&#x27;s owner-api, gets back {hotkey: weight}, and copies it on-chain (winner → family weight, remaind</div>
+                <button class="toggle" onclick="toggleDetails(11)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+        <div class="section" id="sn-38">
+            <h2>SN38 (1 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#aa88ff" id="sig-12">
+            <div class="sig-header">
+                <span class="sn-tag">SN38</span>
+                <span class="snd">sn38 h-param tracker</span>
+                <span class="stype" style="color:#aa88ff">[protocol_change]</span>
+                <span class="urg-tag" style="background:#5599ff">BRIEF WORTHY — READ IN DAILY BRIEF</span>
+                
+            </div>
+            <div class="sum">### Hyperparams changed on subnet 38
+- `activity_cutoff` `50400` → `18000`</div>
+            <button class="toggle" onclick="toggleDetails(12)">📄 Show full message</button>
+            <div id="det-12" class="details" style="display:none">
+                <div class="full-msg">### Hyperparams changed on subnet 38
+- `activity_cutoff` `50400` → `18000`</div>
+                <button class="toggle" onclick="toggleDetails(12)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+        <div class="section" id="sn-40">
+            <h2>SN40 (1 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#aa88ff" id="sig-13">
+            <div class="sig-header">
+                <span class="sn-tag">SN40</span>
+                <span class="snd">sn40 h-param tracker</span>
+                <span class="stype" style="color:#aa88ff">[protocol_change]</span>
+                <span class="urg-tag" style="background:#5599ff">BRIEF WORTHY — READ IN DAILY BRIEF</span>
+                
+            </div>
+            <div class="sum">### Hyperparams changed on subnet 40
+- `commit_reveal_weights_enabled` `True` → `False`</div>
+            <button class="toggle" onclick="toggleDetails(13)">📄 Show full message</button>
+            <div id="det-13" class="details" style="display:none">
+                <div class="full-msg">### Hyperparams changed on subnet 40
+- `commit_reveal_weights_enabled` `True` → `False`</div>
+                <button class="toggle" onclick="toggleDetails(13)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+        <div class="section" id="sn-70">
+            <h2>SN70 (2 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-14">
+            <div class="sig-header">
+                <span class="sn-tag">SN70</span>
+                <span class="snd">consttt</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">We need to break down that second wall here &lt;@227112354121252865&gt; right now there is no way to audit that scores aggregated through `api.nexisgen.ai` match the proper validator results</div>
+            <button class="toggle" onclick="toggleDetails(14)">📄 Show full message</button>
+            <div id="det-14" class="details" style="display:none">
+                <div class="full-msg">We need to break down that second wall here &lt;@227112354121252865&gt; right now there is no way to audit that scores aggregated through `api.nexisgen.ai` match the proper validator results</div>
+                <button class="toggle" onclick="toggleDetails(14)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-15">
+            <div class="sig-header">
+                <span class="sn-tag">SN70</span>
+                <span class="snd">consttt</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">```
+nexis validate runs two independent loops, and they don&#x27;t connect the way you&#x27;d hope:
+
+Scoring loop (auditable). Each validator pulls miner videos from the shared R2 bucket, runs the VBench Docker...</div>
+            <button class="toggle" onclick="toggleDetails(15)">📄 Show full message</button>
+            <div id="det-15" class="details" style="display:none">
+                <div class="full-msg">```
+nexis validate runs two independent loops, and they don&#x27;t connect the way you&#x27;d hope:
+
+Scoring loop (auditable). Each validator pulls miner videos from the shared R2 bucket, runs the VBench Docker image locally, computes per-miner aggregates. Reproducible by anyone with read creds + a 24GB GPU. This is the part you correctly called &quot;fully auditable.&quot;
+
+Score submission (partial). Validators POST scores to api.nexisgen.ai, signed by their hotkey. But api/auth.py verifies the signature at the d</div>
+                <button class="toggle" onclick="toggleDetails(15)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+        <div class="section" id="sn-82">
+            <h2>SN82 (2 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#aa88ff" id="sig-16">
+            <div class="sig-header">
+                <span class="sn-tag">SN82</span>
+                <span class="snd">sn82 h-param tracker</span>
+                <span class="stype" style="color:#aa88ff">[protocol_change]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">### Hyperparams changed on subnet 82
+- `min_burn` `990000000` → `500000`</div>
+            <button class="toggle" onclick="toggleDetails(16)">📄 Show full message</button>
+            <div id="det-16" class="details" style="display:none">
+                <div class="full-msg">### Hyperparams changed on subnet 82
+- `min_burn` `990000000` → `500000`</div>
+                <button class="toggle" onclick="toggleDetails(16)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-17">
+            <div class="sig-header">
+                <span class="sn-tag">SN82</span>
+                <span class="snd">consttt</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">Hi Compelle team, what we need is a verification from a secondary team that there is fair mining occuring, i.e auditability. If you can please reach out to a validator in the ecosystem to run a second...</div>
+            <button class="toggle" onclick="toggleDetails(17)">📄 Show full message</button>
+            <div id="det-17" class="details" style="display:none">
+                <div class="full-msg">Hi Compelle team, what we need is a verification from a secondary team that there is fair mining occuring, i.e auditability. If you can please reach out to a validator in the ecosystem to run a secondary process which shows that mining is fair and or fully auditable in some way, we need this before allowing chain emission</div>
+                <button class="toggle" onclick="toggleDetails(17)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+        <div class="section" id="sn-83">
+            <h2>SN83 (1 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-18">
+            <div class="sig-header">
+                <span class="sn-tag">SN83</span>
+                <span class="snd">consttt</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">The use of  the centralized API here ```http://lambda.toptensor.ai``` makes it trivial for the owner and miners to run a backhanded game where the solutions are passed through to the miner before each...</div>
+            <button class="toggle" onclick="toggleDetails(18)">📄 Show full message</button>
+            <div id="det-18" class="details" style="display:none">
+                <div class="full-msg">The use of  the centralized API here ```http://lambda.toptensor.ai``` makes it trivial for the owner and miners to run a backhanded game where the solutions are passed through to the miner before each challenge, the validators in this case are pure lackeys.</div>
+                <button class="toggle" onclick="toggleDetails(18)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+        <div class="section" id="sn-84">
+            <h2>SN84 (1 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#aa88ff" id="sig-19">
+            <div class="sig-header">
+                <span class="sn-tag">SN84</span>
+                <span class="snd">sn84 h-param tracker</span>
+                <span class="stype" style="color:#aa88ff">[protocol_change]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">### Hyperparams changed on subnet 84
+- `commit_reveal_period` `10` → `1`</div>
+            <button class="toggle" onclick="toggleDetails(19)">📄 Show full message</button>
+            <div id="det-19" class="details" style="display:none">
+                <div class="full-msg">### Hyperparams changed on subnet 84
+- `commit_reveal_period` `10` → `1`</div>
+                <button class="toggle" onclick="toggleDetails(19)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+        <div class="section" id="sn-99">
+            <h2>SN99 (1 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-20">
+            <div class="sig-header">
+                <span class="sn-tag">SN99</span>
+                <span class="snd">consttt</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">Leoma uses a centralized API `https://api.leoma.ai` to fetch tasks and weights. It is not possible to audit the weights on the subnet because the task generation etc comes from this point which is ful...</div>
+            <button class="toggle" onclick="toggleDetails(20)">📄 Show full message</button>
+            <div id="det-20" class="details" style="display:none">
+                <div class="full-msg">Leoma uses a centralized API `https://api.leoma.ai` to fetch tasks and weights. It is not possible to audit the weights on the subnet because the task generation etc comes from this point which is fully blackbox.</div>
+                <button class="toggle" onclick="toggleDetails(20)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+        <div class="section" id="sn-101">
+            <h2>SN101 (3 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-21">
+            <div class="sig-header">
+                <span class="sn-tag">SN101</span>
+                <span class="snd">consttt</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">&lt;@1514437986492743841&gt; If we can improve the auditability we will be happy to bring back emission</div>
+            <button class="toggle" onclick="toggleDetails(21)">📄 Show full message</button>
+            <div id="det-21" class="details" style="display:none">
+                <div class="full-msg">&lt;@1514437986492743841&gt; If we can improve the auditability we will be happy to bring back emission</div>
+                <button class="toggle" onclick="toggleDetails(21)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-22">
+            <div class="sig-header">
+                <span class="sn-tag">SN101</span>
+                <span class="snd">consttt</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">Need: a way to audit the sampling method and choice of challenges.</div>
+            <button class="toggle" onclick="toggleDetails(22)">📄 Show full message</button>
+            <div id="det-22" class="details" style="display:none">
+                <div class="full-msg">Need: a way to audit the sampling method and choice of challenges.</div>
+                <button class="toggle" onclick="toggleDetails(22)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-23">
+            <div class="sig-header">
+                <span class="sn-tag">SN101</span>
+                <span class="snd">consttt</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">```
+Challenges come from the owner (executor/loop.py → {SUBNET_API_URL}/challenge, unsigned). Validators score against an owner-supplied reference image/audio/transcript. The test itself is a trust po...</div>
+            <button class="toggle" onclick="toggleDetails(23)">📄 Show full message</button>
+            <div id="det-23" class="details" style="display:none">
+                <div class="full-msg">```
+Challenges come from the owner (executor/loop.py → {SUBNET_API_URL}/challenge, unsigned). Validators score against an owner-supplied reference image/audio/transcript. The test itself is a trust point.
+```</div>
+                <button class="toggle" onclick="toggleDetails(23)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+        <div class="section" id="sn-107">
+            <h2>SN107 (2 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#aa88ff" id="sig-24">
+            <div class="sig-header">
+                <span class="sn-tag">SN107</span>
+                <span class="snd">sn107 h-param tracker</span>
+                <span class="stype" style="color:#aa88ff">[protocol_change]</span>
+                <span class="urg-tag" style="background:#5599ff">BRIEF WORTHY — READ IN DAILY BRIEF</span>
+                
+            </div>
+            <div class="sum">### Hyperparams changed on subnet 107
+- `min_burn` `150000000` → `200000000`</div>
+            <button class="toggle" onclick="toggleDetails(24)">📄 Show full message</button>
+            <div id="det-24" class="details" style="display:none">
+                <div class="full-msg">### Hyperparams changed on subnet 107
+- `min_burn` `150000000` → `200000000`</div>
+                <button class="toggle" onclick="toggleDetails(24)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#aa88ff" id="sig-25">
+            <div class="sig-header">
+                <span class="sn-tag">SN107</span>
+                <span class="snd">sn107 h-param tracker</span>
+                <span class="stype" style="color:#aa88ff">[protocol_change]</span>
+                <span class="urg-tag" style="background:#5599ff">BRIEF WORTHY — READ IN DAILY BRIEF</span>
+                
+            </div>
+            <div class="sum">### Hyperparams changed on subnet 107
+- `min_burn` `200000000` → `990000000`</div>
+            <button class="toggle" onclick="toggleDetails(25)">📄 Show full message</button>
+            <div id="det-25" class="details" style="display:none">
+                <div class="full-msg">### Hyperparams changed on subnet 107
+- `min_burn` `200000000` → `990000000`</div>
+                <button class="toggle" onclick="toggleDetails(25)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+        <div class="section" id="sn-108">
+            <h2>SN108 (2 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-26">
+            <div class="sig-header">
+                <span class="sn-tag">SN108</span>
+                <span class="snd">consttt</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">Validators do not create tasks, distribute work to miners, or evaluate models locally. All critical pipeline stages depend on external HTTP services — primarily `https://subnet.talkhead.ai` and the ex...</div>
+            <button class="toggle" onclick="toggleDetails(26)">📄 Show full message</button>
+            <div id="det-26" class="details" style="display:none">
+                <div class="full-msg">Validators do not create tasks, distribute work to miners, or evaluate models locally. All critical pipeline stages depend on external HTTP services — primarily `https://subnet.talkhead.ai` and the external `talkhead-executor` service. Validators function as thin clients that relay submissions and set on-chain weights based on centrally provided metrics.
+
+It is therefore impossible to audit this mechanism even slightly</div>
+                <button class="toggle" onclick="toggleDetails(26)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-27">
+            <div class="sig-header">
+                <span class="sn-tag">SN108</span>
+                <span class="snd">consttt</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">Hello 108, we need some way for this subnet to be audited for self mining before we can allow TAO emission.</div>
+            <button class="toggle" onclick="toggleDetails(27)">📄 Show full message</button>
+            <div id="det-27" class="details" style="display:none">
+                <div class="full-msg">Hello 108, we need some way for this subnet to be audited for self mining before we can allow TAO emission.</div>
+                <button class="toggle" onclick="toggleDetails(27)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+        <div class="section" id="sn-110">
+            <h2>SN110 (1 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-28">
+            <div class="sig-header">
+                <span class="sn-tag">SN110</span>
+                <span class="snd">consttt</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">&lt;@910427735376142367&gt; 
+
+I agree here. &lt;@910427735376142367&gt; I understand you are trying to push towards a form of green computing but if the subnet can&#x27;t justify a mining network in some capacity that...</div>
+            <button class="toggle" onclick="toggleDetails(28)">📄 Show full message</button>
+            <div id="det-28" class="details" style="display:none">
+                <div class="full-msg">&lt;@910427735376142367&gt; 
+
+I agree here. &lt;@910427735376142367&gt; I understand you are trying to push towards a form of green computing but if the subnet can&#x27;t justify a mining network in some capacity that is permissionless we need to revaluate.</div>
+                <button class="toggle" onclick="toggleDetails(28)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+
+
+            <div class="section">
+                <h2>💬 Active Channels — No Signals (82)</h2>
+                <p class="section-desc">Subnets with message activity but no classified signals.</p>
+                <div class="active-row"><span class="sn-tag">?</span> <span class="ch-name">general</span> <span class="msg-count">60 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">?</span> <span class="ch-name">novelty-search</span> <span class="msg-count">28 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">?</span> <span class="ch-name">rao</span> <span class="msg-count">115 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN2</span> <span class="ch-name">β・dsperse・2</span> <span class="msg-count">9 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN3</span> <span class="ch-name">γ・τeuτonic・3</span> <span class="msg-count">29 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN7</span> <span class="ch-name">η・allways・7</span> <span class="msg-count">8 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN8</span> <span class="ch-name">θ・vanta・8</span> <span class="msg-count">9 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN9</span> <span class="ch-name">ι・ioτa・9</span> <span class="msg-count">9 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN13</span> <span class="ch-name">ν・daτaverse・13</span> <span class="msg-count">11 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN15</span> <span class="ch-name">ο・oro・15</span> <span class="msg-count">169 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN17</span> <span class="ch-name">ρ・404—gen・17</span> <span class="msg-count">1 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN18</span> <span class="ch-name">σ・zeus・18</span> <span class="msg-count">17 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN19</span> <span class="ch-name">τ・blockmachine・19</span> <span class="msg-count">9 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN21</span> <span class="ch-name">φ・adτao・21</span> <span class="msg-count">11 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN22</span> <span class="ch-name">χ・desearch・22</span> <span class="msg-count">14 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN23</span> <span class="ch-name">ψ・trishool・23</span> <span class="msg-count">45 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN24</span> <span class="ch-name">ω・quasar・24</span> <span class="msg-count">37 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN112</span> <span class="ch-name">ђ・minoτaur・112</span> <span class="msg-count">5 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN113</span> <span class="ch-name">ѓ・tensorusd・113</span> <span class="msg-count">4 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN114</span> <span class="ch-name">є・soma・114</span> <span class="msg-count">22 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN80</span> <span class="ch-name">՞・dogelayer・80</span> <span class="msg-count">9 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN103</span> <span class="ch-name">ա・djinn・103</span> <span class="msg-count">9 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN105</span> <span class="ch-name">գ・beam・105</span> <span class="msg-count">106 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN106</span> <span class="ch-name">դ・voidai・106</span> <span class="msg-count">1 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN26</span> <span class="ch-name">ב・perτurb・26</span> <span class="msg-count">33 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN28</span> <span class="ch-name">ד・fish・28</span> <span class="msg-count">78 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN31</span> <span class="ch-name">ז・recall・31</span> <span class="msg-count">1 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN32</span> <span class="ch-name">ח・iτsai・32</span> <span class="msg-count">2 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN33</span> <span class="ch-name">ט・ready・33</span> <span class="msg-count">15 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN34</span> <span class="ch-name">י・mind・34</span> <span class="msg-count">7 msgs</span> <span class="owner-tag">no signals</span></div>
+                <div class="quiet-note">+ 52 more</div>
+            </div>
+            
+
+
+        <div class="section">
+            <h2>🟢 Active Subnets (96)</h2>
+            <p class="section-desc">Subnets with message activity today, ordered by volume.</p>
+            <div class="active-row"><span class="sn-tag">SN15</span> <span class="ch-name">ο・oro・15</span> <span class="msg-count">169 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN40</span> <span class="ch-name">ן・unclaimed・40</span> <span class="msg-count">142 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">?</span> <span class="ch-name">rao</span> <span class="msg-count">115 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN105</span> <span class="ch-name">գ・beam・105</span> <span class="msg-count">106 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN66</span> <span class="ch-name">ض・ninja・66</span> <span class="msg-count">97 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN28</span> <span class="ch-name">ד・fish・28</span> <span class="msg-count">78 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN124</span> <span class="ch-name">𑀁・swarm・124</span> <span class="msg-count">76 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">?</span> <span class="ch-name">general</span> <span class="msg-count">60 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN120</span> <span class="ch-name">ⴷ・ⴷffine・120</span> <span class="msg-count">59 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN64</span> <span class="ch-name">ش・chutes・64</span> <span class="msg-count">46 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN23</span> <span class="ch-name">ψ・trishool・23</span> <span class="msg-count">45 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN67</span> <span class="ch-name">ط・harnyx・67</span> <span class="msg-count">40 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN74</span> <span class="ch-name">ل・giττensor・74</span> <span class="msg-count">40 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN39</span> <span class="ch-name">מ・cathedral・39</span> <span class="msg-count">39 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN68</span> <span class="ch-name">ظ・nova・68</span> <span class="msg-count">39 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN24</span> <span class="ch-name">ω・quasar・24</span> <span class="msg-count">37 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN26</span> <span class="ch-name">ב・perτurb・26</span> <span class="msg-count">33 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN3</span> <span class="ch-name">γ・τeuτonic・3</span> <span class="msg-count">29 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">?</span> <span class="ch-name">novelty-search</span> <span class="msg-count">28 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN82</span> <span class="ch-name">ᚢ・compelle・82</span> <span class="msg-count">28 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN96</span> <span class="ch-name">᚛・veraτhos・96</span> <span class="msg-count">26 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN118</span> <span class="ch-name">ⲁ・ditto・118</span> <span class="msg-count">26 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN97</span> <span class="ch-name">ა・albedo・97</span> <span class="msg-count">23 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN114</span> <span class="ch-name">є・soma・114</span> <span class="msg-count">22 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN63</span> <span class="ch-name">س・enigma・63</span> <span class="msg-count">21 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN11</span> <span class="ch-name">λ・trajectory-rl・11</span> <span class="msg-count">19 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN88</span> <span class="ch-name">ᛇ・invesτing・88</span> <span class="msg-count">19 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN44</span> <span class="ch-name">ף・score・44</span> <span class="msg-count">18 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN107</span> <span class="ch-name">ミ・minos・107</span> <span class="msg-count">18 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN126</span> <span class="ch-name">𑀃・poker44・126</span> <span class="msg-count">18 msgs</span> <span class="owner-tag">Owner: unknown</span></div>
+        </div>
+        
+
+        <div class="section">
+            <h2>⚫ Quiet Subnets (36)</h2>
+            <p class="section-desc">Subnets with no message activity in the last 24 hours.</p>
+            <div class="quiet-list"><span class="quiet-tag">SN5</span> <span class="quiet-tag">SN10</span> <span class="quiet-tag">SN12</span> <span class="quiet-tag">SN14</span> <span class="quiet-tag">SN16</span> <span class="quiet-tag">SN20</span> <span class="quiet-tag">SN25</span> <span class="quiet-tag">SN27</span> <span class="quiet-tag">SN29</span> <span class="quiet-tag">SN30</span> <span class="quiet-tag">SN36</span> <span class="quiet-tag">SN42</span> <span class="quiet-tag">SN43</span> <span class="quiet-tag">SN46</span> <span class="quiet-tag">SN48</span> <span class="quiet-tag">SN52</span> <span class="quiet-tag">SN57</span> <span class="quiet-tag">SN58</span> <span class="quiet-tag">SN69</span> <span class="quiet-tag">SN76</span> <span class="quiet-tag">SN84</span> <span class="quiet-tag">SN86</span> <span class="quiet-tag">SN87</span> <span class="quiet-tag">SN89</span> <span class="quiet-tag">SN90</span> <span class="quiet-tag">SN91</span> <span class="quiet-tag">SN92</span> <span class="quiet-tag">SN98</span> <span class="quiet-tag">SN104</span> <span class="quiet-tag">SN111</span> <span class="quiet-tag">SN115</span> <span class="quiet-tag">SN116</span> <span class="quiet-tag">SN119</span> <span class="quiet-tag">SN121</span> <span class="quiet-tag">SN122</span> <span class="quiet-tag">SN125</span></div>
+            
+        </div>
+        
+
+<footer>Generated by Hermes · Bittensor Intelligence Monitor · <a href="https://thaneclaw.github.io/bittensor-reports" style="color:var(--dim)">All Reports</a></footer>
+</div>
+</body>
+</html>
