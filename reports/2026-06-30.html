@@ -1,0 +1,412 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bittensor Report — 2026-06-30</title>
+<style>
+:root{--bg:#0a0a12;--card:#141420;--text:#d0d0e0;--dim:#777;--orange:#ff6b35;--red:#ff4444;--green:#00c060;--blue:#5599ff}
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif}
+body{background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+.container{max-width:1000px;margin:0 auto;padding:12px}
+header{text-align:center;padding:24px 0 16px;border-bottom:1px solid #222;margin-bottom:20px}
+h1{color:var(--orange);font-size:clamp(1.4em,4vw,1.8em);font-weight:700}
+.meta{color:var(--dim);font-size:.9em;margin-top:6px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:14px;background:var(--card);border-radius:12px;margin-bottom:20px}
+.stat{text-align:center;padding:8px}
+.v{color:var(--orange);font-size:clamp(1.6em,5vw,2em);font-weight:700}
+.l{font-size:.75em;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+.section{background:var(--card);border-radius:12px;padding:16px;margin-bottom:16px;border:1px solid #1e1e2e}
+h2{color:var(--orange);font-size:1.15em;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid #222;font-weight:600}
+.section-desc{color:var(--dim);font-size:.85em;margin-bottom:12px;font-style:italic}
+/* Summary grid styles */
+.summary-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;margin-top:10px}
+.summary-sn{background:#0e0e18;border-radius:8px;padding:12px;border-left:3px solid var(--blue);cursor:pointer;transition:background .2s;text-decoration:none;color:var(--text)}
+.summary-sn:hover{background:#151520}
+.summary-sn.urgent{border-left-color:var(--red)}
+.summary-sn.brief{border-left-color:var(--blue)}
+.summary-sn.founder{border-left-color:var(--orange)}
+.summary-sn-header{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.summary-sn-num{background:var(--orange);color:#fff;padding:2px 8px;border-radius:4px;font-weight:700;font-size:.85em}
+.summary-sn-count{background:#1a1a2e;padding:2px 8px;border-radius:4px;font-size:.75em;color:var(--dim)}
+.summary-sn-text{font-size:.85em;color:#aaa;line-height:1.4}
+/* Signal cards */
+.signal{margin:10px 0;padding:12px 14px;border-left:3px solid var(--blue);border-radius:6px;background:#0e0e18;transition:background .2s}
+.signal:hover{background:#151520}
+.sig-header{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:6px;font-size:.82em}
+.sn-tag{background:#222;color:var(--orange);padding:2px 8px;border-radius:4px;font-weight:700;font-size:.85em}
+.snd{color:var(--orange);font-weight:600}
+.stype{font-size:.8em;opacity:.8}
+.urg-tag{font-size:.7em;padding:2px 8px;border-radius:3px;color:#fff;font-weight:600}
+.sum{margin-top:6px;font-size:.95em;line-height:1.5;color:var(--text)}
+.toggle{background:#1a1a2e;border:1px solid #333;color:var(--orange);padding:6px 14px;border-radius:6px;cursor:pointer;font-size:.8em;margin-top:10px;width:100%}
+.toggle:hover{background:#222}
+.details{margin-top:10px;padding-top:10px;border-top:1px solid #222}
+.full-msg{background:#0a0a12;padding:12px;border-radius:6px;font-size:.9em;color:#aaa;white-space:pre-wrap;word-break:break-word;max-height:400px;overflow-y:auto}
+.active-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #1a1a2a;font-size:.9em;flex-wrap:wrap}
+.active-row:last-child{border-bottom:none}
+.ch-name{color:var(--dim);font-size:.85em}
+.msg-count{background:#1a1a2e;padding:2px 8px;border-radius:4px;font-size:.75em;color:var(--dim)}
+.owner-tag{color:#888;font-size:.8em}
+.quiet-list{display:flex;flex-wrap:wrap;gap:8px;padding:8px 0}
+.quiet-tag{background:#0e0e18;padding:6px 10px;border-radius:6px;font-size:.85em;color:#666}
+.quiet-note{color:var(--dim);font-size:.8em;margin-top:10px;text-align:center}
+footer{text-align:center;padding:30px 0;color:var(--dim);font-size:.8em;border-top:1px solid #222;margin-top:20px}
+@media (max-width:600px){
+    .stats{grid-template-columns:repeat(2,1fr)}
+    .summary-grid{grid-template-columns:1fr}
+    .sig-header{gap:4px}
+    .active-row{flex-direction:column;align-items:flex-start;gap:4px}
+}
+.synthesis{background:var(--card);border-radius:12px;padding:20px;margin-bottom:16px;border:1px solid #1e1e2e;line-height:1.6}
+.synthesis h3{color:var(--orange);font-size:1em;margin:14px 0 6px}
+.synthesis p{margin-bottom:10px}
+.synthesis ul{margin:0 0 12px 20px}
+.synthesis li{margin-bottom:6px}
+</style>
+<script>
+function toggleDetails(idx) {
+    var el = document.getElementById('det-' + idx);
+    if (el.style.display === 'none') {
+        el.style.display = 'block';
+    } else {
+        el.style.display = 'none';
+    }
+}
+</script>
+</head>
+<body>
+<div class="container">
+<header>
+    <h1>📊 Bittensor Daily Report</h1>
+    <div class="meta">2026-06-30 · 7 signals · 97 active subnets · 34 quiet</div>
+</header>
+
+<div class="stats">
+    <div class="stat"><div class="v">7</div><div class="l">Signals</div></div>
+    <div class="stat"><div class="v">4</div><div class="l">Urgent</div></div>
+    <div class="stat"><div class="v">97</div><div class="l">Active</div></div>
+    <div class="stat"><div class="v">34</div><div class="l">Quiet</div></div>
+</div>
+
+
+    <div class="section">
+        <h2>📋 Subnet Summary</h2>
+        <p class="section-desc">Click any subnet to jump to its detailed signals. Sorted numerically (SN1, SN2, SN3...).</p>
+        <div class="summary-grid">
+            
+        <a class="summary-sn urgent" href="#sn-?">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">ANN</span>
+                <span class="summary-sn-count">🔥 2 urgent · 👤 1 consttt</span>
+            </div>
+            <div class="summary-sn-text">No good reason actually we should change that to make it sym...</div>
+        </a>
+        
+        <a class="summary-sn urgent" href="#sn-16">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN16</span>
+                <span class="summary-sn-count">🔥 2 urgent</span>
+            </div>
+            <div class="summary-sn-text">### Hyperparams changed on subnet 16
+- `min_burn` `500000` →...</div>
+        </a>
+        
+        <a class="summary-sn brief" href="#sn-58">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN58</span>
+                <span class="summary-sn-count">📋 1 brief</span>
+            </div>
+            <div class="summary-sn-text">### Hyperparams changed on subnet 58
+- `target_regs_per_inte...</div>
+        </a>
+        
+        <a class="summary-sn brief" href="#sn-104">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN104</span>
+                <span class="summary-sn-count">📋 1 brief</span>
+            </div>
+            <div class="summary-sn-text">### Hyperparams changed on subnet 104
+- `commit_reveal_weigh...</div>
+        </a>
+        
+        <a class="summary-sn brief" href="#sn-106">
+            <div class="summary-sn-header">
+                <span class="summary-sn-num">SN106</span>
+                <span class="summary-sn-count">📋 1 brief</span>
+            </div>
+            <div class="summary-sn-text">### Hyperparams changed on subnet 106
+- `commit_reveal_weigh...</div>
+        </a>
+        
+        </div>
+    </div>
+    
+
+<div class="synthesis"><div class="section"><h2>🧠 Intelligence Summary</h2><p class="section-desc">LLM-synthesized daily analysis</p>🔹 <b>REGISTRY CHANGES</b>:  <br>
+<li>No registry changes today.</li>
+<br>
+🔒 <b>CONVICTION LOCKS</b>:  <br>
+<li>No conviction lock activity today.</li>
+<br>
+⚡ <b>HEADLINE</b>:  <br>
+Mainnet upgraded to spec version 424 with performance fixes. Subnet 16 saw a major hyperparameter shift.<br>
+<br>
+|🎯 <b>CONST WATCH</b>:  <br>
+<li><b>SN16</b>: Rao stated there's "no good reason" for asymmetry, implying upcoming symmetric changes.</li>
+<br>
+|🌐 <b>ECOSYSTEM</b>:  <br>
+<li><b>SN16</b>: `min_burn` increased dramatically to `999999999`.  </li>
+<li><b>SN106</b>: Enabled `commit_reveal_weights` and `liquid_alpha`.  </li>
+<li><b>SN104</b>: Disabled `commit_reveal_weights`.</li>
+<br>
+|👁 <b>WATCHLIST</b>:  <br>
+<li><b>SN16</b>: Extreme `min_burn` change may impact participation dynamics.  </li>
+<li><b>SN58</b>: Doubled `target_regs_per_interval`; potential registration spike.  </li>
+<li><b>SN106</b>: New weight reveal and liquid alpha features activated.</li>
+<br>
+|🎬 <b>What to Do</b>:  <br>
+<li><b>SN16</b>: Monitor validator reactions to the new burn threshold.  </li>
+<li><b>SN58</b>: Watch registration flow and difficulty adjustments closely.  </li>
+<li><b>SN106</b>: Evaluate impact of enabled weight commit/reveal and liquid alpha.</li></div></div>
+
+
+        <div class="section" id="sn-?">
+            <h2>SN? (2 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#ff6b35" id="sig-0">
+            <div class="sig-header">
+                <span class="sn-tag">?</span>
+                <span class="snd">consttt</span>
+                <span class="stype" style="color:#ff6b35">[founder]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">No good reason actually we should change that to make it symmetric</div>
+            <button class="toggle" onclick="toggleDetails(0)">📄 Show full message</button>
+            <div id="det-0" class="details" style="display:none">
+                <div class="full-msg">No good reason actually we should change that to make it symmetric</div>
+                <button class="toggle" onclick="toggleDetails(0)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#444" id="sig-1">
+            <div class="sig-header">
+                <span class="sn-tag">?</span>
+                <span class="snd">Arbos</span>
+                <span class="stype" style="color:#444">[announcement]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">Hey everyone,
+
+Mainnet has been upgraded to spec version 424. This includes the following hotfixes:
+
+- Fix balancer performance related to safe-bigmath
+- Allow locked alpha transfers in coldkey swaps
+...</div>
+            <button class="toggle" onclick="toggleDetails(1)">📄 Show full message</button>
+            <div id="det-1" class="details" style="display:none">
+                <div class="full-msg">Hey everyone,
+
+Mainnet has been upgraded to spec version 424. This includes the following hotfixes:
+
+- Fix balancer performance related to safe-bigmath
+- Allow locked alpha transfers in coldkey swaps
+- Apply tx &amp; dispatch extensions conditionally (fixes recent increase in staking transaction cost)
+
+For more information, please see: https://github.com/opentensor/subtensor/releases/tag/v3.4.9-424
+
+Thanks!</div>
+                <button class="toggle" onclick="toggleDetails(1)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+        <div class="section" id="sn-16">
+            <h2>SN16 (2 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#aa88ff" id="sig-2">
+            <div class="sig-header">
+                <span class="sn-tag">SN16</span>
+                <span class="snd">sn16 h-param tracker</span>
+                <span class="stype" style="color:#aa88ff">[protocol_change]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">### Hyperparams changed on subnet 16
+- `min_burn` `500000` → `999999999`</div>
+            <button class="toggle" onclick="toggleDetails(2)">📄 Show full message</button>
+            <div id="det-2" class="details" style="display:none">
+                <div class="full-msg">### Hyperparams changed on subnet 16
+- `min_burn` `500000` → `999999999`</div>
+                <button class="toggle" onclick="toggleDetails(2)">🔼 Hide</button>
+            </div>
+        </div>
+        
+
+        <div class="signal" style="border-left-color:#aa88ff" id="sig-3">
+            <div class="sig-header">
+                <span class="sn-tag">SN16</span>
+                <span class="snd">sn16 h-param tracker</span>
+                <span class="stype" style="color:#aa88ff">[protocol_change]</span>
+                <span class="urg-tag" style="background:#ff4444">IMMEDIATE — ACT NOW</span>
+                
+            </div>
+            <div class="sum">### Hyperparams changed on subnet 16
+- `min_burn` `999990000` → `500000`</div>
+            <button class="toggle" onclick="toggleDetails(3)">📄 Show full message</button>
+            <div id="det-3" class="details" style="display:none">
+                <div class="full-msg">### Hyperparams changed on subnet 16
+- `min_burn` `999990000` → `500000`</div>
+                <button class="toggle" onclick="toggleDetails(3)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+        <div class="section" id="sn-58">
+            <h2>SN58 (1 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#aa88ff" id="sig-4">
+            <div class="sig-header">
+                <span class="sn-tag">SN58</span>
+                <span class="snd">sn58 h-param tracker</span>
+                <span class="stype" style="color:#aa88ff">[protocol_change]</span>
+                <span class="urg-tag" style="background:#5599ff">BRIEF WORTHY — READ IN DAILY BRIEF</span>
+                
+            </div>
+            <div class="sum">### Hyperparams changed on subnet 58
+- `target_regs_per_interval` `1` → `2`
+- `max_difficulty` `18446744073709551615` → `4611686018427387903`</div>
+            <button class="toggle" onclick="toggleDetails(4)">📄 Show full message</button>
+            <div id="det-4" class="details" style="display:none">
+                <div class="full-msg">### Hyperparams changed on subnet 58
+- `target_regs_per_interval` `1` → `2`
+- `max_difficulty` `18446744073709551615` → `4611686018427387903`</div>
+                <button class="toggle" onclick="toggleDetails(4)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+        <div class="section" id="sn-104">
+            <h2>SN104 (1 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#aa88ff" id="sig-5">
+            <div class="sig-header">
+                <span class="sn-tag">SN104</span>
+                <span class="snd">sn104 h-param tracker</span>
+                <span class="stype" style="color:#aa88ff">[protocol_change]</span>
+                <span class="urg-tag" style="background:#5599ff">BRIEF WORTHY — READ IN DAILY BRIEF</span>
+                
+            </div>
+            <div class="sum">### Hyperparams changed on subnet 104
+- `commit_reveal_weights_enabled` `True` → `False`</div>
+            <button class="toggle" onclick="toggleDetails(5)">📄 Show full message</button>
+            <div id="det-5" class="details" style="display:none">
+                <div class="full-msg">### Hyperparams changed on subnet 104
+- `commit_reveal_weights_enabled` `True` → `False`</div>
+                <button class="toggle" onclick="toggleDetails(5)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+        <div class="section" id="sn-106">
+            <h2>SN106 (1 signals)</h2>
+            <div class="subnet-signals">
+                
+        <div class="signal" style="border-left-color:#aa88ff" id="sig-6">
+            <div class="sig-header">
+                <span class="sn-tag">SN106</span>
+                <span class="snd">sn106 h-param tracker</span>
+                <span class="stype" style="color:#aa88ff">[protocol_change]</span>
+                <span class="urg-tag" style="background:#5599ff">BRIEF WORTHY — READ IN DAILY BRIEF</span>
+                
+            </div>
+            <div class="sum">### Hyperparams changed on subnet 106
+- `commit_reveal_weights_enabled` `False` → `True`
+- `liquid_alpha_enabled` `False` → `True`</div>
+            <button class="toggle" onclick="toggleDetails(6)">📄 Show full message</button>
+            <div id="det-6" class="details" style="display:none">
+                <div class="full-msg">### Hyperparams changed on subnet 106
+- `commit_reveal_weights_enabled` `False` → `True`
+- `liquid_alpha_enabled` `False` → `True`</div>
+                <button class="toggle" onclick="toggleDetails(6)">🔼 Hide</button>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+        
+
+
+            <div class="section">
+                <h2>💬 Active Channels — No Signals (92)</h2>
+                <p class="section-desc">Subnets with message activity but no classified signals.</p>
+                <div class="active-row"><span class="sn-tag">?</span> <span class="ch-name">general</span> <span class="msg-count">36 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN3</span> <span class="ch-name">γ・τeuτonic・3</span> <span class="msg-count">12 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN6</span> <span class="ch-name">ζ・numinous・6</span> <span class="msg-count">3 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN9</span> <span class="ch-name">ι・ioτa・9</span> <span class="msg-count">9 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN10</span> <span class="ch-name">κ・unclaimed・10</span> <span class="msg-count">4 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN11</span> <span class="ch-name">λ・trajectory-rl・11</span> <span class="msg-count">49 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN13</span> <span class="ch-name">ν・daτaverse・13</span> <span class="msg-count">8 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN15</span> <span class="ch-name">ο・oro・15</span> <span class="msg-count">116 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN17</span> <span class="ch-name">ρ・404—gen・17</span> <span class="msg-count">1 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN18</span> <span class="ch-name">σ・zeus・18</span> <span class="msg-count">7 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN21</span> <span class="ch-name">φ・adτao・21</span> <span class="msg-count">36 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN22</span> <span class="ch-name">χ・desearch・22</span> <span class="msg-count">12 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN23</span> <span class="ch-name">ψ・trishool・23</span> <span class="msg-count">55 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN24</span> <span class="ch-name">ω・quasar・24</span> <span class="msg-count">15 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN110</span> <span class="ch-name">ѐ・greencompute・110</span> <span class="msg-count">5 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN112</span> <span class="ch-name">ђ・minoτaur・112</span> <span class="msg-count">47 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN113</span> <span class="ch-name">ѓ・tensorusd・113</span> <span class="msg-count">3 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN114</span> <span class="ch-name">є・soma・114</span> <span class="msg-count">72 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN115</span> <span class="ch-name">ѕ・soulx・115</span> <span class="msg-count">2 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN103</span> <span class="ch-name">ա・djinn・103</span> <span class="msg-count">2 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN105</span> <span class="ch-name">գ・beam・105</span> <span class="msg-count">172 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN108</span> <span class="ch-name">զ・talkhead・108</span> <span class="msg-count">4 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN26</span> <span class="ch-name">ב・perτurb・26</span> <span class="msg-count">17 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN28</span> <span class="ch-name">ד・fish・28</span> <span class="msg-count">42 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN31</span> <span class="ch-name">ז・recall・31</span> <span class="msg-count">6 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN32</span> <span class="ch-name">ח・iτsai・32</span> <span class="msg-count">10 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN33</span> <span class="ch-name">ט・ready・33</span> <span class="msg-count">2 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN34</span> <span class="ch-name">י・mind・34</span> <span class="msg-count">3 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN35</span> <span class="ch-name">ך・oxmarkets・35</span> <span class="msg-count">3 msgs</span> <span class="owner-tag">no signals</span></div>
+<div class="active-row"><span class="sn-tag">SN36</span> <span class="ch-name">כ・eirel・36</span> <span class="msg-count">9 msgs</span> <span class="owner-tag">no signals</span></div>
+                <div class="quiet-note">+ 62 more</div>
+            </div>
+            
+
+
+        <div class="section">
+            <h2>🟢 Active Subnets (97)</h2>
+            <p class="section-desc">Subnets with message activity today, ordered by volume.</p>
+            <div class="active-row"><span class="sn-tag">SN105</span> <span class="ch-name">գ・beam・105</span> <span class="msg-count">172 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN15</span> <span class="ch-name">ο・oro・15</span> <span class="msg-count">116 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN40</span> <span class="ch-name">ן・unclaimed・40</span> <span class="msg-count">104 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN114</span> <span class="ch-name">є・soma・114</span> <span class="msg-count">72 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN124</span> <span class="ch-name">𑀁・swarm・124</span> <span class="msg-count">64 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN38</span> <span class="ch-name">ם・unclaimed・38</span> <span class="msg-count">57 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN120</span> <span class="ch-name">ⴷ・ⴷffine・120</span> <span class="msg-count">56 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN23</span> <span class="ch-name">ψ・trishool・23</span> <span class="msg-count">55 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN11</span> <span class="ch-name">λ・trajectory-rl・11</span> <span class="msg-count">49 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN66</span> <span class="ch-name">ض・ninja・66</span> <span class="msg-count">48 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN112</span> <span class="ch-name">ђ・minoτaur・112</span> <span class="msg-count">47 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN107</span> <span class="ch-name">ミ・minos・107</span> <span class="msg-count">47 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">?</span> <span class="ch-name">rao</span> <span class="msg-count">46 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN28</span> <span class="ch-name">ד・fish・28</span> <span class="msg-count">42 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">?</span> <span class="ch-name">general</span> <span class="msg-count">36 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN21</span> <span class="ch-name">φ・adτao・21</span> <span class="msg-count">36 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN39</span> <span class="ch-name">מ・cathedral・39</span> <span class="msg-count">35 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN75</span> <span class="ch-name">م・hippius・75</span> <span class="msg-count">33 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN44</span> <span class="ch-name">ף・score・44</span> <span class="msg-count">32 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN49</span> <span class="ch-name">ר・nepher・49</span> <span class="msg-count">31 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN74</span> <span class="ch-name">ل・giττensor・74</span> <span class="msg-count">29 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN78</span> <span class="ch-name">و・vocence・78</span> <span class="msg-count">29 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN102</span> <span class="ch-name">ვ・connito-ai・102</span> <span class="msg-count">26 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN96</span> <span class="ch-name">᚛・veraτhos・96</span> <span class="msg-count">26 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN88</span> <span class="ch-name">ᛇ・invesτing・88</span> <span class="msg-count">25 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN101</span> <span class="ch-name">ე・unclaimed・101</span> <span class="msg-count">24 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN97</span> <span class="ch-name">ა・albedo・97</span> <span class="msg-count">20 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN118</span> <span class="ch-name">ⲁ・ditto・118</span> <span class="msg-count">20 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN61</span> <span class="ch-name">ر・red-team・61</span> <span class="msg-count">19 msgs</span> <span class="owner-tag">Owner: unknown</span></div><div class="active-row"><span class="sn-tag">SN71</span> <span class="ch-name">ف・leadpoeτ・71</span> <span class="msg-count">19 msgs</span> <span class="owner-tag">Owner: unknown</span></div>
+        </div>
+        
+
+        <div class="section">
+            <h2>⚫ Quiet Subnets (34)</h2>
+            <p class="section-desc">Subnets with no message activity in the last 24 hours.</p>
+            <div class="quiet-list"><span class="quiet-tag">SN2</span> <span class="quiet-tag">SN5</span> <span class="quiet-tag">SN7</span> <span class="quiet-tag">SN8</span> <span class="quiet-tag">SN12</span> <span class="quiet-tag">SN14</span> <span class="quiet-tag">SN16</span> <span class="quiet-tag">SN19</span> <span class="quiet-tag">SN20</span> <span class="quiet-tag">SN25</span> <span class="quiet-tag">SN27</span> <span class="quiet-tag">SN29</span> <span class="quiet-tag">SN30</span> <span class="quiet-tag">SN41</span> <span class="quiet-tag">SN43</span> <span class="quiet-tag">SN47</span> <span class="quiet-tag">SN48</span> <span class="quiet-tag">SN52</span> <span class="quiet-tag">SN57</span> <span class="quiet-tag">SN59</span> <span class="quiet-tag">SN69</span> <span class="quiet-tag">SN80</span> <span class="quiet-tag">SN86</span> <span class="quiet-tag">SN87</span> <span class="quiet-tag">SN89</span> <span class="quiet-tag">SN90</span> <span class="quiet-tag">SN92</span> <span class="quiet-tag">SN94</span> <span class="quiet-tag">SN99</span> <span class="quiet-tag">SN111</span> <span class="quiet-tag">SN116</span> <span class="quiet-tag">SN122</span> <span class="quiet-tag">SN125</span> <span class="quiet-tag">SN128</span></div>
+            
+        </div>
+        
+
+<footer>Generated by Hermes · Bittensor Intelligence Monitor · <a href="https://thaneclaw.github.io/bittensor-reports" style="color:var(--dim)">All Reports</a></footer>
+</div>
+</body>
+</html>
